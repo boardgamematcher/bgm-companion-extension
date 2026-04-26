@@ -276,7 +276,7 @@
     "message": "Noch keine benutzerdefinierten Muster"
   },
   "optionsCustomEmptyHint": {
-    "message": "Klicke auf „Neues Muster hinzufügen", um eines zu erstellen"
+    "message": "Klicke auf »Neues Muster hinzufügen«, um eines zu erstellen"
   },
   "optionsCardEdit": {
     "message": "Bearbeiten"
@@ -393,7 +393,7 @@
     "message": "Benutzerdefinierte Muster"
   },
   "optionsHelpCustomBody": {
-    "message": "Die Registerkarte „Benutzerdefinierte Muster" ermöglicht es dir, der Erweiterung einen neuen Shop beizubringen. Weitere Informationen zum Schema und Beispielen findest du im site-profiles README."
+    "message": "Die Registerkarte »Benutzerdefinierte Muster« ermöglicht es dir, der Erweiterung einen neuen Shop beizubringen. Weitere Informationen zum Schema und Beispielen findest du im site-profiles README."
   },
   "optionsHelpCustomLink": {
     "message": "site-profiles README"
