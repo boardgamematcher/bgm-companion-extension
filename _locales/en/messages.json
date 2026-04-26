@@ -1,0 +1,520 @@
+{
+  "extName": {
+    "message": "BGM Toolbox — BoardGameMatcher Companion",
+    "description": "Extension name shown in the browser UI and store listings."
+  },
+  "extDescription": {
+    "message": "Your board game companion: extract games from shops, log plays, sync collections — all connected to BoardGameMatcher.com",
+    "description": "Extension description shown in the store listing and browser extensions page (≤132 chars)."
+  },
+
+  "popupHeaderTitle": {
+    "message": "BoardGameMatcher",
+    "description": "Title shown in the popup header (visually styled as Board Game Matcher)."
+  },
+  "popupSettingsTooltip": {
+    "message": "Settings",
+    "description": "Tooltip on the gear icon in the popup header."
+  },
+  "popupThemeTooltip": {
+    "message": "Toggle theme",
+    "description": "Tooltip on the theme toggle (sun/moon) icon."
+  },
+  "popupAvatarTooltip": {
+    "message": "Logged in",
+    "description": "Default tooltip on the user avatar shown when signed in (before the username is loaded)."
+  },
+  "popupAvatarUserTooltip": {
+    "message": "$name$ — view your BGM profile",
+    "description": "Tooltip on the avatar once the user name is loaded.",
+    "placeholders": {
+      "name": {"content": "$1", "example": "Julien"}
+    }
+  },
+
+  "popupExtractTitle": {
+    "message": "Board games on this page",
+    "description": "Title of the extract card when a supported shop is detected."
+  },
+  "popupExtractButton": {
+    "message": "Extract All",
+    "description": "Default label of the main extract button."
+  },
+  "popupExtractCount": {
+    "message": "Extract $count$ games",
+    "description": "Extract button label when the page has $count$ products.",
+    "placeholders": {
+      "count": {"content": "$1", "example": "73"}
+    }
+  },
+  "popupSiteDetected": {
+    "message": "$site$ detected",
+    "description": "Pill text under the extract card title (e.g. 'Veepee Catalog detected').",
+    "placeholders": {
+      "site": {"content": "$1", "example": "Veepee Catalog"}
+    }
+  },
+
+  "popupUnsupportedTitle": {
+    "message": "No games detected on this page",
+    "description": "Title of the card shown on unsupported pages."
+  },
+  "popupUnsupportedDefault": {
+    "message": "Open a supported board game shop to extract games.",
+    "description": "Body text on the unsupported card when no domain info is available."
+  },
+  "popupUnsupportedDomain": {
+    "message": "$domain$ is not a supported site yet.",
+    "description": "Body text on the unsupported card with the current domain.",
+    "placeholders": {
+      "domain": {"content": "$1", "example": "example.com"}
+    }
+  },
+
+  "popupStatsTitle": {
+    "message": "Last extraction",
+    "description": "Title of the stats card."
+  },
+  "popupStatsEmpty": {
+    "message": "No extractions yet",
+    "description": "Body text shown when there is no extraction history."
+  },
+  "popupStatsLast": {
+    "message": "Last: $count$ games from $domain$",
+    "description": "Body text showing the most recent extraction.",
+    "placeholders": {
+      "count": {"content": "$1", "example": "73"},
+      "domain": {"content": "$2", "example": "veepee.fr"}
+    }
+  },
+
+  "popupWishlistTitle": {
+    "message": "Add a game to your wishlist",
+    "description": "Title of the wishlist quick-add card (signed-in users)."
+  },
+  "popupWishlistPlaceholder": {
+    "message": "Search a board game…",
+    "description": "Placeholder text in the wishlist search input."
+  },
+  "popupWishlistViewAll": {
+    "message": "View full wishlist →",
+    "description": "Link below the wishlist results."
+  },
+  "popupWishlistCountSingular": {
+    "message": "1 game in your wishlist",
+    "description": "Wishlist count when the user has exactly one game."
+  },
+  "popupWishlistCountPlural": {
+    "message": "$count$ games in your wishlist",
+    "description": "Wishlist count for any value other than 1.",
+    "placeholders": {
+      "count": {"content": "$1", "example": "12"}
+    }
+  },
+  "popupWishlistAdd": {
+    "message": "+ Wishlist",
+    "description": "Button on a search result row to add the game to wishlist."
+  },
+  "popupWishlistAdded": {
+    "message": "✓ Added",
+    "description": "Marker shown after a game is added to the wishlist."
+  },
+  "popupWishlistTryAgain": {
+    "message": "Try again",
+    "description": "Wishlist add button after a failed attempt."
+  },
+  "popupWishlistNoGames": {
+    "message": "No games found.",
+    "description": "Empty-state for the wishlist search."
+  },
+  "popupWishlistSearchError": {
+    "message": "Couldn't search right now.",
+    "description": "Error shown when the wishlist search request fails."
+  },
+
+  "popupLoginTitle": {
+    "message": "Get more from your games",
+    "description": "Title of the login CTA card (signed-out users)."
+  },
+  "popupLoginBody": {
+    "message": "Log plays, sync your collection, find players near you.",
+    "description": "Body text in the login CTA card."
+  },
+  "popupLoginButton": {
+    "message": "Sign in to BoardGameMatcher",
+    "description": "Sign-in button in the login CTA card."
+  },
+  "popupLoginSignup": {
+    "message": "Create a free account →",
+    "description": "Sign-up link below the login button."
+  },
+
+  "popupTeaserTitle": {
+    "message": "A free BGM account unlocks",
+    "description": "Title of the teaser card listing logged-in benefits."
+  },
+  "popupTeaserPlays": {
+    "message": "Auto-log plays from BGA & Yucata",
+    "description": "Teaser bullet."
+  },
+  "popupTeaserWishlist": {
+    "message": "Save games you want to a wishlist",
+    "description": "Teaser bullet."
+  },
+  "popupTeaserBgg": {
+    "message": "Sync your BoardGameGeek collection",
+    "description": "Teaser bullet."
+  },
+  "popupTeaserStats": {
+    "message": "Track win rates & play stats",
+    "description": "Teaser bullet."
+  },
+  "popupTeaserPlayers": {
+    "message": "Find players who own games you want to play",
+    "description": "Teaser bullet."
+  },
+
+  "popupYucataTitle": {
+    "message": "Yucata Import",
+    "description": "Title of the Yucata import panel (visible only on yucata.de)."
+  },
+  "popupYucataBody": {
+    "message": "Import your Yucata play history to unlock badges and track statistics. Plays are saved to your BoardGameMatcher account; nothing is sent back to Yucata.",
+    "description": "Body text on the Yucata import panel."
+  },
+  "popupYucataButton": {
+    "message": "Import Yucata Plays",
+    "description": "Button on the Yucata import panel."
+  },
+
+  "popupBgaTitle": {
+    "message": "Board Game Arena Import",
+    "description": "Title of the BGA import panel (visible only on boardgamearena.com)."
+  },
+  "popupBgaBody": {
+    "message": "Import your BGA play history to unlock badges and track statistics. Plays are saved to your BoardGameMatcher account; nothing is sent back to BGA.",
+    "description": "Body text on the BGA import panel."
+  },
+  "popupBgaButton": {
+    "message": "Import BGA Plays",
+    "description": "Button on the BGA import panel."
+  },
+
+  "popupBannerLoggedIn": {
+    "message": "Open BoardGameMatcher.com",
+    "description": "Bottom banner text when the user is signed in."
+  },
+  "popupBannerLoggedOut": {
+    "message": "Discover BoardGameMatcher.com",
+    "description": "Bottom banner text when the user is signed out."
+  },
+
+  "importYucataFetching": {
+    "message": "Fetching all plays from Yucata… please wait",
+    "description": "Status shown immediately after clicking Import Yucata Plays."
+  },
+  "importBgaFetching": {
+    "message": "Fetching all plays from BGA… please wait",
+    "description": "Status shown immediately after clicking Import BGA Plays."
+  },
+  "importSendingProgress": {
+    "message": "Sending plays to BGM… $current$/$total$",
+    "description": "Progress status while batches are being uploaded.",
+    "placeholders": {
+      "current": {"content": "$1", "example": "200"},
+      "total": {"content": "$2", "example": "1500"}
+    }
+  },
+  "importSuccess": {
+    "message": "✓ Imported $count$ plays!",
+    "description": "Success status after a play import completes.",
+    "placeholders": {
+      "count": {"content": "$1", "example": "120"}
+    }
+  },
+  "importDuplicatesSkipped": {
+    "message": "$count$ duplicates skipped",
+    "description": "Suffix appended to the import success message when there are duplicates.",
+    "placeholders": {
+      "count": {"content": "$1", "example": "5"}
+    }
+  },
+  "importNotFoundOnBgm": {
+    "message": "$count$ not found on BGM",
+    "description": "Suffix appended to the import success message when some games could not be matched.",
+    "placeholders": {
+      "count": {"content": "$1", "example": "3"}
+    }
+  },
+  "importErrors": {
+    "message": "$count$ errors",
+    "description": "Suffix appended to the import success message when some chunks errored.",
+    "placeholders": {
+      "count": {"content": "$1", "example": "1"}
+    }
+  },
+  "importErrorPrefix": {
+    "message": "✗ Error: $message$",
+    "description": "Prefix for import error status.",
+    "placeholders": {
+      "message": {"content": "$1", "example": "Network error"}
+    }
+  },
+  "importNoResponse": {
+    "message": "No response from content script",
+    "description": "Error message when the content script does not respond."
+  },
+
+  "popupNoPattern": {
+    "message": "No pattern available",
+    "description": "Toast shown if Extract is clicked without a detected pattern."
+  },
+  "popupNoTab": {
+    "message": "No active tab",
+    "description": "Toast shown when the active tab cannot be queried."
+  },
+  "popupErrorPrefix": {
+    "message": "Error: $message$",
+    "description": "Prefix for generic error toasts.",
+    "placeholders": {
+      "message": {"content": "$1", "example": "fetch failed"}
+    }
+  },
+
+  "ctxMenuExtractPage": {
+    "message": "Extract Board Games from this page",
+    "description": "Right-click context menu entry for the current page."
+  },
+  "ctxMenuExtractSelection": {
+    "message": "Extract Board Games from \"%s\"",
+    "description": "Right-click context menu entry for selected text. The %s is filled by Chrome with the selected text — keep the placeholder."
+  },
+  "ctxMenuExtractLink": {
+    "message": "Extract Board Games from this link",
+    "description": "Right-click context menu entry for a link."
+  },
+
+  "optionsTitle": {
+    "message": "BGM Toolbox Settings",
+    "description": "Page title of the settings page."
+  },
+  "optionsTabSupported": {
+    "message": "Supported Sites",
+    "description": "First tab on the settings page."
+  },
+  "optionsTabCustom": {
+    "message": "Custom Patterns",
+    "description": "Second tab on the settings page."
+  },
+  "optionsTabHelp": {
+    "message": "Help",
+    "description": "Third tab on the settings page."
+  },
+
+  "optionsSupportedTitle": {
+    "message": "Built-in Site Patterns",
+    "description": "Heading of the Supported Sites tab."
+  },
+  "optionsSupportedSubtitle": {
+    "message": "These patterns are included with the extension",
+    "description": "Subheading of the Supported Sites tab."
+  },
+  "optionsSearchPlaceholder": {
+    "message": "Search sites…",
+    "description": "Placeholder of the search input on the Supported Sites tab."
+  },
+
+  "optionsCustomTitle": {
+    "message": "Custom Patterns",
+    "description": "Heading of the Custom Patterns tab."
+  },
+  "optionsCustomSubtitle": {
+    "message": "Add your own site extraction patterns",
+    "description": "Subheading of the Custom Patterns tab."
+  },
+  "optionsCustomAdd": {
+    "message": "Add New Pattern",
+    "description": "Primary action button on the Custom Patterns tab."
+  },
+  "optionsCustomImport": {
+    "message": "Import JSON",
+    "description": "Import button on the Custom Patterns tab."
+  },
+  "optionsCustomExport": {
+    "message": "Export JSON",
+    "description": "Export button on the Custom Patterns tab."
+  },
+  "optionsCustomEmpty": {
+    "message": "No custom patterns yet",
+    "description": "Empty state on the Custom Patterns tab."
+  },
+  "optionsCustomEmptyHint": {
+    "message": "Click \"Add New Pattern\" to create one",
+    "description": "Hint on the empty state of the Custom Patterns tab."
+  },
+  "optionsCardEdit": {
+    "message": "Edit",
+    "description": "Edit button on a custom pattern card."
+  },
+  "optionsCardDelete": {
+    "message": "Delete",
+    "description": "Delete button on a custom pattern card."
+  },
+  "optionsCardSelector": {
+    "message": "Selector:",
+    "description": "Label on a custom pattern card showing the CSS selector."
+  },
+  "optionsCardStrategy": {
+    "message": "Strategy:",
+    "description": "Label on a data_source pattern card."
+  },
+  "optionsCardItemsPath": {
+    "message": "Items path:",
+    "description": "Label on a next_data pattern card showing the JSON path."
+  },
+  "optionsCardExclude": {
+    "message": "Exclude:",
+    "description": "Label on a pattern card showing exclude regexes."
+  },
+  "optionsCardInclude": {
+    "message": "Include:",
+    "description": "Label on a pattern card showing include regexes."
+  },
+
+  "optionsModalAddTitle": {
+    "message": "Add Pattern",
+    "description": "Title of the pattern editor modal in add mode."
+  },
+  "optionsModalEditTitle": {
+    "message": "Edit Pattern",
+    "description": "Title of the pattern editor modal in edit mode."
+  },
+  "optionsFieldDomain": {
+    "message": "Domain *",
+    "description": "Required-field label."
+  },
+  "optionsFieldDomainHint": {
+    "message": "Without http:// or www",
+    "description": "Hint under the Domain field."
+  },
+  "optionsFieldName": {
+    "message": "Display Name *",
+    "description": "Required-field label."
+  },
+  "optionsFieldSelector": {
+    "message": "CSS Selector *",
+    "description": "Required-field label."
+  },
+  "optionsFieldSelectorHint": {
+    "message": "CSS selector to find game names",
+    "description": "Hint under the CSS Selector field."
+  },
+  "optionsFieldExclude": {
+    "message": "Exclude Patterns (comma-separated)",
+    "description": "Optional-field label."
+  },
+  "optionsFieldInclude": {
+    "message": "Include Patterns (comma-separated)",
+    "description": "Optional-field label."
+  },
+  "optionsFieldTrim": {
+    "message": "Trim whitespace",
+    "description": "Checkbox label in the pattern editor."
+  },
+  "optionsFieldDedupe": {
+    "message": "Deduplicate results",
+    "description": "Checkbox label in the pattern editor."
+  },
+  "optionsFormSave": {
+    "message": "Save Pattern",
+    "description": "Submit button in the pattern editor modal."
+  },
+  "optionsFormCancel": {
+    "message": "Cancel",
+    "description": "Cancel button in the pattern editor modal."
+  },
+
+  "optionsConfirmDelete": {
+    "message": "Are you sure you want to delete this pattern?",
+    "description": "Confirmation prompt before deleting a custom pattern."
+  },
+  "optionsSavePatternsFailed": {
+    "message": "Failed to save patterns",
+    "description": "Alert shown when chrome.storage save fails."
+  },
+  "optionsExportEmpty": {
+    "message": "No custom patterns to export",
+    "description": "Alert shown when the user clicks Export with no custom patterns."
+  },
+  "optionsCardStrategyNextData": {
+    "message": "__NEXT_DATA__",
+    "description": "Strategy name shown on next_data pattern cards. Technical, do not translate."
+  },
+  "popupStatsUnknown": {
+    "message": "unknown",
+    "description": "Fallback domain label in the stats card when the source domain is missing."
+  },
+  "optionsImportInvalidArray": {
+    "message": "Invalid format: JSON must be an array of patterns",
+    "description": "Alert shown when importing a non-array JSON file."
+  },
+  "optionsImportInvalidPattern": {
+    "message": "Invalid pattern format in imported file",
+    "description": "Alert shown when an imported pattern is missing required fields."
+  },
+  "optionsImportSuccess": {
+    "message": "Imported $count$ patterns",
+    "description": "Alert shown after a successful import.",
+    "placeholders": {
+      "count": {"content": "$1", "example": "3"}
+    }
+  },
+  "optionsImportFailed": {
+    "message": "Failed to import patterns: $error$",
+    "description": "Alert shown when import throws.",
+    "placeholders": {
+      "error": {"content": "$1", "example": "Unexpected token"}
+    }
+  },
+
+  "optionsHelpTitle": {
+    "message": "Help & Documentation",
+    "description": "Heading of the Help tab."
+  },
+  "optionsHelpWhatTitle": {
+    "message": "What it does",
+    "description": "Subheading of the 'what it does' section in Help."
+  },
+  "optionsHelpShopDeals": {
+    "message": "<strong>Shop deals:</strong> on supported board game shops, click the toolbar icon to extract game names and prices, then match them against BoardGameMatcher.com.",
+    "description": "Help bullet about shop extraction."
+  },
+  "optionsHelpPlayHistory": {
+    "message": "<strong>Play history:</strong> on Board Game Arena and Yucata, import your past plays into your BGM profile in one click.",
+    "description": "Help bullet about play imports."
+  },
+  "optionsHelpWishlist": {
+    "message": "<strong>Wishlist:</strong> quickly add games to your BGM wishlist from the popup.",
+    "description": "Help bullet about the wishlist quick-add."
+  },
+  "optionsHelpCustomTitle": {
+    "message": "Custom patterns",
+    "description": "Subheading of the custom-patterns section in Help."
+  },
+  "optionsHelpCustomBody": {
+    "message": "The Custom Patterns tab lets you teach the extension a new shop. See the site-profiles README for the schema and examples.",
+    "description": "Help text about custom patterns. Linked text is a separate string."
+  },
+  "optionsHelpCustomLink": {
+    "message": "site-profiles README",
+    "description": "Link label inside the custom patterns help paragraph."
+  },
+  "optionsHelpSupportTitle": {
+    "message": "Need help?",
+    "description": "Subheading of the support section in Help."
+  },
+  "optionsHelpSupportBody": {
+    "message": "Issues, feedback, and shop suggestions:",
+    "description": "Help text introducing the support link."
+  }
+}

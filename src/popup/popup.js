@@ -71,7 +71,9 @@ function setLoggedIn(user) {
   } else {
     avatar.textContent = initial;
   }
-  avatar.title = `${user.display_name || user.username || ''} — view your BGM profile`;
+  avatar.title = chrome.i18n.getMessage('popupAvatarUserTooltip', [
+    user.display_name || user.username || '',
+  ]);
   avatar.style.display = '';
   if (user.username) {
     avatar.dataset.profileUrl = `${BGM_BASE_URL}/users/${encodeURIComponent(user.username)}`;
@@ -81,7 +83,8 @@ function setLoggedIn(user) {
 
   document.getElementById('card-login').style.display = 'none';
   document.getElementById('card-teaser').style.display = 'none';
-  document.getElementById('banner-text').textContent = 'Open BoardGameMatcher.com';
+  document.getElementById('banner-text').textContent =
+    chrome.i18n.getMessage('popupBannerLoggedIn');
   showWishlistCard(user);
 }
 
@@ -90,7 +93,8 @@ function setLoggedOut() {
   document.getElementById('card-login').style.display = '';
   document.getElementById('card-wishlist').style.display = 'none';
   document.getElementById('card-teaser').style.display = '';
-  document.getElementById('banner-text').textContent = 'Discover BoardGameMatcher.com';
+  document.getElementById('banner-text').textContent =
+    chrome.i18n.getMessage('popupBannerLoggedOut');
 }
 
 function handleLogin() {
@@ -135,7 +139,7 @@ async function checkSiteSupport() {
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     if (!tab || !tab.url) {
-      setUnsupported('No active tab');
+      setUnsupported(null);
       return;
     }
 
@@ -168,7 +172,10 @@ async function checkSiteSupport() {
 function setSupported(siteName) {
   document.getElementById('card-extract').style.display = '';
   document.getElementById('card-unsupported').style.display = 'none';
-  document.getElementById('detected-site').textContent = siteName + ' detected';
+  document.getElementById('detected-site').textContent = chrome.i18n.getMessage(
+    'popupSiteDetected',
+    [siteName]
+  );
   document.getElementById('extract-btn').disabled = false;
   // Extract is the primary CTA when on a supported shop. Suppress the
   // teaser pitch — the login card alone is enough sign-up nudge, and
@@ -180,8 +187,8 @@ function setUnsupported(domain) {
   document.getElementById('card-extract').style.display = 'none';
   document.getElementById('card-unsupported').style.display = '';
   document.getElementById('unsupported-text').textContent = domain
-    ? `${domain} is not a supported site yet.`
-    : 'Open a supported board game shop to extract games.';
+    ? chrome.i18n.getMessage('popupUnsupportedDomain', [domain])
+    : chrome.i18n.getMessage('popupUnsupportedDefault');
 }
 
 async function countGames(tabId, pattern) {
@@ -232,7 +239,10 @@ async function countGames(tabId, pattern) {
       });
       const count = results?.[0]?.result;
       if (count > 0) {
-        document.getElementById('extract-btn').textContent = `Extract ${count} games`;
+        document.getElementById('extract-btn').textContent = chrome.i18n.getMessage(
+          'popupExtractCount',
+          [String(count)]
+        );
       }
     } catch (_e) {
       // Can't inject into this page (e.g. chrome:// URLs)
@@ -250,7 +260,10 @@ async function countGames(tabId, pattern) {
     });
     const count = results?.[0]?.result;
     if (count > 0) {
-      document.getElementById('extract-btn').textContent = `Extract ${count} games`;
+      document.getElementById('extract-btn').textContent = chrome.i18n.getMessage(
+        'popupExtractCount',
+        [String(count)]
+      );
     }
   } catch (_e) {
     // Can't inject into this page (e.g. chrome:// URLs)
@@ -287,14 +300,14 @@ function openFallbackExtraction(url) {
 
 async function handleExtract() {
   if (!currentPattern) {
-    showMessage('No pattern available', 'error');
+    showMessage(chrome.i18n.getMessage('popupNoPattern'), 'error');
     return;
   }
 
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     if (!tab || !tab.url) {
-      showMessage('No active tab', 'error');
+      showMessage(chrome.i18n.getMessage('popupNoTab'), 'error');
       return;
     }
 
@@ -360,7 +373,7 @@ async function handleExtract() {
     window.close();
   } catch (error) {
     console.error('Error extracting:', error);
-    showMessage('Error: ' + error.message, 'error');
+    showMessage(chrome.i18n.getMessage('popupErrorPrefix', [error.message]), 'error');
   }
 }
 
@@ -379,9 +392,12 @@ function updateStatsDisplay(stats) {
   const statsText = document.getElementById('stats-text');
   if (stats.lastExtraction && typeof stats.lastExtraction.count === 'number') {
     const { count, domain } = stats.lastExtraction;
-    statsText.textContent = `Last: ${count} games from ${domain || 'unknown'}`;
+    statsText.textContent = chrome.i18n.getMessage('popupStatsLast', [
+      String(count),
+      domain || chrome.i18n.getMessage('popupStatsUnknown'),
+    ]);
   } else {
-    statsText.textContent = 'No extractions yet';
+    statsText.textContent = chrome.i18n.getMessage('popupStatsEmpty');
   }
 }
 
@@ -437,9 +453,9 @@ function renderWishlistCount() {
   if (wishlistCount === null) {
     el.textContent = '';
   } else if (wishlistCount === 1) {
-    el.textContent = '1 game in your wishlist';
+    el.textContent = chrome.i18n.getMessage('popupWishlistCountSingular');
   } else {
-    el.textContent = `${wishlistCount} games in your wishlist`;
+    el.textContent = chrome.i18n.getMessage('popupWishlistCountPlural', [String(wishlistCount)]);
   }
 }
 
@@ -465,7 +481,7 @@ async function searchWishlistGames(query) {
       { credentials: 'include', signal: wishlistSearchAbort.signal }
     );
     if (!response.ok) {
-      renderWishlistError("Couldn't search right now.");
+      renderWishlistError(chrome.i18n.getMessage('popupWishlistSearchError'));
       return;
     }
     const data = await response.json();
@@ -473,7 +489,7 @@ async function searchWishlistGames(query) {
   } catch (error) {
     if (error.name === 'AbortError') return;
     console.warn('Wishlist search failed:', error);
-    renderWishlistError("Couldn't search right now.");
+    renderWishlistError(chrome.i18n.getMessage('popupWishlistSearchError'));
   }
 }
 
@@ -496,7 +512,7 @@ function renderWishlistResults(games) {
   if (!games.length) {
     const empty = document.createElement('div');
     empty.className = 'wl-error';
-    empty.textContent = 'No games found.';
+    empty.textContent = chrome.i18n.getMessage('popupWishlistNoGames');
     container.appendChild(empty);
     return;
   }
@@ -530,7 +546,7 @@ function buildWishlistRow(game) {
   const btn = document.createElement('button');
   btn.className = 'wl-btn-add';
   btn.type = 'button';
-  btn.textContent = '+ Wishlist';
+  btn.textContent = chrome.i18n.getMessage('popupWishlistAdd');
   btn.addEventListener('click', () => addToWishlist(game, row, btn));
 
   row.append(thumb, info, btn);
@@ -551,12 +567,12 @@ async function addToWishlist(game, row, btn) {
     );
     if (!response.ok) {
       btn.disabled = false;
-      btn.textContent = 'Try again';
+      btn.textContent = chrome.i18n.getMessage('popupWishlistTryAgain');
       return;
     }
     const marker = document.createElement('span');
     marker.className = 'wl-btn-added';
-    marker.textContent = '✓ Added';
+    marker.textContent = chrome.i18n.getMessage('popupWishlistAdded');
     btn.replaceWith(marker);
     if (wishlistCount !== null) {
       wishlistCount += 1;
@@ -565,6 +581,6 @@ async function addToWishlist(game, row, btn) {
   } catch (error) {
     console.warn('Add to wishlist failed:', error);
     btn.disabled = false;
-    btn.textContent = 'Try again';
+    btn.textContent = chrome.i18n.getMessage('popupWishlistTryAgain');
   }
 }

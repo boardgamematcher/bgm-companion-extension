@@ -28,14 +28,19 @@ function setStatus(text, variant) {
 // Listen for progress updates from the service worker
 chrome.runtime.onMessage.addListener((message) => {
   if (message.action === 'playsImportProgress' && yucataStatus) {
-    setStatus(`Sending plays to BGM... ${message.current}/${message.total}`);
+    setStatus(
+      chrome.i18n.getMessage('importSendingProgress', [
+        String(message.current),
+        String(message.total),
+      ])
+    );
   }
 });
 
 if (yucataImportBtn) {
   yucataImportBtn.addEventListener('click', () => {
     yucataImportBtn.disabled = true;
-    setStatus('Fetching all plays from Yucata... please wait');
+    setStatus(chrome.i18n.getMessage('importYucataFetching'));
 
     // Send message to content script
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -43,16 +48,19 @@ if (yucataImportBtn) {
         yucataImportBtn.disabled = false;
 
         if (chrome.runtime.lastError || !response) {
-          const msg = chrome.runtime.lastError?.message || 'No response from content script';
-          setStatus(`✗ Error: ${msg}`, 'is-error');
+          const msg =
+            chrome.runtime.lastError?.message || chrome.i18n.getMessage('importNoResponse');
+          setStatus(chrome.i18n.getMessage('importErrorPrefix', [msg]), 'is-error');
         } else if (response.success) {
           const { posted, skipped, duplicates } = response.data;
-          const parts = [`✓ Imported ${posted} plays!`];
-          if (duplicates > 0) parts.push(`${duplicates} duplicates skipped`);
-          if (skipped > 0) parts.push(`${skipped} not found on BGM`);
+          const parts = [chrome.i18n.getMessage('importSuccess', [String(posted)])];
+          if (duplicates > 0)
+            parts.push(chrome.i18n.getMessage('importDuplicatesSkipped', [String(duplicates)]));
+          if (skipped > 0)
+            parts.push(chrome.i18n.getMessage('importNotFoundOnBgm', [String(skipped)]));
           setStatus(parts.join(' · '), 'is-success');
         } else {
-          setStatus(`✗ Error: ${response.error}`, 'is-error');
+          setStatus(chrome.i18n.getMessage('importErrorPrefix', [response.error]), 'is-error');
         }
 
         // Keep status visible (don't auto-clear)
