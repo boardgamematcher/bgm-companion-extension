@@ -1,0 +1,410 @@
+{
+  "extName": {
+    "message": "BGM Toolbox — Compagnon BoardGameMatcher"
+  },
+  "extDescription": {
+    "message": "Votre compagnon jeux de société : extrayez des jeux depuis les boutiques, enregistrez vos parties, synchronisez vos collections — tout connecté à BoardGameMatcher.com"
+  },
+
+  "popupHeaderTitle": {
+    "message": "BoardGameMatcher"
+  },
+  "popupSettingsTooltip": {
+    "message": "Paramètres"
+  },
+  "popupThemeTooltip": {
+    "message": "Changer le thème"
+  },
+  "popupAvatarTooltip": {
+    "message": "Connecté"
+  },
+  "popupAvatarUserTooltip": {
+    "message": "$name$ — voir votre profil BGM",
+    "placeholders": {
+      "name": {"content": "$1", "example": "Julien"}
+    }
+  },
+
+  "popupExtractTitle": {
+    "message": "Jeux de société sur cette page"
+  },
+  "popupExtractButton": {
+    "message": "Tout extraire"
+  },
+  "popupExtractCount": {
+    "message": "Extraire $count$ jeux",
+    "placeholders": {
+      "count": {"content": "$1", "example": "73"}
+    }
+  },
+  "popupSiteDetected": {
+    "message": "$site$ détecté",
+    "placeholders": {
+      "site": {"content": "$1", "example": "Veepee Catalog"}
+    }
+  },
+
+  "popupUnsupportedTitle": {
+    "message": "Aucun jeu détecté sur cette page"
+  },
+  "popupUnsupportedNoTab": {
+    "message": "Ouvrez un onglet dans le navigateur pour utiliser BGM Toolbox."
+  },
+  "popupUnsupportedDefault": {
+    "message": "Ouvrez une boutique de jeux de société compatible pour extraire des jeux."
+  },
+  "popupUnsupportedDomain": {
+    "message": "$domain$ n'est pas encore un site compatible.",
+    "placeholders": {
+      "domain": {"content": "$1", "example": "example.com"}
+    }
+  },
+
+  "popupStatsTitle": {
+    "message": "Dernière extraction"
+  },
+  "popupStatsEmpty": {
+    "message": "Aucune extraction pour l'instant"
+  },
+  "popupStatsLast": {
+    "message": "Dernière : $count$ jeux depuis $domain$",
+    "placeholders": {
+      "count": {"content": "$1", "example": "73"},
+      "domain": {"content": "$2", "example": "veepee.fr"}
+    }
+  },
+
+  "popupWishlistTitle": {
+    "message": "Ajouter un jeu à votre liste de souhaits"
+  },
+  "popupWishlistPlaceholder": {
+    "message": "Rechercher un jeu de société…"
+  },
+  "popupWishlistViewAll": {
+    "message": "Voir la liste complète →"
+  },
+  "popupWishlistCountSingular": {
+    "message": "1 jeu dans votre liste de souhaits"
+  },
+  "popupWishlistCountPlural": {
+    "message": "$count$ jeux dans votre liste de souhaits",
+    "placeholders": {
+      "count": {"content": "$1", "example": "12"}
+    }
+  },
+  "popupWishlistAdd": {
+    "message": "+ Liste de souhaits"
+  },
+  "popupWishlistAdded": {
+    "message": "✓ Ajouté"
+  },
+  "popupWishlistTryAgain": {
+    "message": "Réessayer"
+  },
+  "popupWishlistNoGames": {
+    "message": "Aucun jeu trouvé."
+  },
+  "popupWishlistSearchError": {
+    "message": "Impossible de rechercher pour l'instant."
+  },
+
+  "popupLoginTitle": {
+    "message": "Tirez le meilleur parti de vos jeux"
+  },
+  "popupLoginBody": {
+    "message": "Enregistrez des parties, synchronisez votre collection, trouvez des joueurs près de chez vous."
+  },
+  "popupLoginButton": {
+    "message": "Se connecter à BoardGameMatcher"
+  },
+  "popupLoginSignup": {
+    "message": "Créer un compte gratuit →"
+  },
+
+  "popupTeaserTitle": {
+    "message": "Un compte BGM gratuit vous donne accès à"
+  },
+  "popupTeaserPlays": {
+    "message": "Enregistrement automatique des parties BGA & Yucata"
+  },
+  "popupTeaserWishlist": {
+    "message": "Sauvegarder les jeux souhaités dans une liste"
+  },
+  "popupTeaserBgg": {
+    "message": "Synchroniser votre collection BoardGameGeek"
+  },
+  "popupTeaserStats": {
+    "message": "Suivre vos taux de victoire & statistiques"
+  },
+  "popupTeaserPlayers": {
+    "message": "Trouver des joueurs qui possèdent les jeux que vous voulez jouer"
+  },
+
+  "popupYucataTitle": {
+    "message": "Import Yucata"
+  },
+  "popupYucataBody": {
+    "message": "Importez votre historique de parties Yucata pour débloquer des badges et suivre vos statistiques. Les parties sont sauvegardées sur votre compte BoardGameMatcher ; rien n'est renvoyé à Yucata."
+  },
+  "popupYucataButton": {
+    "message": "Importer les parties Yucata"
+  },
+
+  "popupBgaTitle": {
+    "message": "Import Board Game Arena"
+  },
+  "popupBgaBody": {
+    "message": "Importez votre historique de parties BGA pour débloquer des badges et suivre vos statistiques. Les parties sont sauvegardées sur votre compte BoardGameMatcher ; rien n'est renvoyé à BGA."
+  },
+  "popupBgaButton": {
+    "message": "Importer les parties BGA"
+  },
+
+  "popupBannerLoggedIn": {
+    "message": "Ouvrir BoardGameMatcher.com"
+  },
+  "popupBannerLoggedOut": {
+    "message": "Découvrir BoardGameMatcher.com"
+  },
+
+  "importYucataFetching": {
+    "message": "Récupération de toutes les parties Yucata… veuillez patienter"
+  },
+  "importBgaFetching": {
+    "message": "Récupération de toutes les parties BGA… veuillez patienter"
+  },
+  "importSendingProgress": {
+    "message": "Envoi des parties à BGM… $current$/$total$",
+    "placeholders": {
+      "current": {"content": "$1", "example": "200"},
+      "total": {"content": "$2", "example": "1500"}
+    }
+  },
+  "importSuccess": {
+    "message": "✓ $count$ parties importées !",
+    "placeholders": {
+      "count": {"content": "$1", "example": "120"}
+    }
+  },
+  "importDuplicatesSkipped": {
+    "message": "$count$ doublons ignorés",
+    "placeholders": {
+      "count": {"content": "$1", "example": "5"}
+    }
+  },
+  "importNotFoundOnBgm": {
+    "message": "$count$ non trouvés sur BGM",
+    "placeholders": {
+      "count": {"content": "$1", "example": "3"}
+    }
+  },
+  "importErrors": {
+    "message": "$count$ erreurs",
+    "placeholders": {
+      "count": {"content": "$1", "example": "1"}
+    }
+  },
+  "importErrorPrefix": {
+    "message": "✗ Erreur : $message$",
+    "placeholders": {
+      "message": {"content": "$1", "example": "Network error"}
+    }
+  },
+  "importNoResponse": {
+    "message": "Aucune réponse du script de contenu"
+  },
+
+  "popupNoPattern": {
+    "message": "Aucun modèle disponible"
+  },
+  "popupNoTab": {
+    "message": "Aucun onglet actif"
+  },
+  "popupErrorPrefix": {
+    "message": "Erreur : $message$",
+    "placeholders": {
+      "message": {"content": "$1", "example": "fetch failed"}
+    }
+  },
+
+  "ctxMenuExtractPage": {
+    "message": "Extraire les jeux de société de cette page"
+  },
+  "ctxMenuExtractSelection": {
+    "message": "Extraire les jeux de société de \"%s\""
+  },
+  "ctxMenuExtractLink": {
+    "message": "Extraire les jeux de société de ce lien"
+  },
+
+  "optionsTitle": {
+    "message": "Paramètres BGM Toolbox"
+  },
+  "optionsTabSupported": {
+    "message": "Sites compatibles"
+  },
+  "optionsTabCustom": {
+    "message": "Modèles personnalisés"
+  },
+  "optionsTabHelp": {
+    "message": "Aide"
+  },
+
+  "optionsSupportedTitle": {
+    "message": "Modèles de sites intégrés"
+  },
+  "optionsSupportedSubtitle": {
+    "message": "Ces modèles sont inclus dans l'extension"
+  },
+  "optionsSearchPlaceholder": {
+    "message": "Rechercher des sites…"
+  },
+
+  "optionsCustomTitle": {
+    "message": "Modèles personnalisés"
+  },
+  "optionsCustomSubtitle": {
+    "message": "Ajoutez vos propres modèles d'extraction de sites"
+  },
+  "optionsCustomAdd": {
+    "message": "Ajouter un modèle"
+  },
+  "optionsCustomImport": {
+    "message": "Importer JSON"
+  },
+  "optionsCustomExport": {
+    "message": "Exporter JSON"
+  },
+  "optionsCustomEmpty": {
+    "message": "Aucun modèle personnalisé pour l'instant"
+  },
+  "optionsCustomEmptyHint": {
+    "message": "Cliquez sur « Ajouter un modèle » pour en créer un"
+  },
+  "optionsCardEdit": {
+    "message": "Modifier"
+  },
+  "optionsCardDelete": {
+    "message": "Supprimer"
+  },
+  "optionsCardSelector": {
+    "message": "Sélecteur :"
+  },
+  "optionsCardStrategy": {
+    "message": "Stratégie :"
+  },
+  "optionsCardItemsPath": {
+    "message": "Chemin des éléments :"
+  },
+  "optionsCardExclude": {
+    "message": "Exclure :"
+  },
+  "optionsCardInclude": {
+    "message": "Inclure :"
+  },
+
+  "optionsModalAddTitle": {
+    "message": "Ajouter un modèle"
+  },
+  "optionsModalEditTitle": {
+    "message": "Modifier le modèle"
+  },
+  "optionsFieldDomain": {
+    "message": "Domaine *"
+  },
+  "optionsFieldDomainHint": {
+    "message": "Sans http:// ni www"
+  },
+  "optionsFieldName": {
+    "message": "Nom d'affichage *"
+  },
+  "optionsFieldSelector": {
+    "message": "Sélecteur CSS *"
+  },
+  "optionsFieldSelectorHint": {
+    "message": "Sélecteur CSS pour trouver les noms de jeux"
+  },
+  "optionsFieldExclude": {
+    "message": "Modèles d'exclusion (séparés par des virgules)"
+  },
+  "optionsFieldInclude": {
+    "message": "Modèles d'inclusion (séparés par des virgules)"
+  },
+  "optionsFieldTrim": {
+    "message": "Supprimer les espaces"
+  },
+  "optionsFieldDedupe": {
+    "message": "Dédupliquer les résultats"
+  },
+  "optionsFormSave": {
+    "message": "Enregistrer le modèle"
+  },
+  "optionsFormCancel": {
+    "message": "Annuler"
+  },
+
+  "optionsConfirmDelete": {
+    "message": "Êtes-vous sûr de vouloir supprimer ce modèle ?"
+  },
+  "optionsSavePatternsFailed": {
+    "message": "Échec de l'enregistrement des modèles"
+  },
+  "optionsExportEmpty": {
+    "message": "Aucun modèle personnalisé à exporter"
+  },
+  "optionsCardStrategyNextData": {
+    "message": "__NEXT_DATA__"
+  },
+  "popupStatsUnknown": {
+    "message": "inconnu"
+  },
+  "optionsImportInvalidArray": {
+    "message": "Format invalide : le JSON doit être un tableau de modèles"
+  },
+  "optionsImportInvalidPattern": {
+    "message": "Format de modèle invalide dans le fichier importé"
+  },
+  "optionsImportSuccess": {
+    "message": "$count$ modèles importés",
+    "placeholders": {
+      "count": {"content": "$1", "example": "3"}
+    }
+  },
+  "optionsImportFailed": {
+    "message": "Échec de l'importation des modèles : $error$",
+    "placeholders": {
+      "error": {"content": "$1", "example": "Unexpected token"}
+    }
+  },
+
+  "optionsHelpTitle": {
+    "message": "Aide & Documentation"
+  },
+  "optionsHelpWhatTitle": {
+    "message": "Ce qu'il fait"
+  },
+  "optionsHelpShopDeals": {
+    "message": "<strong>Offres en boutique :</strong> sur les boutiques de jeux de société compatibles, cliquez sur l'icône de la barre d'outils pour extraire les noms de jeux, puis les comparer sur BoardGameMatcher.com."
+  },
+  "optionsHelpPlayHistory": {
+    "message": "<strong>Historique des parties :</strong> sur Board Game Arena et Yucata, importez vos parties passées dans votre profil BGM en un clic."
+  },
+  "optionsHelpWishlist": {
+    "message": "<strong>Liste de souhaits :</strong> ajoutez rapidement des jeux à votre liste de souhaits BGM depuis le popup."
+  },
+  "optionsHelpCustomTitle": {
+    "message": "Modèles personnalisés"
+  },
+  "optionsHelpCustomBody": {
+    "message": "L'onglet Modèles personnalisés vous permet d'apprendre à l'extension à reconnaître une nouvelle boutique. Consultez le README site-profiles pour le schéma et les exemples."
+  },
+  "optionsHelpCustomLink": {
+    "message": "README site-profiles"
+  },
+  "optionsHelpSupportTitle": {
+    "message": "Besoin d'aide ?"
+  },
+  "optionsHelpSupportBody": {
+    "message": "Problèmes, retours et suggestions de boutiques :"
+  }
+}

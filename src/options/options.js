@@ -131,12 +131,12 @@ function createPatternCard(pattern, isCustom, index) {
 
     const editBtn = document.createElement('button');
     editBtn.className = 'icon-btn';
-    editBtn.textContent = 'Edit';
+    editBtn.textContent = chrome.i18n.getMessage('optionsCardEdit');
     editBtn.addEventListener('click', () => editPattern(index));
 
     const deleteBtn = document.createElement('button');
     deleteBtn.className = 'icon-btn delete';
-    deleteBtn.textContent = 'Delete';
+    deleteBtn.textContent = chrome.i18n.getMessage('optionsCardDelete');
     deleteBtn.addEventListener('click', () => deletePattern(index));
 
     actions.appendChild(editBtn);
@@ -155,18 +155,18 @@ function createPatternCard(pattern, isCustom, index) {
     const itemsPathStr = Array.isArray(itemsPath) ? itemsPath.join(' | ') : itemsPath || '';
     details.innerHTML = `
       <div class="pattern-row">
-        <span class="pattern-label">Strategy:</span>
-        <span class="pattern-value">__NEXT_DATA__</span>
+        <span class="pattern-label">${chrome.i18n.getMessage('optionsCardStrategy')}</span>
+        <span class="pattern-value">${chrome.i18n.getMessage('optionsCardStrategyNextData')}</span>
       </div>
       <div class="pattern-row">
-        <span class="pattern-label">Items path:</span>
+        <span class="pattern-label">${chrome.i18n.getMessage('optionsCardItemsPath')}</span>
         <span class="pattern-value">${escapeHtml(itemsPathStr)}</span>
       </div>
     `;
   } else {
     details.innerHTML = `
       <div class="pattern-row">
-        <span class="pattern-label">Selector:</span>
+        <span class="pattern-label">${chrome.i18n.getMessage('optionsCardSelector')}</span>
         <span class="pattern-value">${escapeHtml(pattern.selector || '')}</span>
       </div>
     `;
@@ -176,7 +176,7 @@ function createPatternCard(pattern, isCustom, index) {
     if (pattern.filters.exclude && pattern.filters.exclude.length > 0) {
       details.innerHTML += `
         <div class="pattern-row">
-          <span class="pattern-label">Exclude:</span>
+          <span class="pattern-label">${chrome.i18n.getMessage('optionsCardExclude')}</span>
           <span class="pattern-value">${escapeHtml(pattern.filters.exclude.join(', '))}</span>
         </div>
       `;
@@ -184,7 +184,7 @@ function createPatternCard(pattern, isCustom, index) {
     if (pattern.filters.include && pattern.filters.include.length > 0) {
       details.innerHTML += `
         <div class="pattern-row">
-          <span class="pattern-label">Include:</span>
+          <span class="pattern-label">${chrome.i18n.getMessage('optionsCardInclude')}</span>
           <span class="pattern-value">${escapeHtml(pattern.filters.include.join(', '))}</span>
         </div>
       `;
@@ -205,12 +205,12 @@ function openModal(index = null) {
 
   if (index !== null) {
     // Edit mode
-    title.textContent = 'Edit Pattern';
+    title.textContent = chrome.i18n.getMessage('optionsModalEditTitle');
     const pattern = customPatterns[index];
     populateForm(pattern);
   } else {
     // Add mode
-    title.textContent = 'Add Pattern';
+    title.textContent = chrome.i18n.getMessage('optionsModalAddTitle');
     form.reset();
     document.getElementById('trim-input').checked = true;
     document.getElementById('dedupe-input').checked = true;
@@ -290,7 +290,7 @@ function editPattern(index) {
 
 // Delete pattern
 async function deletePattern(index) {
-  if (!confirm('Are you sure you want to delete this pattern?')) {
+  if (!confirm(chrome.i18n.getMessage('optionsConfirmDelete'))) {
     return;
   }
 
@@ -308,7 +308,7 @@ async function saveCustomPatterns() {
     await chrome.storage.local.set({ customPatterns });
   } catch (error) {
     console.error('Error saving patterns:', error);
-    alert('Failed to save patterns');
+    alert(chrome.i18n.getMessage('optionsSavePatternsFailed'));
   }
 }
 
@@ -327,7 +327,7 @@ async function handleImport() {
       const imported = JSON.parse(text);
 
       if (!Array.isArray(imported)) {
-        alert('Invalid format: JSON must be an array of patterns');
+        alert(chrome.i18n.getMessage('optionsImportInvalidArray'));
         return;
       }
 
@@ -338,7 +338,7 @@ async function handleImport() {
         const hasDataSource =
           pattern.data_source === 'next_data' && pattern.next_data && pattern.next_data.items_path;
         if (!pattern.domain || !pattern.name || (!hasSelector && !hasDataSource)) {
-          alert('Invalid pattern format in imported file');
+          alert(chrome.i18n.getMessage('optionsImportInvalidPattern'));
           return;
         }
       }
@@ -349,10 +349,10 @@ async function handleImport() {
       renderCustomPatterns();
 
       chrome.runtime.sendMessage({ action: 'reloadPatterns' });
-      alert(`Imported ${imported.length} patterns`);
+      alert(chrome.i18n.getMessage('optionsImportSuccess', [String(imported.length)]));
     } catch (error) {
       console.error('Import error:', error);
-      alert('Failed to import patterns: ' + error.message);
+      alert(chrome.i18n.getMessage('optionsImportFailed', [error.message]));
     }
   });
 
@@ -362,7 +362,7 @@ async function handleImport() {
 // Handle export
 function handleExport() {
   if (customPatterns.length === 0) {
-    alert('No custom patterns to export');
+    alert(chrome.i18n.getMessage('optionsExportEmpty'));
     return;
   }
 

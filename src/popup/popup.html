@@ -14,11 +14,18 @@
           <div class="name">Board<span>Game</span>Matcher</div>
         </div>
         <div class="header-right">
-          <button id="theme-toggle-btn" class="icon-btn" title="Toggle theme">
+          <button id="theme-toggle-btn" class="icon-btn" data-i18n-title="popupThemeTooltip">
             <span id="theme-icon">&#9790;</span>
           </button>
-          <button id="settings-btn" class="icon-btn" title="Settings">&#9881;</button>
-          <div id="user-avatar" class="avatar" style="display: none" title="Logged in"></div>
+          <button id="settings-btn" class="icon-btn" data-i18n-title="popupSettingsTooltip">
+            &#9881;
+          </button>
+          <div
+            id="user-avatar"
+            class="avatar"
+            style="display: none"
+            data-i18n-title="popupAvatarTooltip"
+          ></div>
         </div>
       </header>
 
@@ -31,19 +38,25 @@
             <span id="detected-site">Site detected</span>
           </div>
           <div class="card-top">
-            <div class="card-title" id="extract-title">Board games on this page</div>
+            <div class="card-title" id="extract-title" data-i18n="popupExtractTitle">
+              Board games on this page
+            </div>
           </div>
           <div class="extract-row">
-            <button class="btn-primary" id="extract-btn">Extract All</button>
+            <button class="btn-primary" id="extract-btn" data-i18n="popupExtractButton">
+              Extract All
+            </button>
           </div>
         </div>
 
         <!-- Unsupported site card -->
         <div class="card" id="card-unsupported" style="display: none">
           <div class="card-top">
-            <div class="card-title">No games detected on this page</div>
+            <div class="card-title" data-i18n="popupUnsupportedTitle">
+              No games detected on this page
+            </div>
           </div>
-          <p class="card-body-text" id="unsupported-text">
+          <p class="card-body-text" id="unsupported-text" data-i18n="popupUnsupportedDefault">
             Open a supported board game shop to extract games.
           </p>
         </div>
@@ -51,20 +64,23 @@
         <!-- Stats card -->
         <div class="card" id="card-stats">
           <div class="card-top">
-            <div class="card-title">Last extraction</div>
+            <div class="card-title" data-i18n="popupStatsTitle">Last extraction</div>
           </div>
-          <p class="card-body-text" id="stats-text">No extractions yet</p>
+          <p class="card-body-text" id="stats-text" data-i18n="popupStatsEmpty">
+            No extractions yet
+          </p>
         </div>
 
         <!-- Wishlist quick-add card (shown when authenticated) -->
         <div class="card wishlist-card" id="card-wishlist" style="display: none">
           <div class="card-top">
-            <div class="card-title">Add a game to your wishlist</div>
+            <div class="card-title" data-i18n="popupWishlistTitle">Add a game to your wishlist</div>
           </div>
           <div class="quick-add-row">
             <input
               id="wishlist-input"
               type="text"
+              data-i18n-placeholder="popupWishlistPlaceholder"
               placeholder="Search a board game..."
               autocomplete="off"
             />
@@ -72,7 +88,13 @@
           <div class="wl-results" id="wishlist-results"></div>
           <div class="wl-footer">
             <span class="wl-count" id="wishlist-count"></span>
-            <a class="wl-link" id="wishlist-link" href="#" target="_blank" rel="noopener"
+            <a
+              class="wl-link"
+              id="wishlist-link"
+              href="#"
+              target="_blank"
+              rel="noopener"
+              data-i18n="popupWishlistViewAll"
               >View full wishlist &rarr;</a
             >
           </div>
@@ -81,40 +103,68 @@
         <!-- Login CTA card (shown when not authenticated) -->
         <div class="card login-card" id="card-login" style="display: none">
           <div class="login-card-inner">
-            <h3 class="login-title">Get more from your games</h3>
-            <p class="card-body-text">Log plays, sync your collection, find players near you.</p>
-            <button class="btn-primary" id="login-btn" style="margin-top: 10px">
+            <h3 class="login-title" data-i18n="popupLoginTitle">Get more from your games</h3>
+            <p class="card-body-text" data-i18n="popupLoginBody">
+              Log plays, sync your collection, find players near you.
+            </p>
+            <button
+              class="btn-primary"
+              id="login-btn"
+              style="margin-top: 10px"
+              data-i18n="popupLoginButton"
+            >
               Sign in to BoardGameMatcher
             </button>
-            <a class="login-signup" id="signup-link" href="#">Create a free account &rarr;</a>
+            <a class="login-signup" id="signup-link" href="#" data-i18n="popupLoginSignup"
+              >Create a free account &rarr;</a
+            >
           </div>
         </div>
 
         <!-- Feature teaser card (shown when not authenticated) -->
         <div class="card teaser-card" id="card-teaser" style="display: none">
           <div class="card-top">
-            <div class="card-title">A free BGM account unlocks</div>
+            <div class="card-title" data-i18n="popupTeaserTitle">A free BGM account unlocks</div>
           </div>
           <ul class="teaser-list">
-            <li><span class="teaser-dot"></span>Auto-log plays from BGA &amp; Yucata</li>
-            <li><span class="teaser-dot"></span>Save games you want to a wishlist</li>
-            <li><span class="teaser-dot"></span>Sync your BoardGameGeek collection</li>
-            <li><span class="teaser-dot"></span>Track win rates &amp; play stats</li>
-            <li><span class="teaser-dot"></span>Find players who own games you want to play</li>
+            <li>
+              <span class="teaser-dot"></span
+              ><span data-i18n="popupTeaserPlays">Auto-log plays from BGA &amp; Yucata</span>
+            </li>
+            <li>
+              <span class="teaser-dot"></span
+              ><span data-i18n="popupTeaserWishlist">Save games you want to a wishlist</span>
+            </li>
+            <li>
+              <span class="teaser-dot"></span
+              ><span data-i18n="popupTeaserBgg">Sync your BoardGameGeek collection</span>
+            </li>
+            <li>
+              <span class="teaser-dot"></span
+              ><span data-i18n="popupTeaserStats">Track win rates &amp; play stats</span>
+            </li>
+            <li>
+              <span class="teaser-dot"></span
+              ><span data-i18n="popupTeaserPlayers"
+                >Find players who own games you want to play</span
+              >
+            </li>
           </ul>
         </div>
 
         <!-- Yucata Import Panel (visible only on yucata.de) -->
         <div class="card" id="yucataPanel" style="display: none">
           <div class="card-top">
-            <div class="card-title">Yucata Import</div>
+            <div class="card-title" data-i18n="popupYucataTitle">Yucata Import</div>
           </div>
-          <p class="card-body-text">
+          <p class="card-body-text" data-i18n="popupYucataBody">
             Import your Yucata play history to unlock badges and track statistics. Plays are saved
             to your BoardGameMatcher account; nothing is sent back to Yucata.
           </p>
           <div class="extract-row" style="margin-top: 10px">
-            <button id="yucataImportBtn" class="btn-primary">Import Yucata Plays</button>
+            <button id="yucataImportBtn" class="btn-primary" data-i18n="popupYucataButton">
+              Import Yucata Plays
+            </button>
           </div>
           <div id="yucataStatus" class="import-status"></div>
         </div>
@@ -123,14 +173,16 @@
       <!-- BGA Import Panel (visible only on boardgamearena.com) -->
       <div class="card" id="bgaPanel" style="display: none">
         <div class="card-top">
-          <div class="card-title">Board Game Arena Import</div>
+          <div class="card-title" data-i18n="popupBgaTitle">Board Game Arena Import</div>
         </div>
-        <p class="card-body-text">
+        <p class="card-body-text" data-i18n="popupBgaBody">
           Import your BGA play history to unlock badges and track statistics. Plays are saved to
           your BoardGameMatcher account; nothing is sent back to BGA.
         </p>
         <div class="extract-row" style="margin-top: 10px">
-          <button id="bgaImportBtn" class="btn-primary">Import BGA Plays</button>
+          <button id="bgaImportBtn" class="btn-primary" data-i18n="popupBgaButton">
+            Import BGA Plays
+          </button>
         </div>
         <div id="bgaStatus" class="import-status"></div>
       </div>
@@ -141,11 +193,14 @@
       <!-- Bottom banner -->
       <a class="powered-banner" href="https://boardgamematcher.com" target="_blank" rel="noopener">
         <div class="pb-logo">B</div>
-        <div class="pb-text" id="banner-text">Open BoardGameMatcher.com</div>
+        <div class="pb-text" id="banner-text" data-i18n="popupBannerLoggedOut">
+          Discover BoardGameMatcher.com
+        </div>
         <span class="pb-arrow">&rarr;</span>
       </a>
     </div>
 
+    <script src="../lib/i18n.js"></script>
     <script src="popup.js"></script>
     <script src="yucata-import.js"></script>
     <script src="bga-import.js"></script>
