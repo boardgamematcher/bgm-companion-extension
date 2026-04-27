@@ -59,6 +59,10 @@
     "message": "No games detected on this page",
     "description": "Title of the card shown on unsupported pages."
   },
+  "popupUnsupportedNoTab": {
+    "message": "Open a browser tab to use BGM Toolbox.",
+    "description": "Body text on the unsupported card when no active tab is detected."
+  },
   "popupUnsupportedDefault": {
     "message": "Open a supported board game shop to extract games.",
     "description": "Body text on the unsupported card when no domain info is available."

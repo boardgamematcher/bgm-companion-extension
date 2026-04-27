@@ -51,7 +51,6 @@
     }
   }
   if (typeof window !== 'undefined') {
-    window.applyI18n = applyI18n;
-    window.t = t;
+    window.bgmI18n = { t, applyI18n };
   }
 })();

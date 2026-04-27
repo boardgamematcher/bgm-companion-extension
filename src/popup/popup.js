@@ -186,9 +186,15 @@ function setSupported(siteName) {
 function setUnsupported(domain) {
   document.getElementById('card-extract').style.display = 'none';
   document.getElementById('card-unsupported').style.display = '';
-  document.getElementById('unsupported-text').textContent = domain
-    ? chrome.i18n.getMessage('popupUnsupportedDomain', [domain])
-    : chrome.i18n.getMessage('popupUnsupportedDefault');
+  let msg;
+  if (domain === null) {
+    msg = chrome.i18n.getMessage('popupUnsupportedNoTab');
+  } else if (domain) {
+    msg = chrome.i18n.getMessage('popupUnsupportedDomain', [domain]);
+  } else {
+    msg = chrome.i18n.getMessage('popupUnsupportedDefault');
+  }
+  document.getElementById('unsupported-text').textContent = msg;
 }
 
 async function countGames(tabId, pattern) {

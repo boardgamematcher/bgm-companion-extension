@@ -47,6 +47,9 @@
   "popupUnsupportedTitle": {
     "message": "Aucun jeu détecté sur cette page"
   },
+  "popupUnsupportedNoTab": {
+    "message": "Ouvrez un onglet dans le navigateur pour utiliser BGM Toolbox."
+  },
   "popupUnsupportedDefault": {
     "message": "Ouvrez une boutique de jeux de société compatible pour extraire des jeux."
   },

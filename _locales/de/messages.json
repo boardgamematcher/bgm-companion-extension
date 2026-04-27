@@ -47,6 +47,9 @@
   "popupUnsupportedTitle": {
     "message": "Keine Spiele auf dieser Seite erkannt"
   },
+  "popupUnsupportedNoTab": {
+    "message": "Öffne einen Browser-Tab, um BGM Toolbox zu verwenden."
+  },
   "popupUnsupportedDefault": {
     "message": "Öffne einen unterstützten Brettspielshop, um Spiele zu extrahieren."
   },

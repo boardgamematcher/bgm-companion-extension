@@ -47,6 +47,9 @@
   "popupUnsupportedTitle": {
     "message": "Nessun gioco rilevato in questa pagina"
   },
+  "popupUnsupportedNoTab": {
+    "message": "Apri una scheda del browser per usare BGM Toolbox."
+  },
   "popupUnsupportedDefault": {
     "message": "Apri un negozio di giochi da tavolo supportato per estrarre i giochi."
   },
