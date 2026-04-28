@@ -692,3 +692,32 @@ body {
   color: inherit;
   text-decoration: underline;
 }
+
+/* ── BGA play stats ── */
+.bga-stats-row,
+.bga-teaser-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+}
+
+.bga-plays-link {
+  font-size: 11px;
+  color: var(--accent);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.bga-plays-link:hover {
+  text-decoration: underline;
+}
+
+.bga-teaser-blurred {
+  filter: blur(4px);
+  user-select: none;
+  pointer-events: none;
+}

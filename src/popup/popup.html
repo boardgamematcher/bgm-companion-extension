@@ -179,6 +179,24 @@
           Import your BGA play history to unlock badges and track statistics. Plays are saved to
           your BoardGameMatcher account; nothing is sent back to BGA.
         </p>
+        <div class="bga-stats-row" id="bgaStatsRow" style="display: none">
+          <span id="bgaStatText" class="bga-stat-text"></span>
+          <a
+            id="bgaPlaysLink"
+            class="bga-plays-link"
+            href="#"
+            target="_blank"
+            rel="noopener"
+            data-i18n="popupBgaPlaysLink"
+            >View your play history →</a
+          >
+        </div>
+        <div class="bga-teaser-row" id="bgaTeaserRow" style="display: none">
+          <span class="bga-teaser-blurred">42 plays · 68% win rate</span>
+          <a id="bgaTeaserSignin" class="bga-plays-link" href="#" data-i18n="popupBgaTeaserCta"
+            >Sign in to track your stats</a
+          >
+        </div>
         <div class="extract-row" style="margin-top: 10px">
           <button id="bgaImportBtn" class="btn-primary" data-i18n="popupBgaButton">
             Import BGA Plays
