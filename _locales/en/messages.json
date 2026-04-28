@@ -695,6 +695,34 @@
       "count": {"content": "$2", "example": "3"}
     }
   },
+  "optionsNotifSessionInviteLabel": {
+    "message": "Game night invites",
+    "description": "Options page: label for the game night invite notifications toggle."
+  },
+  "optionsNotifSessionInviteDesc": {
+    "message": "Get notified when someone invites you to a game night session",
+    "description": "Options page: description for the game night invite notifications toggle."
+  },
+  "notifSessionInviteTitle": {
+    "message": "Game Night Invite",
+    "description": "Notification title when a new game night invite is received."
+  },
+  "notifSessionInviteOne": {
+    "message": "$host$ invited you to \"$title$\"",
+    "description": "Notification body when one new game night invite is received.",
+    "placeholders": {
+      "host": {"content": "$1", "example": "meeple_marc"},
+      "title": {"content": "$2", "example": "Friday Board Game Night"}
+    }
+  },
+  "notifSessionInviteMany": {
+    "message": "$host$ and $count$ others invited you to game nights",
+    "description": "Notification body when two or more new game night invites are received.",
+    "placeholders": {
+      "host": {"content": "$1", "example": "meeple_marc"},
+      "count": {"content": "$2", "example": "2"}
+    }
+  },
   "msgBannerNewMessageFrom": {
     "message": "New message from $name$",
     "description": "Popup banner text when one unread message from one sender.",

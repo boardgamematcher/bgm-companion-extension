@@ -527,6 +527,29 @@
       "count": {"content": "$2", "example": "3"}
     }
   },
+  "optionsNotifSessionInviteLabel": {
+    "message": "Spieleabend-Einladungen"
+  },
+  "optionsNotifSessionInviteDesc": {
+    "message": "Benachrichtigung erhalten, wenn jemand dich zu einem Spieleabend einlädt"
+  },
+  "notifSessionInviteTitle": {
+    "message": "Spieleabend-Einladung"
+  },
+  "notifSessionInviteOne": {
+    "message": "$host$ lädt dich zu \"$title$\" ein",
+    "placeholders": {
+      "host": {"content": "$1", "example": "meeple_marc"},
+      "title": {"content": "$2", "example": "Spieleabend Freitag"}
+    }
+  },
+  "notifSessionInviteMany": {
+    "message": "$host$ und $count$ weitere haben dich zu Spieleabenden eingeladen",
+    "placeholders": {
+      "host": {"content": "$1", "example": "meeple_marc"},
+      "count": {"content": "$2", "example": "2"}
+    }
+  },
   "msgBannerNewMessageFrom": {
     "message": "Neue Nachricht von $name$",
     "placeholders": {"name": {"content": "$1", "example": "meeple_marc"}}

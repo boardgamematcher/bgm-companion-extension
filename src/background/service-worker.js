@@ -9,6 +9,7 @@ const BGM_BASE_URL = 'https://boardgamematcher.com';
 const NEWS_POLL_ALARM = 'bgm-news-poll';
 const MSG_POLL_ALARM = 'bgm-messages-poll';
 const FRIEND_REQ_POLL_ALARM = 'bgm-friend-req-poll';
+const SESSION_INVITE_POLL_ALARM = 'bgm-session-invite-poll';
 
 // Verbose service-worker logs are off in shipped builds. Flip to `true`
 // locally when debugging pattern loading or cache behaviour. Errors and
@@ -32,9 +33,11 @@ chrome.runtime.onInstalled.addListener(async () => {
   chrome.alarms.create(NEWS_POLL_ALARM, { periodInMinutes: 60 });
   chrome.alarms.create(MSG_POLL_ALARM, { periodInMinutes: 1 });
   chrome.alarms.create(FRIEND_REQ_POLL_ALARM, { periodInMinutes: 5 });
+  chrome.alarms.create(SESSION_INVITE_POLL_ALARM, { periodInMinutes: 5 });
   pollNews();
   pollUnreadMessages();
   pollFriendRequests();
+  pollSessionInvites();
 
   // Create context menus
   chrome.contextMenus.create({
@@ -230,6 +233,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return false;
   }
 
+  if (message.action === 'pollSessionInvites') {
+    pollSessionInvites();
+    sendResponse({ success: true });
+    return false;
+  }
+
   if (message.action === 'getWishlist') {
     fetchWishlist().then((wishlist) => sendResponse({ wishlist }));
     return true;
@@ -338,6 +347,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === NEWS_POLL_ALARM) pollNews();
   if (alarm.name === MSG_POLL_ALARM) pollUnreadMessages();
   if (alarm.name === FRIEND_REQ_POLL_ALARM) pollFriendRequests();
+  if (alarm.name === SESSION_INVITE_POLL_ALARM) pollSessionInvites();
 });
 
 chrome.notifications.onClicked.addListener((notifId) => {
@@ -348,6 +358,11 @@ chrome.notifications.onClicked.addListener((notifId) => {
   }
   if (notifId.startsWith('bgm-friend-')) {
     chrome.tabs.create({ url: `${BGM_BASE_URL}/friends` });
+    chrome.notifications.clear(notifId);
+  }
+  if (notifId.startsWith('bgm-session-')) {
+    const gameNightId = notifId.slice('bgm-session-'.length).split('-')[0];
+    chrome.tabs.create({ url: `${BGM_BASE_URL}/play/sessions/${gameNightId}` });
     chrome.notifications.clear(notifId);
   }
 });
@@ -425,6 +440,50 @@ async function pollFriendRequests() {
     // Store all currently-pending IDs (prunes accepted/declined ones automatically)
     const allCurrentIds = requests.map((r) => r.id);
     await chrome.storage.local.set({ notifiedFriendReqIds: allCurrentIds });
+  } catch (_e) {
+    // Network failure — silently skip
+  }
+}
+
+async function pollSessionInvites() {
+  try {
+    const { sessionInviteNotifEnabled = true } = await chrome.storage.local.get(
+      'sessionInviteNotifEnabled'
+    );
+    if (!sessionInviteNotifEnabled) return;
+
+    const res = await fetch(`${BGM_BASE_URL}/api/sessions/invites/pending`, {
+      credentials: 'include',
+    });
+    if (!res.ok) return;
+
+    const { invites } = await res.json();
+    if (!invites || invites.length === 0) return;
+
+    const { notifiedInviteIds = [] } = await chrome.storage.local.get('notifiedInviteIds');
+    const seenSet = new Set(notifiedInviteIds);
+
+    const newInvites = invites.filter((inv) => !seenSet.has(inv.id));
+    if (newInvites.length === 0) return;
+
+    const top = newInvites[0];
+    const message =
+      newInvites.length === 1
+        ? chrome.i18n.getMessage('notifSessionInviteOne', [top.host_username, top.title])
+        : chrome.i18n.getMessage('notifSessionInviteMany', [
+            top.host_username,
+            String(newInvites.length - 1),
+          ]);
+
+    chrome.notifications.create(`bgm-session-${top.game_night_id}-${Date.now()}`, {
+      type: 'basic',
+      iconUrl: '/icons/icon128.png',
+      title: chrome.i18n.getMessage('notifSessionInviteTitle'),
+      message,
+    });
+
+    // Store all current invite IDs (removes accepted/declined ones automatically)
+    await chrome.storage.local.set({ notifiedInviteIds: invites.map((inv) => inv.id) });
   } catch (_e) {
     // Network failure — silently skip
   }
