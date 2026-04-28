@@ -695,6 +695,34 @@
       "count": {"content": "$2", "example": "3"}
     }
   },
+  "optionsNotifMatchLabel": {
+    "message": "New player matches",
+    "description": "Toggle label for new player match notification setting."
+  },
+  "optionsNotifMatchDesc": {
+    "message": "Get notified when BoardGameMatcher finds a new compatible player for you",
+    "description": "Description for new player match notification toggle."
+  },
+  "notifMatchTitle": {
+    "message": "New match on BoardGameMatcher",
+    "description": "Title of the browser notification for a new player match."
+  },
+  "notifMatchOne": {
+    "message": "$username$ is a great match — $score$% compatibility",
+    "description": "Notification body when exactly one new player match is found.",
+    "placeholders": {
+      "username": {"content": "$1", "example": "meeple_marc"},
+      "score": {"content": "$2", "example": "87"}
+    }
+  },
+  "notifMatchMany": {
+    "message": "$username$ and $count$ others are great matches",
+    "description": "Notification body when two or more new player matches are found.",
+    "placeholders": {
+      "username": {"content": "$1", "example": "meeple_marc"},
+      "count": {"content": "$2", "example": "3"}
+    }
+  },
   "optionsNotifSessionInviteLabel": {
     "message": "Game night invites",
     "description": "Options page: label for the game night invite notifications toggle."
