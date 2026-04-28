@@ -427,6 +427,43 @@
   "optionsHelpSupportBody": {
     "message": "Problemi, feedback e suggerimenti di negozi:"
   },
+  "qlProfile": {
+    "message": "Profilo",
+    "description": "Quick-link label for the user profile page."
+  },
+  "qlMatches": {
+    "message": "Giocatori",
+    "description": "Quick-link label for the find players page."
+  },
+  "qlMessages": {
+    "message": "Messaggi",
+    "description": "Quick-link label for the messages page."
+  },
+  "qlCollection": {
+    "message": "Collezione",
+    "description": "Quick-link label for the game collection page."
+  },
+  "qlWishlist": {
+    "message": "Lista desideri",
+    "description": "Quick-link label for the wishlist page."
+  },
+  "popupBggTitle": {
+    "message": "Importazione BoardGameGeek",
+    "description": "Title of the BGG import panel (visible only on boardgamegeek.com)."
+  },
+  "popupBggBody": {
+    "message": "Importa la tua cronologia partite di BGG per sbloccare badge e monitorare le statistiche. Le partite vengono salvate nel tuo account BoardGameMatcher; nulla viene inviato a BGG.",
+    "description": "Body text on the BGG import panel."
+  },
+  "popupBggButton": {
+    "message": "Importa partite BGG",
+    "description": "Button on the BGG import panel."
+  },
+  "importBggFetching": {
+    "message": "Recupero di tutte le partite da BGG… attendere",
+    "description": "Status shown immediately after clicking Import BGG Plays."
+
+  },
 
   "popupBggSyncTitle": {
     "message": "Sincronizza collezione BGG"
