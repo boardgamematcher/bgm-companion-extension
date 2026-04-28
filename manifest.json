@@ -41,17 +41,148 @@
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["src/lib/pattern-matcher.js", "src/content/content-script.js"]
+      "matches": [
+        "*://*.amazon.at/*",
+        "*://*.amazon.be/*",
+        "*://*.amazon.ca/*",
+        "*://*.amazon.co.jp/*",
+        "*://*.amazon.co.uk/*",
+        "*://*.amazon.com/*",
+        "*://*.amazon.com.au/*",
+        "*://*.amazon.com.br/*",
+        "*://*.amazon.com.mx/*",
+        "*://*.amazon.de/*",
+        "*://*.amazon.es/*",
+        "*://*.amazon.fr/*",
+        "*://*.amazon.it/*",
+        "*://*.amazon.nl/*",
+        "*://*.amazon.pl/*",
+        "*://*.amazon.se/*",
+        "*://*.board-game.co.uk/*",
+        "*://*.boardgamebliss.com/*",
+        "*://*.bol.com/*",
+        "*://*.brettspielversand.de/*",
+        "*://*.coolshop.co/*",
+        "*://*.coolshop.com/*",
+        "*://*.coolshop.de/*",
+        "*://*.coolshop.dk/*",
+        "*://*.coolshop.fi/*",
+        "*://*.coolshop.is/*",
+        "*://*.coolshop.nl/*",
+        "*://*.coolshop.no/*",
+        "*://*.coolshop.pl/*",
+        "*://*.coolshop.se/*",
+        "*://*.coolstuffinc.com/*",
+        "*://*.cultura.com/*",
+        "*://*.espritjeu.com/*",
+        "*://*.fantasywelt.de/*",
+        "*://*.fnac.com/*",
+        "*://*.gamenerdz.com/*",
+        "*://*.gamersdream.shop/*",
+        "*://*.knapix.com/*",
+        "*://*.kutami.de/*",
+        "*://*.le-passe-temps.com/*",
+        "*://*.lepion.com/*",
+        "*://*.ludifolie.com/*",
+        "*://*.ludisphere.fr/*",
+        "*://*.ludum.fr/*",
+        "*://*.milan-spiele.de/*",
+        "*://*.miniaturemarket.com/*",
+        "*://*.okkazeo.com/*",
+        "*://*.philibertnet.com/*",
+        "*://*.privalia.com/*",
+        "*://*.spiele-offensive.de/*",
+        "*://*.spieletaxi.de/*",
+        "*://*.thalia.de/*",
+        "*://*.veepee.at/*",
+        "*://*.veepee.be/*",
+        "*://*.veepee.de/*",
+        "*://*.veepee.es/*",
+        "*://*.veepee.fr/*",
+        "*://*.veepee.it/*",
+        "*://*.veepee.lu/*",
+        "*://*.veepee.nl/*"
+      ],
+      "js": [
+        "src/lib/pattern-matcher.js",
+        "src/content/content-script.js"
+      ]
     },
     {
-      "matches": ["<all_urls>"],
-      "js": ["src/content/wishlist-badge.js"],
-      "css": ["src/content/wishlist-badge.css"],
+      "matches": [
+        "*://*.amazon.at/*",
+        "*://*.amazon.be/*",
+        "*://*.amazon.ca/*",
+        "*://*.amazon.co.jp/*",
+        "*://*.amazon.co.uk/*",
+        "*://*.amazon.com/*",
+        "*://*.amazon.com.au/*",
+        "*://*.amazon.com.br/*",
+        "*://*.amazon.com.mx/*",
+        "*://*.amazon.de/*",
+        "*://*.amazon.es/*",
+        "*://*.amazon.fr/*",
+        "*://*.amazon.it/*",
+        "*://*.amazon.nl/*",
+        "*://*.amazon.pl/*",
+        "*://*.amazon.se/*",
+        "*://*.board-game.co.uk/*",
+        "*://*.boardgamebliss.com/*",
+        "*://*.bol.com/*",
+        "*://*.brettspielversand.de/*",
+        "*://*.coolshop.co/*",
+        "*://*.coolshop.com/*",
+        "*://*.coolshop.de/*",
+        "*://*.coolshop.dk/*",
+        "*://*.coolshop.fi/*",
+        "*://*.coolshop.is/*",
+        "*://*.coolshop.nl/*",
+        "*://*.coolshop.no/*",
+        "*://*.coolshop.pl/*",
+        "*://*.coolshop.se/*",
+        "*://*.coolstuffinc.com/*",
+        "*://*.cultura.com/*",
+        "*://*.espritjeu.com/*",
+        "*://*.fantasywelt.de/*",
+        "*://*.fnac.com/*",
+        "*://*.gamenerdz.com/*",
+        "*://*.gamersdream.shop/*",
+        "*://*.knapix.com/*",
+        "*://*.kutami.de/*",
+        "*://*.le-passe-temps.com/*",
+        "*://*.lepion.com/*",
+        "*://*.ludifolie.com/*",
+        "*://*.ludisphere.fr/*",
+        "*://*.ludum.fr/*",
+        "*://*.milan-spiele.de/*",
+        "*://*.miniaturemarket.com/*",
+        "*://*.okkazeo.com/*",
+        "*://*.philibertnet.com/*",
+        "*://*.privalia.com/*",
+        "*://*.spiele-offensive.de/*",
+        "*://*.spieletaxi.de/*",
+        "*://*.thalia.de/*",
+        "*://*.veepee.at/*",
+        "*://*.veepee.be/*",
+        "*://*.veepee.de/*",
+        "*://*.veepee.es/*",
+        "*://*.veepee.fr/*",
+        "*://*.veepee.it/*",
+        "*://*.veepee.lu/*",
+        "*://*.veepee.nl/*"
+      ],
+      "js": [
+        "src/content/wishlist-badge.js"
+      ],
+      "css": [
+        "src/content/wishlist-badge.css"
+      ],
       "run_at": "document_idle"
     },
     {
-      "matches": ["https://www.yucata.de/*"],
+      "matches": [
+        "https://www.yucata.de/*"
+      ],
       "js": [
         "src/lib/yucata-mapper.js",
         "src/content/yucata-scraper.js",
@@ -69,7 +200,10 @@
       ]
     },
     {
-      "matches": ["https://boardgamegeek.com/*", "https://www.boardgamegeek.com/*"],
+      "matches": [
+        "https://boardgamegeek.com/*",
+        "https://www.boardgamegeek.com/*"
+      ],
       "js": [
         "src/content/bgg-scraper.js",
         "src/content/bgg-listener.js"
@@ -84,16 +218,30 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["patterns/built-in.json"],
-      "matches": ["<all_urls>"]
+      "resources": [
+        "patterns/built-in.json"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
     },
     {
-      "resources": ["patterns/yucata-mapping.json", "src/content/yucata-page-extract.js"],
-      "matches": ["https://www.yucata.de/*"]
+      "resources": [
+        "patterns/yucata-mapping.json",
+        "src/content/yucata-page-extract.js"
+      ],
+      "matches": [
+        "https://www.yucata.de/*"
+      ]
     },
     {
-      "resources": ["patterns/bga-mapping.json"],
-      "matches": ["https://boardgamearena.com/*", "https://en.boardgamearena.com/*"]
+      "resources": [
+        "patterns/bga-mapping.json"
+      ],
+      "matches": [
+        "https://boardgamearena.com/*",
+        "https://en.boardgamearena.com/*"
+      ]
     }
   ]
 }
