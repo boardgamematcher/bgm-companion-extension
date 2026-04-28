@@ -18,6 +18,9 @@
         <button class="tab-btn" data-tab="custom" data-i18n="optionsTabCustom">
           Custom Patterns
         </button>
+        <button class="tab-btn" data-tab="notifications" data-i18n="optionsTabNotifications">
+          Notifications
+        </button>
         <button class="tab-btn" data-tab="help" data-i18n="optionsTabHelp">Help</button>
       </nav>
 
@@ -76,6 +79,29 @@
             <p class="hint" data-i18n="optionsCustomEmptyHint">
               Click "Add New Pattern" to create one
             </p>
+          </div>
+        </div>
+
+        <!-- Notifications Tab -->
+        <div id="notifications-tab" class="tab-content">
+          <div class="section-header">
+            <h2 data-i18n="optionsNotifTitle">Notifications</h2>
+            <p class="subtitle" data-i18n="optionsNotifSubtitle">
+              Choose which browser notifications BGM Toolbox can send you
+            </p>
+          </div>
+          <div class="notif-list">
+            <label class="notif-row">
+              <div class="notif-info">
+                <span class="notif-label" data-i18n="optionsNotifNewsLabel"
+                  >News &amp; announcements</span
+                >
+                <span class="notif-desc" data-i18n="optionsNotifNewsDesc">
+                  Get notified when BoardGameMatcher publishes a new article or announcement
+                </span>
+              </div>
+              <input type="checkbox" id="notif-news" class="notif-toggle" checked />
+            </label>
           </div>
         </div>
 

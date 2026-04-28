@@ -8,7 +8,9 @@
   "homepage_url": "https://boardgamematcher.com",
   "permissions": [
     "activeTab",
+    "alarms",
     "contextMenus",
+    "notifications",
     "storage",
     "scripting"
   ],

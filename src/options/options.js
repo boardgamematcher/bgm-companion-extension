@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupTabs();
   setupEventListeners();
   renderPatterns();
+  await loadNotifSettings();
 });
 
 // Setup tab switching
@@ -27,6 +28,19 @@ function setupTabs() {
       button.classList.add('active');
       document.getElementById(`${tabName}-tab`).classList.add('active');
     });
+  });
+}
+
+// Load and persist notification settings
+async function loadNotifSettings() {
+  const { newsNotifEnabled = true } = await chrome.storage.local.get('newsNotifEnabled');
+  document.getElementById('notif-news').checked = newsNotifEnabled;
+
+  document.getElementById('notif-news').addEventListener('change', async (e) => {
+    await chrome.storage.local.set({ newsNotifEnabled: e.target.checked });
+    if (e.target.checked) {
+      chrome.runtime.sendMessage({ action: 'pollNews' }).catch(() => {});
+    }
   });
 }
 
