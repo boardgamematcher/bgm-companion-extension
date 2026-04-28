@@ -160,6 +160,26 @@
     "message": "BGA-Spielrunden importieren"
   },
 
+  "popupBgaStats": {
+    "message": "$count$ Spielrunden · $rate$% Gewinnquote",
+    "placeholders": {
+      "count": {"content": "$1", "example": "42"},
+      "rate": {"content": "$2", "example": "68"}
+    }
+  },
+  "popupBgaStatsNoRate": {
+    "message": "$count$ Spielrunden",
+    "placeholders": {
+      "count": {"content": "$1", "example": "3"}
+    }
+  },
+  "popupBgaPlaysLink": {
+    "message": "Spielhistorie ansehen →"
+  },
+  "popupBgaTeaserCta": {
+    "message": "Anmelden, um Statistiken zu verfolgen"
+  },
+
   "popupBannerLoggedIn": {
     "message": "BoardGameMatcher.com öffnen"
   },

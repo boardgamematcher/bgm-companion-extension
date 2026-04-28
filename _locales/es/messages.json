@@ -160,6 +160,26 @@
     "message": "Importar partidas de BGA"
   },
 
+  "popupBgaStats": {
+    "message": "$count$ partidas · $rate$% de victorias",
+    "placeholders": {
+      "count": {"content": "$1", "example": "42"},
+      "rate": {"content": "$2", "example": "68"}
+    }
+  },
+  "popupBgaStatsNoRate": {
+    "message": "$count$ partidas",
+    "placeholders": {
+      "count": {"content": "$1", "example": "3"}
+    }
+  },
+  "popupBgaPlaysLink": {
+    "message": "Ver tu historial de partidas →"
+  },
+  "popupBgaTeaserCta": {
+    "message": "Inicia sesión para ver tus estadísticas"
+  },
+
   "popupBannerLoggedIn": {
     "message": "Abrir BoardGameMatcher.com"
   },

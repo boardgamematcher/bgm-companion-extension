@@ -160,6 +160,26 @@
     "message": "Importer les parties BGA"
   },
 
+  "popupBgaStats": {
+    "message": "$count$ parties · $rate$% de victoires",
+    "placeholders": {
+      "count": {"content": "$1", "example": "42"},
+      "rate": {"content": "$2", "example": "68"}
+    }
+  },
+  "popupBgaStatsNoRate": {
+    "message": "$count$ parties",
+    "placeholders": {
+      "count": {"content": "$1", "example": "3"}
+    }
+  },
+  "popupBgaPlaysLink": {
+    "message": "Voir votre historique de parties →"
+  },
+  "popupBgaTeaserCta": {
+    "message": "Connectez-vous pour suivre vos stats"
+  },
+
   "popupBannerLoggedIn": {
     "message": "Ouvrir BoardGameMatcher.com"
   },

@@ -25,6 +25,7 @@ function setupEventListeners() {
   document.getElementById('user-avatar').addEventListener('click', handleAvatarClick);
   document.getElementById('bggSyncBtn').addEventListener('click', handleBggSync);
   document.getElementById('bggSyncClear').addEventListener('click', handleBggSyncClear);
+  document.getElementById('bgaTeaserSignin').addEventListener('click', handleLogin);
 }
 
 function handleAvatarClick(e) {
@@ -90,6 +91,7 @@ function setLoggedIn(user) {
     chrome.i18n.getMessage('popupBannerLoggedIn');
   showWishlistCard(user);
   showBggSyncPanel(user);
+  loadBgaStats(user);
 }
 
 function setLoggedOut() {
@@ -98,6 +100,7 @@ function setLoggedOut() {
   document.getElementById('card-wishlist').style.display = 'none';
   document.getElementById('card-teaser').style.display = '';
   document.getElementById('bggSyncPanel').style.display = 'none';
+  document.getElementById('bgaTeaserRow').style.display = '';
   document.getElementById('banner-text').textContent =
     chrome.i18n.getMessage('popupBannerLoggedOut');
 }
@@ -593,6 +596,30 @@ async function addToWishlist(game, row, btn) {
     console.warn('Add to wishlist failed:', error);
     btn.disabled = false;
     btn.textContent = chrome.i18n.getMessage('popupWishlistTryAgain');
+  }
+}
+
+// ── BGA play stats ──
+
+async function loadBgaStats(user) {
+  if (!user) return;
+  const playsLink = document.getElementById('bgaPlaysLink');
+  if (playsLink && user.username) {
+    playsLink.href = `${BGM_BASE_URL}/users/${encodeURIComponent(user.username)}`;
+  }
+  try {
+    const res = await fetch(`${BGM_BASE_URL}/api/plays/summary`, { credentials: 'include' });
+    if (!res.ok) return;
+    const { total_plays, win_rate } = await res.json();
+    const statText = document.getElementById('bgaStatText');
+    if (!statText) return;
+    const key = win_rate !== null ? 'popupBgaStats' : 'popupBgaStatsNoRate';
+    const args =
+      win_rate !== null ? [String(total_plays), String(win_rate)] : [String(total_plays)];
+    statText.textContent = chrome.i18n.getMessage(key, args);
+    document.getElementById('bgaStatsRow').style.display = '';
+  } catch (_e) {
+    // stats are optional — silently skip
   }
 }
 

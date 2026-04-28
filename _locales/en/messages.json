@@ -203,6 +203,29 @@
     "message": "Import BGA Plays",
     "description": "Button on the BGA import panel."
   },
+  "popupBgaStats": {
+    "message": "$count$ plays · $rate$% win rate",
+    "description": "BGA play stats shown when logged in and win rate is available.",
+    "placeholders": {
+      "count": {"content": "$1", "example": "42"},
+      "rate": {"content": "$2", "example": "68"}
+    }
+  },
+  "popupBgaStatsNoRate": {
+    "message": "$count$ plays",
+    "description": "BGA play stats shown when logged in but no win rate is available yet.",
+    "placeholders": {
+      "count": {"content": "$1", "example": "3"}
+    }
+  },
+  "popupBgaPlaysLink": {
+    "message": "View your play history →",
+    "description": "CTA link below BGA stats row, opens user's BGM profile."
+  },
+  "popupBgaTeaserCta": {
+    "message": "Sign in to track your stats",
+    "description": "CTA shown to logged-out users on BGA alongside blurred placeholder stats."
+  },
 
   "popupBannerLoggedIn": {
     "message": "Open BoardGameMatcher.com",
