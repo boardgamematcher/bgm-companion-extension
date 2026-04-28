@@ -3,6 +3,8 @@ const PROFILES_URL =
   'https://raw.githubusercontent.com/boardgamematcher/site-profiles/main/profiles.json';
 const PROFILES_CACHE_KEY = 'cachedProfiles';
 const PROFILES_CACHE_TTL = 6 * 60 * 60 * 1000; // 6 hours
+const WISHLIST_CACHE_KEY = 'cachedWishlist';
+const WISHLIST_CACHE_TTL = 10 * 60 * 1000; // 10 minutes
 const BGM_BASE_URL = 'https://boardgamematcher.com';
 const NEWS_POLL_ALARM = 'bgm-news-poll';
 const MSG_POLL_ALARM = 'bgm-messages-poll';
@@ -226,6 +228,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     pollFriendRequests();
     sendResponse({ success: true });
     return false;
+  }
+
+  if (message.action === 'getWishlist') {
+    fetchWishlist().then((wishlist) => sendResponse({ wishlist }));
+    return true;
   }
 });
 
@@ -451,6 +458,33 @@ async function pollUnreadMessages() {
   } catch (_e) {
     chrome.action.setBadgeText({ text: '' });
     await chrome.storage.local.remove('unreadMessages');
+  }
+}
+
+// Fetch the user's wishlist from BGM, cached for 10 minutes.
+// Returns null when the user is not logged in or on network failure.
+async function fetchWishlist() {
+  try {
+    const cached = await chrome.storage.local.get(WISHLIST_CACHE_KEY);
+    const entry = cached[WISHLIST_CACHE_KEY];
+    if (entry && Date.now() - entry.timestamp < WISHLIST_CACHE_TTL) {
+      return entry.wishlist;
+    }
+  } catch (_e) {
+    // Cache read failed, continue to fetch
+  }
+
+  try {
+    const res = await fetch(`${BGM_BASE_URL}/api/me/wishlist`, { credentials: 'include' });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const wishlist = data.wishlist || [];
+    await chrome.storage.local.set({
+      [WISHLIST_CACHE_KEY]: { wishlist, timestamp: Date.now() },
+    });
+    return wishlist;
+  } catch (_e) {
+    return null;
   }
 }
 
