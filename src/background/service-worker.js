@@ -6,6 +6,7 @@ const PROFILES_CACHE_TTL = 6 * 60 * 60 * 1000; // 6 hours
 const BGM_BASE_URL = 'https://boardgamematcher.com';
 const NEWS_POLL_ALARM = 'bgm-news-poll';
 const MSG_POLL_ALARM = 'bgm-messages-poll';
+const FRIEND_REQ_POLL_ALARM = 'bgm-friend-req-poll';
 
 // Verbose service-worker logs are off in shipped builds. Flip to `true`
 // locally when debugging pattern loading or cache behaviour. Errors and
@@ -28,8 +29,10 @@ chrome.runtime.onInstalled.addListener(async () => {
 
   chrome.alarms.create(NEWS_POLL_ALARM, { periodInMinutes: 60 });
   chrome.alarms.create(MSG_POLL_ALARM, { periodInMinutes: 1 });
+  chrome.alarms.create(FRIEND_REQ_POLL_ALARM, { periodInMinutes: 5 });
   pollNews();
   pollUnreadMessages();
+  pollFriendRequests();
 
   // Create context menus
   chrome.contextMenus.create({
@@ -218,6 +221,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     sendResponse({ success: true });
     return false;
   }
+
+  if (message.action === 'pollFriendRequests') {
+    pollFriendRequests();
+    sendResponse({ success: true });
+    return false;
+  }
 });
 
 // Update extraction stats
@@ -321,12 +330,17 @@ async function getStats() {
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === NEWS_POLL_ALARM) pollNews();
   if (alarm.name === MSG_POLL_ALARM) pollUnreadMessages();
+  if (alarm.name === FRIEND_REQ_POLL_ALARM) pollFriendRequests();
 });
 
 chrome.notifications.onClicked.addListener((notifId) => {
   if (notifId.startsWith('bgm-news-')) {
     const slug = notifId.slice('bgm-news-'.length);
     chrome.tabs.create({ url: `${BGM_BASE_URL}/news/${slug}` });
+    chrome.notifications.clear(notifId);
+  }
+  if (notifId.startsWith('bgm-friend-')) {
+    chrome.tabs.create({ url: `${BGM_BASE_URL}/friends` });
     chrome.notifications.clear(notifId);
   }
 });
@@ -359,6 +373,51 @@ async function pollNews() {
       });
       await chrome.storage.local.set({ lastSeenNewsId: item.id });
     }
+  } catch (_e) {
+    // Network failure — silently skip
+  }
+}
+
+async function pollFriendRequests() {
+  try {
+    const { friendReqNotifEnabled = true } =
+      await chrome.storage.local.get('friendReqNotifEnabled');
+    if (!friendReqNotifEnabled) return;
+
+    const res = await fetch(`${BGM_BASE_URL}/api/friends/pending-summary`, {
+      credentials: 'include',
+    });
+    if (!res.ok) return;
+
+    const { requests } = await res.json();
+    if (!requests || requests.length === 0) return;
+
+    const { notifiedFriendReqIds = [] } = await chrome.storage.local.get('notifiedFriendReqIds');
+    const seenSet = new Set(notifiedFriendReqIds);
+
+    const newRequests = requests.filter((r) => !seenSet.has(r.id));
+    if (newRequests.length === 0) return;
+
+    const names = newRequests.map((r) => r.username);
+    let message;
+    if (names.length === 1) {
+      message = chrome.i18n.getMessage('notifFriendReqOne', [names[0]]);
+    } else if (names.length === 2) {
+      message = chrome.i18n.getMessage('notifFriendReqTwo', [names[0], names[1]]);
+    } else {
+      message = chrome.i18n.getMessage('notifFriendReqMany', [names[0], String(names.length - 1)]);
+    }
+
+    chrome.notifications.create(`bgm-friend-${Date.now()}`, {
+      type: 'basic',
+      iconUrl: '/icons/icon128.png',
+      title: chrome.i18n.getMessage('notifFriendReqTitle'),
+      message,
+    });
+
+    // Store all currently-pending IDs (prunes accepted/declined ones automatically)
+    const allCurrentIds = requests.map((r) => r.id);
+    await chrome.storage.local.set({ notifiedFriendReqIds: allCurrentIds });
   } catch (_e) {
     // Network failure — silently skip
   }

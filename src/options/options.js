@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupTabs();
   setupEventListeners();
   renderPatterns();
+  await loadNotifSettings();
 });
 
 // Setup tab switching
@@ -39,6 +40,9 @@ async function loadNotifSettings() {
 
   const { msgBadgeEnabled = true } = await chrome.storage.local.get('msgBadgeEnabled');
   document.getElementById('notif-messages').checked = msgBadgeEnabled;
+
+  const { friendReqNotifEnabled = true } = await chrome.storage.local.get('friendReqNotifEnabled');
+  document.getElementById('notif-friend-req').checked = friendReqNotifEnabled;
 }
 
 // Setup event listeners
@@ -57,6 +61,13 @@ function setupEventListeners() {
   document.getElementById('notif-messages').addEventListener('change', async (e) => {
     await chrome.storage.local.set({ msgBadgeEnabled: e.target.checked });
     chrome.runtime.sendMessage({ action: 'pollMessages' }).catch(() => {});
+  });
+
+  document.getElementById('notif-friend-req').addEventListener('change', async (e) => {
+    await chrome.storage.local.set({ friendReqNotifEnabled: e.target.checked });
+    if (e.target.checked) {
+      chrome.runtime.sendMessage({ action: 'pollFriendRequests' }).catch(() => {});
+    }
   });
 
   // Custom pattern actions
