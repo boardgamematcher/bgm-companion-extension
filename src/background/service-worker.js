@@ -361,7 +361,7 @@ chrome.notifications.onClicked.addListener((notifId) => {
     chrome.notifications.clear(notifId);
   }
   if (notifId.startsWith('bgm-session-')) {
-    const gameNightId = notifId.slice('bgm-session-'.length).split('-')[0];
+    const gameNightId = notifId.slice('bgm-session-'.length).split('_')[0];
     chrome.tabs.create({ url: `${BGM_BASE_URL}/play/sessions/${gameNightId}` });
     chrome.notifications.clear(notifId);
   }
@@ -475,7 +475,7 @@ async function pollSessionInvites() {
             String(newInvites.length - 1),
           ]);
 
-    chrome.notifications.create(`bgm-session-${top.game_night_id}-${Date.now()}`, {
+    chrome.notifications.create(`bgm-session-${top.game_night_id}_${Date.now()}`, {
       type: 'basic',
       iconUrl: '/icons/icon128.png',
       title: chrome.i18n.getMessage('notifSessionInviteTitle'),
