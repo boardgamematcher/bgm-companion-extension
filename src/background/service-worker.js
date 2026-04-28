@@ -5,6 +5,7 @@ const PROFILES_CACHE_KEY = 'cachedProfiles';
 const PROFILES_CACHE_TTL = 6 * 60 * 60 * 1000; // 6 hours
 const BGM_BASE_URL = 'https://boardgamematcher.com';
 const NEWS_POLL_ALARM = 'bgm-news-poll';
+const MSG_POLL_ALARM = 'bgm-messages-poll';
 
 // Verbose service-worker logs are off in shipped builds. Flip to `true`
 // locally when debugging pattern loading or cache behaviour. Errors and
@@ -26,7 +27,9 @@ chrome.runtime.onInstalled.addListener(async () => {
   await reloadPatterns();
 
   chrome.alarms.create(NEWS_POLL_ALARM, { periodInMinutes: 60 });
+  chrome.alarms.create(MSG_POLL_ALARM, { periodInMinutes: 1 });
   pollNews();
+  pollUnreadMessages();
 
   // Create context menus
   chrome.contextMenus.create({
@@ -197,6 +200,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true;
   }
 
+  if (message.action === 'pollMessages') {
+    pollUnreadMessages();
+    sendResponse({ success: true });
+    return false;
+  }
+
   if (message.action === 'syncBggCollection') {
     syncBggCollection(message.bggUsername)
       .then((results) => sendResponse({ success: true, results }))
@@ -307,10 +316,11 @@ async function getStats() {
   }
 }
 
-// ── News notifications ──
+// ── Notification polling ──
 
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === NEWS_POLL_ALARM) pollNews();
+  if (alarm.name === MSG_POLL_ALARM) pollUnreadMessages();
 });
 
 chrome.notifications.onClicked.addListener((notifId) => {
@@ -351,6 +361,37 @@ async function pollNews() {
     }
   } catch (_e) {
     // Network failure — silently skip
+  }
+}
+
+async function pollUnreadMessages() {
+  try {
+    const { msgBadgeEnabled = true } = await chrome.storage.local.get('msgBadgeEnabled');
+    if (!msgBadgeEnabled) {
+      chrome.action.setBadgeText({ text: '' });
+      await chrome.storage.local.remove('unreadMessages');
+      return;
+    }
+    const res = await fetch(`${BGM_BASE_URL}/api/messages/unread-summary`, {
+      credentials: 'include',
+    });
+    if (!res.ok) {
+      chrome.action.setBadgeText({ text: '' });
+      await chrome.storage.local.remove('unreadMessages');
+      return;
+    }
+    const { count, senders } = await res.json();
+    if (count > 0) {
+      chrome.action.setBadgeText({ text: String(count) });
+      chrome.action.setBadgeBackgroundColor({ color: '#f5a623' });
+      await chrome.storage.local.set({ unreadMessages: { count, senders } });
+    } else {
+      chrome.action.setBadgeText({ text: '' });
+      await chrome.storage.local.remove('unreadMessages');
+    }
+  } catch (_e) {
+    chrome.action.setBadgeText({ text: '' });
+    await chrome.storage.local.remove('unreadMessages');
   }
 }
 
