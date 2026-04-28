@@ -59,6 +59,13 @@
         "src/content/bga-scraper.js",
         "src/content/bga-listener.js"
       ]
+    },
+    {
+      "matches": ["https://boardgamegeek.com/*", "https://www.boardgamegeek.com/*"],
+      "js": [
+        "src/content/bgg-scraper.js",
+        "src/content/bgg-listener.js"
+      ]
     }
   ],
   "options_page": "src/options/options.html",
