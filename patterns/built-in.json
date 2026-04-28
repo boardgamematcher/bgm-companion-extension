@@ -27,7 +27,7 @@
       "url_pattern": "^https?://(?:www\\.veepee\\.(?:fr|de|es|it|at|lu|nl)|(?:fr|nl)\\.veepee\\.be|(?:es|it)\\.privalia\\.com)/[a-z]+/catalog/"
     },
     {
-      "card_selector": "a.mam",
+      "card_selector": ".wrapper_product",
       "domain": "philibertnet.com",
       "filters": {
         "deduplicate": true,
@@ -35,14 +35,16 @@
         "include": null,
         "trim": true
       },
-      "image_selector": "img",
+      "image_selector": ".wrapper_product_1 img",
       "name": "Philibert Flash Sales",
-      "price_selector": ".prix-jeu",
-      "selector": "h3",
+      "price_selector": ".price_container .price",
+      "sale_price_selector": ".old-price.product-price",
+      "selector": ".s_title_block a",
       "threshold": 0.8,
       "url_pattern": "philibertnet\\.com/.*/flash-sales"
     },
     {
+      "card_selector": ".wrapper_product",
       "domain": "philibertnet.com",
       "filters": {
         "deduplicate": true,
@@ -50,12 +52,16 @@
         "include": null,
         "trim": true
       },
+      "image_selector": ".wrapper_product_1 img",
       "name": "Philibert Promotions",
+      "price_selector": ".price_container .price",
+      "sale_price_selector": ".old-price.product-price",
       "selector": ".s_title_block a",
       "threshold": 0.8,
       "url_pattern": "philibertnet\\.com/.*/promotions"
     },
     {
+      "card_selector": ".wrapper_product",
       "domain": "philibertnet.com",
       "filters": {
         "deduplicate": true,
@@ -63,12 +69,16 @@
         "include": null,
         "trim": true
       },
+      "image_selector": ".wrapper_product_1 img",
       "name": "Philibert Homepage",
+      "price_selector": ".price_container .price",
+      "sale_price_selector": ".old-price.product-price",
       "selector": ".s_title_block a",
       "threshold": 0.8,
       "url_pattern": "philibertnet\\.com/(?:fr|en|de|es|it)/?$"
     },
     {
+      "card_selector": ".wrapper_product",
       "domain": "philibertnet.com",
       "filters": {
         "deduplicate": true,
@@ -76,7 +86,10 @@
         "include": null,
         "trim": true
       },
+      "image_selector": ".wrapper_product_1 img",
       "name": "Philibert Search / Category",
+      "price_selector": ".price_container .price",
+      "sale_price_selector": ".old-price.product-price",
       "selector": ".s_title_block a",
       "threshold": 0.8,
       "url_pattern": "philibertnet\\.com/"
@@ -88,9 +101,17 @@
         "deduplicate": true,
         "exclude": [
           "^Sponsored",
-          "^Sponsoris\u00e9",
+          "^Sponsorisé",
           "^Advertisement",
-          "^Publicit\u00e9"
+          "^Publicité",
+          "^Gesponsert",
+          "^Anzeige",
+          "^Patrocinado",
+          "^Sponsorizzato",
+          "^Pubblicità",
+          "^Gesponsord",
+          "^Sponsrad",
+          "^Sponsorowane"
         ],
         "include": null,
         "trim": true
@@ -101,47 +122,7 @@
       "sale_price_selector": ".a-price[data-a-strike] .a-offscreen",
       "selector": "h2 span",
       "threshold": 0.8,
-      "url_pattern": "amazon\\.(com|fr|de|co\\.uk|es|it)/s\\?"
-    },
-    {
-      "card_selector": "div[data-component-type=\"s-search-result\"]",
-      "domain": "amazon.fr",
-      "filters": {
-        "deduplicate": true,
-        "exclude": [
-          "^Sponsoris\u00e9",
-          "^Publicit\u00e9"
-        ],
-        "include": null,
-        "trim": true
-      },
-      "image_selector": "img.s-image",
-      "name": "Amazon France Search",
-      "price_selector": ".a-price .a-offscreen",
-      "sale_price_selector": ".a-price[data-a-strike] .a-offscreen",
-      "selector": "h2 span",
-      "threshold": 0.8,
-      "url_pattern": "amazon\\.fr/s\\?"
-    },
-    {
-      "card_selector": "div[data-component-type=\"s-search-result\"]",
-      "domain": "amazon.de",
-      "filters": {
-        "deduplicate": true,
-        "exclude": [
-          "^Gesponsert",
-          "^Anzeige"
-        ],
-        "include": null,
-        "trim": true
-      },
-      "image_selector": "img.s-image",
-      "name": "Amazon Germany Search",
-      "price_selector": ".a-price .a-offscreen",
-      "sale_price_selector": ".a-price[data-a-strike] .a-offscreen",
-      "selector": "h2 span",
-      "threshold": 0.8,
-      "url_pattern": "amazon\\.de/s\\?"
+      "url_pattern": "amazon\\.(com|fr|de|co\\.uk|es|it|nl|se|pl|ca|com\\.au|co\\.jp|be|at|com\\.mx|com\\.br|in|sg)/s\\?"
     },
     {
       "card_selector": ".p13n-sc-uncoverable-faceout, .a-section",
@@ -150,7 +131,16 @@
         "deduplicate": true,
         "exclude": [
           "^Sponsored",
-          "^Sponsoris\u00e9"
+          "^Sponsorisé",
+          "^Publicité",
+          "^Gesponsert",
+          "^Anzeige",
+          "^Patrocinado",
+          "^Sponsorizzato",
+          "^Pubblicità",
+          "^Gesponsord",
+          "^Sponsrad",
+          "^Sponsorowane"
         ],
         "include": null,
         "trim": true
@@ -160,7 +150,39 @@
       "price_selector": ".a-price .a-offscreen",
       "selector": "h2 span, .p13n-sc-truncate-desktop-type2",
       "threshold": 0.8,
-      "url_pattern": "amazon\\.(com|fr|de|co\\.uk|es|it)/(gp/|Best-Sellers|b[/\\?])"
+      "url_pattern": "amazon\\.(com|fr|de|co\\.uk|es|it|nl|se|pl|ca|com\\.au|co\\.jp|be|at|com\\.mx|com\\.br|in|sg)/(gp/|Best-Sellers|b[/\\?])"
+    },
+    {
+      "card_selector": "[data-bltgi*=\"ProductList_Middle\"]",
+      "domain": "bol.com",
+      "filters": {
+        "deduplicate": true,
+        "exclude": [
+          "^Gesponsord",
+          "^Sponsorisé"
+        ],
+        "trim": true
+      },
+      "image_selector": "[data-bltgh*=\"ProductImage\"] img",
+      "name": "Bol.com",
+      "selector": "[data-bltgh*=\"ProductTitle\"] h2",
+      "threshold": 0.8,
+      "url_pattern": "bol\\.com/(?:nl|be)/(?:nl|fr)/(?:l|s)/"
+    },
+    {
+      "card_selector": ".product__card",
+      "domain": "coolshop.dk",
+      "filters": {
+        "deduplicate": true,
+        "trim": true
+      },
+      "image_selector": ".product__card-image",
+      "name": "Coolshop",
+      "price_selector": ".product__card-price--display, .product__card-price--discount",
+      "sale_price_selector": ".product__card-price--guide",
+      "selector": ".product__card-title",
+      "threshold": 0.8,
+      "url_pattern": "coolshop\\.(dk|de|se|no|fi|nl|pl|is|co|com)/"
     },
     {
       "card_selector": "a[href^=\"/r/\"]",
@@ -536,5 +558,5 @@
       "url_pattern": "spieletaxi\\.de"
     }
   ],
-  "version": "1.3.0"
+  "version": "1.4.0"
 }
