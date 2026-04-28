@@ -520,5 +520,46 @@
   "optionsHelpSupportBody": {
     "message": "Issues, feedback, and shop suggestions:",
     "description": "Help text introducing the support link."
+  },
+
+  "popupBggSyncTitle": {
+    "message": "Sync BGG Collection",
+    "description": "Title of the BGG collection sync panel."
+  },
+  "popupBggSyncBody": {
+    "message": "Import your owned games, wishlist and ratings from BoardGameGeek.",
+    "description": "Body text of the BGG collection sync panel."
+  },
+  "popupBggSyncButton": {
+    "message": "Import Collection",
+    "description": "Button label on the BGG collection sync panel."
+  },
+  "popupBggSyncAs": {
+    "message": "Syncing as: $username$",
+    "description": "Shows the auto-detected BGG username before syncing.",
+    "placeholders": {
+      "username": {"content": "$1", "example": "jmailing"}
+    }
+  },
+  "popupBggSyncNotYou": {
+    "message": "not you?",
+    "description": "Link to clear the stored BGG username and open BGG."
+  },
+  "popupBggSyncNoUser": {
+    "message": "Visit boardgamegeek.com while logged in to sync your collection.",
+    "description": "Shown when no BGG username can be detected or is stored."
+  },
+  "importBggSyncFetching": {
+    "message": "Fetching your BGG collection… please wait",
+    "description": "Status shown immediately after clicking Import Collection."
+  },
+  "popupBggSyncSummary": {
+    "message": "$owned$ owned · $wishlist$ wishlist · $ratings$ ratings",
+    "description": "Success summary after BGG collection import.",
+    "placeholders": {
+      "owned": {"content": "$1", "example": "42"},
+      "wishlist": {"content": "$2", "example": "15"},
+      "ratings": {"content": "$3", "example": "120"}
+    }
   }
 }

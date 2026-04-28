@@ -406,5 +406,38 @@
   },
   "optionsHelpSupportBody": {
     "message": "Probleme, Feedback und Shop-Vorschläge:"
+  },
+
+  "popupBggSyncTitle": {
+    "message": "BGG-Sammlung synchronisieren"
+  },
+  "popupBggSyncBody": {
+    "message": "Importiere deine Spiele, Wunschliste und Bewertungen von BoardGameGeek."
+  },
+  "popupBggSyncButton": {
+    "message": "Sammlung importieren"
+  },
+  "popupBggSyncAs": {
+    "message": "Synchronisierung als: $username$",
+    "placeholders": {
+      "username": {"content": "$1", "example": "jmailing"}
+    }
+  },
+  "popupBggSyncNotYou": {
+    "message": "nicht Sie?"
+  },
+  "popupBggSyncNoUser": {
+    "message": "Melde dich auf boardgamegeek.com an, um deine Sammlung zu synchronisieren."
+  },
+  "importBggSyncFetching": {
+    "message": "BGG-Sammlung abrufen… bitte warten"
+  },
+  "popupBggSyncSummary": {
+    "message": "$owned$ besessen · $wishlist$ Wunschliste · $ratings$ Bewertungen",
+    "placeholders": {
+      "owned": {"content": "$1", "example": "42"},
+      "wishlist": {"content": "$2", "example": "15"},
+      "ratings": {"content": "$3", "example": "120"}
+    }
   }
 }

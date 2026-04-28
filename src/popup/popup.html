@@ -187,6 +187,28 @@
         <div id="bgaStatus" class="import-status"></div>
       </div>
 
+      <!-- BGG Sync Panel (visible to all logged-in users) -->
+      <div class="card" id="bggSyncPanel" style="display: none">
+        <div class="card-top">
+          <div class="card-title" data-i18n="popupBggSyncTitle">Sync BGG Collection</div>
+        </div>
+        <p class="card-body-text" data-i18n="popupBggSyncBody">
+          Import your owned games, wishlist and ratings from BoardGameGeek.
+        </p>
+        <p class="card-body-text bgg-sync-user-row" id="bggSyncAsRow" style="display: none">
+          <span id="bggSyncAsText"></span
+          ><a href="#" id="bggSyncClear" class="bgg-sync-clear" data-i18n="popupBggSyncNotYou"
+            >not you?</a
+          >
+        </p>
+        <div class="extract-row" style="margin-top: 10px">
+          <button id="bggSyncBtn" class="btn-primary" data-i18n="popupBggSyncButton" disabled>
+            Import Collection
+          </button>
+        </div>
+        <div id="bggSyncStatus" class="import-status"></div>
+      </div>
+
       <!-- Message toast -->
       <div id="message" class="message hidden"></div>
 
