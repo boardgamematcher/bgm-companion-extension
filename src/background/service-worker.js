@@ -4,6 +4,7 @@ const PROFILES_URL =
 const PROFILES_CACHE_KEY = 'cachedProfiles';
 const PROFILES_CACHE_TTL = 6 * 60 * 60 * 1000; // 6 hours
 const BGM_BASE_URL = 'https://boardgamematcher.com';
+const NEWS_POLL_ALARM = 'bgm-news-poll';
 
 // Verbose service-worker logs are off in shipped builds. Flip to `true`
 // locally when debugging pattern loading or cache behaviour. Errors and
@@ -23,6 +24,9 @@ chrome.runtime.onInstalled.addListener(async () => {
   debug('BGM Toolbox installed/updated — clearing profile cache');
   await chrome.storage.local.remove(PROFILES_CACHE_KEY);
   await reloadPatterns();
+
+  chrome.alarms.create(NEWS_POLL_ALARM, { periodInMinutes: 60 });
+  pollNews();
 
   // Create context menus
   chrome.contextMenus.create({
@@ -199,6 +203,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       .catch((error) => sendResponse({ success: false, error: error.message }));
     return true;
   }
+
+  if (message.action === 'pollNews') {
+    pollNews();
+    sendResponse({ success: true });
+    return false;
+  }
 });
 
 // Update extraction stats
@@ -294,6 +304,53 @@ async function getStats() {
   } catch (error) {
     console.error('Error getting stats:', error);
     return { lastExtraction: null };
+  }
+}
+
+// ── News notifications ──
+
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === NEWS_POLL_ALARM) pollNews();
+});
+
+chrome.notifications.onClicked.addListener((notifId) => {
+  if (notifId.startsWith('bgm-news-')) {
+    const slug = notifId.slice('bgm-news-'.length);
+    chrome.tabs.create({ url: `${BGM_BASE_URL}/news/${slug}` });
+    chrome.notifications.clear(notifId);
+  }
+});
+
+async function pollNews() {
+  try {
+    const { newsNotifEnabled = true } = await chrome.storage.local.get('newsNotifEnabled');
+    if (!newsNotifEnabled) return;
+
+    const res = await fetch(`${BGM_BASE_URL}/api/news/latest`);
+    if (!res.ok) return;
+
+    const item = await res.json();
+    if (!item || !item.id) return;
+
+    const { lastSeenNewsId } = await chrome.storage.local.get('lastSeenNewsId');
+
+    // First run: just record the current latest item without notifying
+    if (!lastSeenNewsId) {
+      await chrome.storage.local.set({ lastSeenNewsId: item.id });
+      return;
+    }
+
+    if (item.id !== lastSeenNewsId) {
+      chrome.notifications.create(`bgm-news-${item.slug}`, {
+        type: 'basic',
+        iconUrl: '/icons/icon128.png',
+        title: chrome.i18n.getMessage('notifNewsTitle'),
+        message: item.title,
+      });
+      await chrome.storage.local.set({ lastSeenNewsId: item.id });
+    }
+  } catch (_e) {
+    // Network failure — silently skip
   }
 }
 
