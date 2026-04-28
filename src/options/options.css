@@ -118,6 +118,18 @@ main {
 }
 
 /* ── Section header ── */
+.section-toolbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.section-toolbar .section-header {
+  margin-bottom: 0;
+}
+
 .section-header {
   margin-bottom: 24px;
 }
