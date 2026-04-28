@@ -32,6 +32,9 @@ function setupTabs() {
 
 // Setup event listeners
 function setupEventListeners() {
+  // Refresh profiles
+  document.getElementById('refresh-profiles-btn').addEventListener('click', handleRefreshProfiles);
+
   // Custom pattern actions
   document.getElementById('add-pattern-btn').addEventListener('click', () => openModal());
   document.getElementById('import-btn').addEventListener('click', handleImport);
@@ -49,18 +52,70 @@ function setupEventListeners() {
 // Load patterns from storage
 async function loadPatterns() {
   try {
-    // Load built-in patterns. The bundled JSON uses the key "profiles"
-    // (matching the shared site-profiles repo schema). Earlier code read
-    // "patterns", which silently produced an empty Supported Sites tab.
-    const response = await fetch(chrome.runtime.getURL('patterns/built-in.json'));
-    const data = await response.json();
-    builtInPatterns = data.profiles || data.patterns || [];
+    // Prefer the live cache (populated by the SW from GitHub) over the
+    // bundled fallback, so the list reflects any recently refreshed profiles.
+    const cached = await chrome.storage.local.get('cachedProfiles');
+    const entry = cached.cachedProfiles;
+    if (entry && Array.isArray(entry.profiles) && entry.profiles.length > 0) {
+      builtInPatterns = entry.profiles;
+      updateProfilesMeta(entry.timestamp, entry.profiles.length);
+    } else {
+      // Fall back to the bundled JSON when the cache is empty or missing.
+      const response = await fetch(chrome.runtime.getURL('patterns/built-in.json'));
+      const data = await response.json();
+      builtInPatterns = data.profiles || data.patterns || [];
+      updateProfilesMeta(null, builtInPatterns.length);
+    }
 
-    // Load custom patterns
     const result = await chrome.storage.local.get('customPatterns');
     customPatterns = result.customPatterns || [];
   } catch (error) {
     console.error('Error loading patterns:', error);
+  }
+}
+
+function updateProfilesMeta(timestamp, count) {
+  const el = document.getElementById('profiles-meta');
+  if (!el) return;
+  const countStr = `${count} site${count !== 1 ? 's' : ''}`;
+  if (!timestamp) {
+    el.textContent = countStr;
+    return;
+  }
+  const ago = formatTimeAgo(timestamp);
+  el.textContent = `${countStr} — updated ${ago}`;
+}
+
+function formatTimeAgo(timestamp) {
+  const diffMs = Date.now() - timestamp;
+  const diffMin = Math.floor(diffMs / 60000);
+  if (diffMin < 1) return 'just now';
+  if (diffMin < 60) return `${diffMin}m ago`;
+  const diffH = Math.floor(diffMin / 60);
+  if (diffH < 24) return `${diffH}h ago`;
+  return `${Math.floor(diffH / 24)}d ago`;
+}
+
+async function handleRefreshProfiles() {
+  const btn = document.getElementById('refresh-profiles-btn');
+  btn.disabled = true;
+  btn.textContent = 'Refreshing…';
+
+  try {
+    await chrome.storage.local.remove('cachedProfiles');
+    await new Promise((resolve, reject) => {
+      chrome.runtime.sendMessage({ action: 'reloadPatterns' }, (response) => {
+        if (chrome.runtime.lastError) return reject(chrome.runtime.lastError);
+        resolve(response);
+      });
+    });
+    await loadPatterns();
+    renderSupportedPatterns(document.getElementById('search-supported').value);
+  } catch (err) {
+    console.error('Failed to refresh profiles:', err);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Refresh profiles';
   }
 }
 
