@@ -544,7 +544,26 @@
     "message": "Issues, feedback, and shop suggestions:",
     "description": "Help text introducing the support link."
   },
-
+  "qlProfile": {
+    "message": "Profile",
+    "description": "Quick-link label for the user profile page."
+  },
+  "qlMatches": {
+    "message": "Find Players",
+    "description": "Quick-link label for the find players page."
+  },
+  "qlMessages": {
+    "message": "Messages",
+    "description": "Quick-link label for the messages page."
+  },
+  "qlCollection": {
+    "message": "Collection",
+    "description": "Quick-link label for the game collection page."
+  },
+  "qlWishlist": {
+    "message": "Wishlist",
+    "description": "Quick-link label for the wishlist page."
+  },
   "popupBggTitle": {
     "message": "BoardGameGeek Import",
     "description": "Title of the BGG import panel (visible only on boardgamegeek.com)."

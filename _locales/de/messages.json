@@ -427,7 +427,26 @@
   "optionsHelpSupportBody": {
     "message": "Probleme, Feedback und Shop-Vorschläge:"
   },
-
+  "qlProfile": {
+    "message": "Profil",
+    "description": "Quick-link label for the user profile page."
+  },
+  "qlMatches": {
+    "message": "Spieler",
+    "description": "Quick-link label for the find players page."
+  },
+  "qlMessages": {
+    "message": "Nachrichten",
+    "description": "Quick-link label for the messages page."
+  },
+  "qlCollection": {
+    "message": "Sammlung",
+    "description": "Quick-link label for the game collection page."
+  },
+  "qlWishlist": {
+    "message": "Wunschliste",
+    "description": "Quick-link label for the wishlist page."
+  },
   "popupBggTitle": {
     "message": "BoardGameGeek-Import",
     "description": "Title of the BGG import panel (visible only on boardgamegeek.com)."
