@@ -6,10 +6,10 @@ let editingIndex = null;
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
   await loadPatterns();
+  await loadNotifSettings();
   setupTabs();
   setupEventListeners();
   renderPatterns();
-  await loadNotifSettings();
 });
 
 // Setup tab switching
@@ -31,23 +31,33 @@ function setupTabs() {
   });
 }
 
-// Load and persist notification settings
+// ── Notifications settings ──
+
 async function loadNotifSettings() {
   const { newsNotifEnabled = true } = await chrome.storage.local.get('newsNotifEnabled');
   document.getElementById('notif-news').checked = newsNotifEnabled;
 
-  document.getElementById('notif-news').addEventListener('change', async (e) => {
-    await chrome.storage.local.set({ newsNotifEnabled: e.target.checked });
-    if (e.target.checked) {
-      chrome.runtime.sendMessage({ action: 'pollNews' }).catch(() => {});
-    }
-  });
+  const { msgBadgeEnabled = true } = await chrome.storage.local.get('msgBadgeEnabled');
+  document.getElementById('notif-messages').checked = msgBadgeEnabled;
 }
 
 // Setup event listeners
 function setupEventListeners() {
   // Refresh profiles
   document.getElementById('refresh-profiles-btn').addEventListener('click', handleRefreshProfiles);
+
+  // Notifications toggles
+  document.getElementById('notif-news').addEventListener('change', async (e) => {
+    await chrome.storage.local.set({ newsNotifEnabled: e.target.checked });
+    if (e.target.checked) {
+      chrome.runtime.sendMessage({ action: 'pollNews' }).catch(() => {});
+    }
+  });
+
+  document.getElementById('notif-messages').addEventListener('change', async (e) => {
+    await chrome.storage.local.set({ msgBadgeEnabled: e.target.checked });
+    chrome.runtime.sendMessage({ action: 'pollMessages' }).catch(() => {});
+  });
 
   // Custom pattern actions
   document.getElementById('add-pattern-btn').addEventListener('click', () => openModal());

@@ -93,6 +93,7 @@ function setLoggedIn(user) {
   showQuickLinks(user);
   showBggSyncPanel(user);
   loadBgaStats(user);
+  loadMsgBanner();
 }
 
 function setLoggedOut() {
@@ -103,6 +104,7 @@ function setLoggedOut() {
   document.getElementById('quick-links').style.display = 'none';
   document.getElementById('bggSyncPanel').style.display = 'none';
   document.getElementById('bgaTeaserRow').style.display = '';
+  document.getElementById('msg-banner').style.display = 'none';
   document.getElementById('banner-text').textContent =
     chrome.i18n.getMessage('popupBannerLoggedOut');
 }
@@ -635,6 +637,38 @@ async function loadBgaStats(user) {
   } catch (_e) {
     // stats are optional — silently skip
   }
+}
+
+// ── Unread messages banner ──
+
+async function loadMsgBanner() {
+  const banner = document.getElementById('msg-banner');
+  const { unreadMessages } = await chrome.storage.local.get('unreadMessages');
+  if (!unreadMessages || unreadMessages.count < 1) {
+    banner.style.display = 'none';
+    return;
+  }
+  const { count, senders } = unreadMessages;
+  let label;
+  if (senders && senders.length > 0) {
+    const names = senders.slice(0, 2).join(', ');
+    label =
+      count === 1
+        ? chrome.i18n.getMessage('msgBannerNewMessageFrom', [names])
+        : chrome.i18n.getMessage('msgBannerNewMessagesFrom', [String(count), names]);
+  } else {
+    label =
+      count === 1
+        ? chrome.i18n.getMessage('msgBannerNewMessage')
+        : chrome.i18n.getMessage('msgBannerNewMessages', [String(count)]);
+  }
+  document.getElementById('msg-banner-text').textContent = label;
+  banner.href = `${BGM_BASE_URL}/messages`;
+  banner.onclick = (e) => {
+    e.preventDefault();
+    chrome.tabs.create({ url: `${BGM_BASE_URL}/messages` });
+  };
+  banner.style.display = '';
 }
 
 // ── BGG Collection Sync ──
