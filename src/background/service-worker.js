@@ -9,6 +9,7 @@ const BGM_BASE_URL = 'https://boardgamematcher.com';
 const NEWS_POLL_ALARM = 'bgm-news-poll';
 const MSG_POLL_ALARM = 'bgm-messages-poll';
 const FRIEND_REQ_POLL_ALARM = 'bgm-friend-req-poll';
+const MATCH_POLL_ALARM = 'bgm-match-poll';
 
 // Verbose service-worker logs are off in shipped builds. Flip to `true`
 // locally when debugging pattern loading or cache behaviour. Errors and
@@ -32,9 +33,11 @@ chrome.runtime.onInstalled.addListener(async () => {
   chrome.alarms.create(NEWS_POLL_ALARM, { periodInMinutes: 60 });
   chrome.alarms.create(MSG_POLL_ALARM, { periodInMinutes: 1 });
   chrome.alarms.create(FRIEND_REQ_POLL_ALARM, { periodInMinutes: 5 });
+  chrome.alarms.create(MATCH_POLL_ALARM, { periodInMinutes: 60 });
   pollNews();
   pollUnreadMessages();
   pollFriendRequests();
+  pollNewMatches();
 
   // Create context menus
   chrome.contextMenus.create({
@@ -230,6 +233,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return false;
   }
 
+  if (message.action === 'pollMatches') {
+    pollNewMatches();
+    sendResponse({ success: true });
+    return false;
+  }
+
   if (message.action === 'getWishlist') {
     fetchWishlist().then((wishlist) => sendResponse({ wishlist }));
     return true;
@@ -338,6 +347,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === NEWS_POLL_ALARM) pollNews();
   if (alarm.name === MSG_POLL_ALARM) pollUnreadMessages();
   if (alarm.name === FRIEND_REQ_POLL_ALARM) pollFriendRequests();
+  if (alarm.name === MATCH_POLL_ALARM) pollNewMatches();
 });
 
 chrome.notifications.onClicked.addListener((notifId) => {
@@ -348,6 +358,10 @@ chrome.notifications.onClicked.addListener((notifId) => {
   }
   if (notifId.startsWith('bgm-friend-')) {
     chrome.tabs.create({ url: `${BGM_BASE_URL}/friends` });
+    chrome.notifications.clear(notifId);
+  }
+  if (notifId.startsWith('bgm-match-')) {
+    chrome.tabs.create({ url: `${BGM_BASE_URL}/play` });
     chrome.notifications.clear(notifId);
   }
 });
@@ -425,6 +439,43 @@ async function pollFriendRequests() {
     // Store all currently-pending IDs (prunes accepted/declined ones automatically)
     const allCurrentIds = requests.map((r) => r.id);
     await chrome.storage.local.set({ notifiedFriendReqIds: allCurrentIds });
+  } catch (_e) {
+    // Network failure — silently skip
+  }
+}
+
+async function pollNewMatches() {
+  try {
+    const { matchNotifEnabled = true } = await chrome.storage.local.get('matchNotifEnabled');
+    if (!matchNotifEnabled) return;
+
+    const res = await fetch(`${BGM_BASE_URL}/api/matches/new`, { credentials: 'include' });
+    if (!res.ok) return;
+
+    const { matches } = await res.json();
+    if (!matches || matches.length === 0) return;
+
+    const { notifiedMatchIds = [] } = await chrome.storage.local.get('notifiedMatchIds');
+    const seenSet = new Set(notifiedMatchIds);
+
+    const newMatches = matches.filter((m) => !seenSet.has(m.user_id));
+    if (newMatches.length === 0) return;
+
+    const top = newMatches[0];
+    const message =
+      newMatches.length === 1
+        ? chrome.i18n.getMessage('notifMatchOne', [top.username, String(top.score)])
+        : chrome.i18n.getMessage('notifMatchMany', [top.username, String(newMatches.length - 1)]);
+
+    chrome.notifications.create(`bgm-match-${Date.now()}`, {
+      type: 'basic',
+      iconUrl: '/icons/icon128.png',
+      title: chrome.i18n.getMessage('notifMatchTitle'),
+      message,
+    });
+
+    // Store all current match IDs so we don't re-notify on the next poll
+    await chrome.storage.local.set({ notifiedMatchIds: matches.map((m) => m.user_id) });
   } catch (_e) {
     // Network failure — silently skip
   }

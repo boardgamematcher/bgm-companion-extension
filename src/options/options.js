@@ -43,6 +43,9 @@ async function loadNotifSettings() {
 
   const { friendReqNotifEnabled = true } = await chrome.storage.local.get('friendReqNotifEnabled');
   document.getElementById('notif-friend-req').checked = friendReqNotifEnabled;
+
+  const { matchNotifEnabled = true } = await chrome.storage.local.get('matchNotifEnabled');
+  document.getElementById('notif-match').checked = matchNotifEnabled;
 }
 
 // Setup event listeners
@@ -67,6 +70,13 @@ function setupEventListeners() {
     await chrome.storage.local.set({ friendReqNotifEnabled: e.target.checked });
     if (e.target.checked) {
       chrome.runtime.sendMessage({ action: 'pollFriendRequests' }).catch(() => {});
+    }
+  });
+
+  document.getElementById('notif-match').addEventListener('change', async (e) => {
+    await chrome.storage.local.set({ matchNotifEnabled: e.target.checked });
+    if (e.target.checked) {
+      chrome.runtime.sendMessage({ action: 'pollMatches' }).catch(() => {});
     }
   });
 
