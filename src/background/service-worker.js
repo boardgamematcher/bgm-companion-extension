@@ -12,7 +12,8 @@ const DEBUG = false;
 const debug = DEBUG ? console.log.bind(console) : () => {};
 
 let cachedPatterns = [];
-let isReloading = false;
+let reloadingPromise = null;
+let patternsReady = false;
 
 // Load patterns eagerly on service worker start
 reloadPatterns();
@@ -102,28 +103,32 @@ async function fetchSharedProfiles() {
 }
 
 // Load patterns from shared profiles + custom patterns
-async function reloadPatterns() {
-  if (isReloading) return;
-  isReloading = true;
-  try {
-    const sharedProfiles = await fetchSharedProfiles();
+function reloadPatterns() {
+  if (reloadingPromise) return reloadingPromise;
+  reloadingPromise = (async () => {
+    try {
+      const sharedProfiles = await fetchSharedProfiles();
 
-    const result = await chrome.storage.local.get('customPatterns');
-    const custom = result.customPatterns || [];
+      const result = await chrome.storage.local.get('customPatterns');
+      const custom = result.customPatterns || [];
 
-    // Merge: shared profiles first, custom overrides by domain+name
-    const patternMap = new Map();
-    sharedProfiles.forEach((p) => patternMap.set(p.domain + ':' + p.name, p));
-    custom.forEach((p) => patternMap.set(p.domain + ':' + (p.name || 'custom'), p));
+      // Merge: shared profiles first, custom overrides by domain+name
+      const patternMap = new Map();
+      sharedProfiles.forEach((p) => patternMap.set(p.domain + ':' + p.name, p));
+      custom.forEach((p) => patternMap.set(p.domain + ':' + (p.name || 'custom'), p));
 
-    cachedPatterns = Array.from(patternMap.values());
-    debug('Loaded patterns:', cachedPatterns.length);
-  } catch (error) {
-    console.error('Error loading patterns:', error);
-    cachedPatterns = [];
-  } finally {
-    isReloading = false;
-  }
+      cachedPatterns = Array.from(patternMap.values());
+      patternsReady = true;
+      debug('Loaded patterns:', cachedPatterns.length);
+    } catch (error) {
+      console.error('Error loading patterns:', error);
+      cachedPatterns = [];
+      patternsReady = false;
+    } finally {
+      reloadingPromise = null;
+    }
+  })();
+  return reloadingPromise;
 }
 
 // Find pattern for domain (simple) or full URL (precise via url_pattern)
@@ -153,7 +158,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       const pattern = findPatternForDomain(message.domain, message.url);
       sendResponse({ supported: pattern !== null, pattern });
     };
-    if (cachedPatterns.length === 0) {
+    if (!patternsReady) {
       reloadPatterns().then(respond);
       return true;
     }

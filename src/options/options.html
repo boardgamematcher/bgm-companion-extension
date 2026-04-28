@@ -2,19 +2,23 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>BGM Toolbox - Settings</title>
+    <title data-i18n="optionsTitle">BGM Toolbox Settings</title>
     <link rel="stylesheet" href="options.css" />
   </head>
   <body>
     <div class="container">
       <header>
-        <h1>BGM Toolbox Settings</h1>
+        <h1 data-i18n="optionsTitle">BGM Toolbox Settings</h1>
       </header>
 
       <nav class="tabs">
-        <button class="tab-btn active" data-tab="supported">Supported Sites</button>
-        <button class="tab-btn" data-tab="custom">Custom Patterns</button>
-        <button class="tab-btn" data-tab="help">Help</button>
+        <button class="tab-btn active" data-tab="supported" data-i18n="optionsTabSupported">
+          Supported Sites
+        </button>
+        <button class="tab-btn" data-tab="custom" data-i18n="optionsTabCustom">
+          Custom Patterns
+        </button>
+        <button class="tab-btn" data-tab="help" data-i18n="optionsTabHelp">Help</button>
       </nav>
 
       <main>
@@ -22,14 +26,19 @@
         <div id="supported-tab" class="tab-content active">
           <div class="section-toolbar">
             <div class="section-header">
-              <h2>Built-in Site Patterns</h2>
+              <h2 data-i18n="optionsSupportedTitle">Built-in Site Patterns</h2>
               <p class="subtitle" id="profiles-meta"></p>
             </div>
             <button id="refresh-profiles-btn" class="secondary-btn">Refresh profiles</button>
           </div>
 
           <div class="search-box">
-            <input type="text" id="search-supported" placeholder="Search sites..." />
+            <input
+              type="text"
+              id="search-supported"
+              data-i18n-placeholder="optionsSearchPlaceholder"
+              placeholder="Search sites..."
+            />
           </div>
 
           <div id="supported-list" class="pattern-list">
@@ -40,14 +49,22 @@
         <!-- Custom Patterns Tab -->
         <div id="custom-tab" class="tab-content">
           <div class="section-header">
-            <h2>Custom Patterns</h2>
-            <p class="subtitle">Add your own site extraction patterns</p>
+            <h2 data-i18n="optionsCustomTitle">Custom Patterns</h2>
+            <p class="subtitle" data-i18n="optionsCustomSubtitle">
+              Add your own site extraction patterns
+            </p>
           </div>
 
           <div class="actions">
-            <button id="add-pattern-btn" class="primary-btn">Add New Pattern</button>
-            <button id="import-btn" class="secondary-btn">Import JSON</button>
-            <button id="export-btn" class="secondary-btn">Export JSON</button>
+            <button id="add-pattern-btn" class="primary-btn" data-i18n="optionsCustomAdd">
+              Add New Pattern
+            </button>
+            <button id="import-btn" class="secondary-btn" data-i18n="optionsCustomImport">
+              Import JSON
+            </button>
+            <button id="export-btn" class="secondary-btn" data-i18n="optionsCustomExport">
+              Export JSON
+            </button>
           </div>
 
           <div id="custom-list" class="pattern-list">
@@ -55,52 +72,59 @@
           </div>
 
           <div id="custom-empty" class="empty-state">
-            <p>No custom patterns yet</p>
-            <p class="hint">Click "Add New Pattern" to create one</p>
+            <p data-i18n="optionsCustomEmpty">No custom patterns yet</p>
+            <p class="hint" data-i18n="optionsCustomEmptyHint">
+              Click "Add New Pattern" to create one
+            </p>
           </div>
         </div>
 
         <!-- Help Tab -->
         <div id="help-tab" class="tab-content">
           <div class="section-header">
-            <h2>Help & Documentation</h2>
+            <h2 data-i18n="optionsHelpTitle">Help &amp; Documentation</h2>
           </div>
 
           <section class="help-section">
-            <h3>What it does</h3>
+            <h3 data-i18n="optionsHelpWhatTitle">What it does</h3>
             <ul>
-              <li>
+              <li data-i18n-html="optionsHelpShopDeals">
                 <strong>Shop deals:</strong> on supported board game shops, click the toolbar icon
                 to extract game names and prices, then match them against BoardGameMatcher.com.
               </li>
-              <li>
+              <li data-i18n-html="optionsHelpPlayHistory">
                 <strong>Play history:</strong> on Board Game Arena and Yucata, import your past
                 plays into your BGM profile in one click.
               </li>
-              <li>
+              <li data-i18n-html="optionsHelpWishlist">
                 <strong>Wishlist:</strong> quickly add games to your BGM wishlist from the popup.
               </li>
             </ul>
           </section>
 
           <section class="help-section">
-            <h3>Custom patterns</h3>
+            <h3 data-i18n="optionsHelpCustomTitle">Custom patterns</h3>
             <p>
-              The Custom Patterns tab lets you teach the extension a new shop. See the
+              <span data-i18n="optionsHelpCustomBody"
+                >The Custom Patterns tab lets you teach the extension a new shop. See the
+                site-profiles README for the schema and examples.</span
+              >
               <a
                 href="https://github.com/boardgamematcher/site-profiles/blob/main/README.md"
                 target="_blank"
                 rel="noopener"
+                data-i18n="optionsHelpCustomLink"
                 >site-profiles README</a
               >
-              for the schema and examples.
             </p>
           </section>
 
           <section class="help-section">
-            <h3>Need help?</h3>
+            <h3 data-i18n="optionsHelpSupportTitle">Need help?</h3>
             <p>
-              Issues, feedback, and shop suggestions:
+              <span data-i18n="optionsHelpSupportBody"
+                >Issues, feedback, and shop suggestions:</span
+              >
               <a
                 href="https://github.com/boardgamematcher/toolbox-extension/issues"
                 target="_blank"
@@ -117,62 +141,76 @@
     <div id="pattern-modal" class="modal hidden">
       <div class="modal-content">
         <div class="modal-header">
-          <h2 id="modal-title">Add Pattern</h2>
+          <h2 id="modal-title" data-i18n="optionsModalAddTitle">Add Pattern</h2>
           <button id="modal-close" class="close-btn">&times;</button>
         </div>
 
         <form id="pattern-form">
           <div class="form-group">
-            <label for="domain-input">Domain *</label>
+            <label for="domain-input" data-i18n="optionsFieldDomain">Domain *</label>
             <input type="text" id="domain-input" placeholder="example.com" required />
-            <span class="hint">Without http:// or www</span>
+            <span class="hint" data-i18n="optionsFieldDomainHint">Without http:// or www</span>
           </div>
 
           <div class="form-group">
-            <label for="name-input">Display Name *</label>
+            <label for="name-input" data-i18n="optionsFieldName">Display Name *</label>
             <input type="text" id="name-input" placeholder="Example Site" required />
           </div>
 
           <div class="form-group">
-            <label for="selector-input">CSS Selector *</label>
+            <label for="selector-input" data-i18n="optionsFieldSelector">CSS Selector *</label>
             <input type="text" id="selector-input" placeholder=".product-name" required />
-            <span class="hint">CSS selector to find game names</span>
+            <span class="hint" data-i18n="optionsFieldSelectorHint"
+              >CSS selector to find game names</span
+            >
           </div>
 
           <div class="form-group">
-            <label for="exclude-input">Exclude Patterns (comma-separated)</label>
+            <label for="exclude-input" data-i18n="optionsFieldExclude"
+              >Exclude Patterns (comma-separated)</label
+            >
             <input type="text" id="exclude-input" placeholder="^Sponsored, ^Ad" />
-            <span class="hint">Regex patterns to exclude results</span>
           </div>
 
           <div class="form-group">
-            <label for="include-input">Include Patterns (comma-separated)</label>
+            <label for="include-input" data-i18n="optionsFieldInclude"
+              >Include Patterns (comma-separated)</label
+            >
             <input type="text" id="include-input" placeholder="Game$, Board" />
-            <span class="hint">Regex patterns to include only matching results</span>
           </div>
 
           <div class="form-group checkbox-group">
             <label>
               <input type="checkbox" id="trim-input" checked />
-              Trim whitespace
+              <span data-i18n="optionsFieldTrim">Trim whitespace</span>
             </label>
           </div>
 
           <div class="form-group checkbox-group">
             <label>
               <input type="checkbox" id="dedupe-input" checked />
-              Remove duplicates
+              <span data-i18n="optionsFieldDedupe">Deduplicate results</span>
             </label>
           </div>
 
           <div class="modal-actions">
-            <button type="button" id="cancel-btn" class="secondary-btn">Cancel</button>
-            <button type="submit" class="primary-btn">Save Pattern</button>
+            <button
+              type="button"
+              id="cancel-btn"
+              class="secondary-btn"
+              data-i18n="optionsFormCancel"
+            >
+              Cancel
+            </button>
+            <button type="submit" class="primary-btn" data-i18n="optionsFormSave">
+              Save Pattern
+            </button>
           </div>
         </form>
       </div>
     </div>
 
+    <script src="../lib/i18n.js"></script>
     <script src="options.js"></script>
   </body>
 </html>
