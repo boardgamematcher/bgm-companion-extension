@@ -205,6 +205,23 @@
         <div id="bgaStatus" class="import-status"></div>
       </div>
 
+      <!-- BGG Import Panel (visible only on boardgamegeek.com) -->
+      <div class="card" id="bggPanel" style="display: none">
+        <div class="card-top">
+          <div class="card-title" data-i18n="popupBggTitle">BoardGameGeek Import</div>
+        </div>
+        <p class="card-body-text" data-i18n="popupBggBody">
+          Import your BGG play history to unlock badges and track statistics. Plays are saved to
+          your BoardGameMatcher account; nothing is sent back to BGG.
+        </p>
+        <div class="extract-row" style="margin-top: 10px">
+          <button id="bggImportBtn" class="btn-primary" data-i18n="popupBggButton">
+            Import BGG Plays
+          </button>
+        </div>
+        <div id="bggStatus" class="import-status"></div>
+      </div>
+
       <!-- BGG Sync Panel (visible to all logged-in users) -->
       <div class="card" id="bggSyncPanel" style="display: none">
         <div class="card-top">
@@ -244,5 +261,6 @@
     <script src="popup.js"></script>
     <script src="yucata-import.js"></script>
     <script src="bga-import.js"></script>
+    <script src="bgg-import.js"></script>
   </body>
 </html>
