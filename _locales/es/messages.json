@@ -542,5 +542,8 @@
   "msgBannerNewMessages": {
     "message": "$count$ mensajes nuevos",
     "placeholders": {"count": {"content": "$1", "example": "3"}}
+  },
+  "wishlistBadgeLabel": {
+    "message": "✓ En tu lista de deseos"
   }
 }

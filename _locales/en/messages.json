@@ -613,6 +613,11 @@
     "message": "Fetching your BGG collection… please wait",
     "description": "Status shown immediately after clicking Import Collection."
   },
+  "wishlistBadgeLabel": {
+    "message": "✓ On your wishlist",
+    "description": "Badge injected next to a game title on a retailer page when the game is in the user's BGM wishlist."
+  },
+
   "popupBggSyncSummary": {
     "message": "$owned$ owned · $wishlist$ wishlist · $ratings$ ratings",
     "description": "Success summary after BGG collection import.",
