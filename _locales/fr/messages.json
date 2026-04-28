@@ -406,5 +406,21 @@
   },
   "optionsHelpSupportBody": {
     "message": "Problèmes, retours et suggestions de boutiques :"
+  },
+  "popupBggTitle": {
+    "message": "Importation BoardGameGeek",
+    "description": "Title of the BGG import panel (visible only on boardgamegeek.com)."
+  },
+  "popupBggBody": {
+    "message": "Importez votre historique de parties BGG pour débloquer des badges et suivre vos statistiques. Les parties sont sauvegardées sur votre compte BoardGameMatcher ; rien n’est renvoyé à BGG.",
+    "description": "Body text on the BGG import panel."
+  },
+  "popupBggButton": {
+    "message": "Importer les parties BGG",
+    "description": "Button on the BGG import panel."
+  },
+  "importBggFetching": {
+    "message": "Récupération de toutes les parties depuis BGG… veuillez patienter",
+    "description": "Status shown immediately after clicking Import BGG Plays."
   }
 }

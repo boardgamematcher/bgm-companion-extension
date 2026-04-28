@@ -520,5 +520,21 @@
   "optionsHelpSupportBody": {
     "message": "Issues, feedback, and shop suggestions:",
     "description": "Help text introducing the support link."
+  },
+  "popupBggTitle": {
+    "message": "BoardGameGeek Import",
+    "description": "Title of the BGG import panel (visible only on boardgamegeek.com)."
+  },
+  "popupBggBody": {
+    "message": "Import your BGG play history to unlock badges and track statistics. Plays are saved to your BoardGameMatcher account; nothing is sent back to BGG.",
+    "description": "Body text on the BGG import panel."
+  },
+  "popupBggButton": {
+    "message": "Import BGG Plays",
+    "description": "Button on the BGG import panel."
+  },
+  "importBggFetching": {
+    "message": "Fetching all plays from BGG… please wait",
+    "description": "Status shown immediately after clicking Import BGG Plays."
   }
 }
