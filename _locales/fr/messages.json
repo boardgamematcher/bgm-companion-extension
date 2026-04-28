@@ -527,6 +527,29 @@
       "count": {"content": "$2", "example": "3"}
     }
   },
+  "optionsNotifMatchLabel": {
+    "message": "Nouveaux joueurs compatibles"
+  },
+  "optionsNotifMatchDesc": {
+    "message": "Soyez notifié quand BoardGameMatcher trouve un nouveau joueur compatible pour vous"
+  },
+  "notifMatchTitle": {
+    "message": "Nouveau match sur BoardGameMatcher"
+  },
+  "notifMatchOne": {
+    "message": "$username$ est un excellent match — $score$% de compatibilité",
+    "placeholders": {
+      "username": {"content": "$1", "example": "meeple_marc"},
+      "score": {"content": "$2", "example": "87"}
+    }
+  },
+  "notifMatchMany": {
+    "message": "$username$ et $count$ autres sont d'excellents matchs",
+    "placeholders": {
+      "username": {"content": "$1", "example": "meeple_marc"},
+      "count": {"content": "$2", "example": "3"}
+    }
+  },
   "msgBannerNewMessageFrom": {
     "message": "Nouveau message de $name$",
     "placeholders": {"name": {"content": "$1", "example": "meeple_marc"}}
