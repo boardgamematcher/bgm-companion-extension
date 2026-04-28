@@ -678,3 +678,40 @@ body {
 .import-status.is-success {
   color: #3cb371;
 }
+
+/* ── Quick links ── */
+.quick-links {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 12px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-surface);
+}
+
+.ql-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 10px;
+  line-height: 1.2;
+  padding: 4px 6px;
+  border-radius: var(--radius);
+  transition:
+    color 0.15s,
+    background 0.15s;
+  min-width: 0;
+}
+
+.ql-item:hover {
+  color: var(--amber);
+  background: var(--amber-glow);
+}
+
+.ql-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}

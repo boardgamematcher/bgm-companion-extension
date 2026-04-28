@@ -406,5 +406,25 @@
   },
   "optionsHelpSupportBody": {
     "message": "Problemi, feedback e suggerimenti di negozi:"
+  },
+  "qlProfile": {
+    "message": "Profilo",
+    "description": "Quick-link label for the user profile page."
+  },
+  "qlMatches": {
+    "message": "Giocatori",
+    "description": "Quick-link label for the find players page."
+  },
+  "qlMessages": {
+    "message": "Messaggi",
+    "description": "Quick-link label for the messages page."
+  },
+  "qlCollection": {
+    "message": "Collezione",
+    "description": "Quick-link label for the game collection page."
+  },
+  "qlWishlist": {
+    "message": "Lista desideri",
+    "description": "Quick-link label for the wishlist page."
   }
 }

@@ -86,6 +86,7 @@ function setLoggedIn(user) {
   document.getElementById('banner-text').textContent =
     chrome.i18n.getMessage('popupBannerLoggedIn');
   showWishlistCard(user);
+  showQuickLinks(user);
 }
 
 function setLoggedOut() {
@@ -93,6 +94,7 @@ function setLoggedOut() {
   document.getElementById('card-login').style.display = '';
   document.getElementById('card-wishlist').style.display = 'none';
   document.getElementById('card-teaser').style.display = '';
+  document.getElementById('quick-links').style.display = 'none';
   document.getElementById('banner-text').textContent =
     chrome.i18n.getMessage('popupBannerLoggedOut');
 }
@@ -420,6 +422,18 @@ function showMessage(text, type) {
 
 function handleSettings() {
   chrome.runtime.openOptionsPage();
+}
+
+// ── Quick links ──
+
+function showQuickLinks(user) {
+  const u = encodeURIComponent(user.username || '');
+  document.getElementById('ql-profile').href = `${BGM_BASE_URL}/users/${u}`;
+  document.getElementById('ql-matches').href = `${BGM_BASE_URL}/play/players`;
+  document.getElementById('ql-messages').href = `${BGM_BASE_URL}/messages`;
+  document.getElementById('ql-collection').href = `${BGM_BASE_URL}/collections/${u}`;
+  document.getElementById('ql-wishlist').href = `${BGM_BASE_URL}/collections/${u}?tab=wishlist`;
+  document.getElementById('quick-links').style.display = '';
 }
 
 // ── Wishlist quick-add ──
