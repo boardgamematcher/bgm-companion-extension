@@ -192,6 +192,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     });
     return true;
   }
+
+  if (message.action === 'syncBggCollection') {
+    syncBggCollection(message.bggUsername)
+      .then((results) => sendResponse({ success: true, results }))
+      .catch((error) => sendResponse({ success: false, error: error.message }));
+    return true;
+  }
 });
 
 // Update extraction stats
@@ -288,4 +295,27 @@ async function getStats() {
     console.error('Error getting stats:', error);
     return { lastExtraction: null };
   }
+}
+
+// Import a BGG collection into BGM
+async function syncBggCollection(bggUsername) {
+  const response = await fetch(`${BGM_BASE_URL}/api/bgg/import-collection`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ bgg_username: bggUsername }),
+  });
+
+  if (!response.ok) {
+    let errMsg = `API error ${response.status}`;
+    try {
+      const data = await response.json();
+      if (data && data.error) errMsg = data.error;
+    } catch (_e) {
+      // ignore parse error
+    }
+    throw new Error(errMsg);
+  }
+
+  return response.json();
 }
