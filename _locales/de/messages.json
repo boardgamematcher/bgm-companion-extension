@@ -496,5 +496,51 @@
       "wishlist": {"content": "$2", "example": "15"},
       "ratings": {"content": "$3", "example": "120"}
     }
+  },
+
+  "optionsTabNotifications": {"message": "Benachrichtigungen"},
+  "optionsNotifTitle": {"message": "Benachrichtigungen"},
+  "optionsNotifSubtitle": {"message": "Wähle, welche Browser-Benachrichtigungen BGM Toolbox senden darf"},
+  "optionsNotifNewsLabel": {"message": "Neuigkeiten & Ankündigungen"},
+  "optionsNotifNewsDesc": {"message": "Benachrichtigung, wenn BoardGameMatcher einen neuen Artikel oder eine Ankündigung veröffentlicht"},
+  "optionsNotifMessagesLabel": {"message": "Ungelesene Nachrichten"},
+  "optionsNotifMessagesDesc": {"message": "Badge und Banner anzeigen, wenn ungelesene Nachrichten vorhanden sind"},
+  "optionsNotifFriendReqLabel": {"message": "Freundschaftsanfragen"},
+  "optionsNotifFriendReqDesc": {"message": "Benachrichtigung, wenn jemand eine Freundschaftsanfrage auf BoardGameMatcher sendet"},
+  "notifNewsTitle": {"message": "Neu auf BoardGameMatcher"},
+  "notifFriendReqTitle": {"message": "Neue Freundschaftsanfrage auf BoardGameMatcher"},
+  "notifFriendReqOne": {
+    "message": "$name$ möchte dein Freund sein",
+    "placeholders": {"name": {"content": "$1", "example": "meeple_marc"}}
+  },
+  "notifFriendReqTwo": {
+    "message": "$name1$ und $name2$ möchten deine Freunde sein",
+    "placeholders": {
+      "name1": {"content": "$1", "example": "meeple_marc"},
+      "name2": {"content": "$2", "example": "alice"}
+    }
+  },
+  "notifFriendReqMany": {
+    "message": "$name$ und $count$ weitere möchten deine Freunde sein",
+    "placeholders": {
+      "name": {"content": "$1", "example": "meeple_marc"},
+      "count": {"content": "$2", "example": "3"}
+    }
+  },
+  "msgBannerNewMessageFrom": {
+    "message": "Neue Nachricht von $name$",
+    "placeholders": {"name": {"content": "$1", "example": "meeple_marc"}}
+  },
+  "msgBannerNewMessagesFrom": {
+    "message": "$count$ neue Nachrichten von $names$",
+    "placeholders": {
+      "count": {"content": "$1", "example": "3"},
+      "names": {"content": "$2", "example": "meeple_marc, alice"}
+    }
+  },
+  "msgBannerNewMessage": {"message": "1 neue Nachricht"},
+  "msgBannerNewMessages": {
+    "message": "$count$ neue Nachrichten",
+    "placeholders": {"count": {"content": "$1", "example": "3"}}
   }
 }
