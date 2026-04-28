@@ -621,5 +621,99 @@
       "wishlist": {"content": "$2", "example": "15"},
       "ratings": {"content": "$3", "example": "120"}
     }
+  },
+
+  "optionsTabNotifications": {
+    "message": "Notifications",
+    "description": "Tab label for the Notifications settings tab."
+  },
+  "optionsNotifTitle": {
+    "message": "Notifications",
+    "description": "Section heading on the Notifications settings tab."
+  },
+  "optionsNotifSubtitle": {
+    "message": "Choose which browser notifications BGM Toolbox can send you",
+    "description": "Subtitle on the Notifications settings tab."
+  },
+  "optionsNotifNewsLabel": {
+    "message": "News & announcements",
+    "description": "Toggle label for news notification setting."
+  },
+  "optionsNotifNewsDesc": {
+    "message": "Get notified when BoardGameMatcher publishes a new article or announcement",
+    "description": "Description for news notification toggle."
+  },
+  "optionsNotifMessagesLabel": {
+    "message": "Unread messages",
+    "description": "Toggle label for unread messages notification setting."
+  },
+  "optionsNotifMessagesDesc": {
+    "message": "Show a badge and banner when you have unread messages",
+    "description": "Description for unread messages notification toggle."
+  },
+  "optionsNotifFriendReqLabel": {
+    "message": "Friend requests",
+    "description": "Toggle label for friend request notification setting."
+  },
+  "optionsNotifFriendReqDesc": {
+    "message": "Get notified when someone sends you a friend request on BoardGameMatcher",
+    "description": "Description for friend request notification toggle."
+  },
+  "notifNewsTitle": {
+    "message": "New on BoardGameMatcher",
+    "description": "Title of the browser notification for a new news item."
+  },
+  "notifFriendReqTitle": {
+    "message": "New friend request on BoardGameMatcher",
+    "description": "Title of the browser notification for a new friend request."
+  },
+  "notifFriendReqOne": {
+    "message": "$name$ wants to be your friend",
+    "description": "Notification body when one new friend request is received.",
+    "placeholders": {
+      "name": {"content": "$1", "example": "meeple_marc"}
+    }
+  },
+  "notifFriendReqTwo": {
+    "message": "$name1$ and $name2$ want to be your friends",
+    "description": "Notification body when exactly two new friend requests are received.",
+    "placeholders": {
+      "name1": {"content": "$1", "example": "meeple_marc"},
+      "name2": {"content": "$2", "example": "alice"}
+    }
+  },
+  "notifFriendReqMany": {
+    "message": "$name$ and $count$ others want to be your friends",
+    "description": "Notification body when three or more new friend requests are received.",
+    "placeholders": {
+      "name": {"content": "$1", "example": "meeple_marc"},
+      "count": {"content": "$2", "example": "3"}
+    }
+  },
+  "msgBannerNewMessageFrom": {
+    "message": "New message from $name$",
+    "description": "Popup banner text when one unread message from one sender.",
+    "placeholders": {
+      "name": {"content": "$1", "example": "meeple_marc"}
+    }
+  },
+  "msgBannerNewMessagesFrom": {
+    "message": "$count$ new messages from $names$",
+    "description": "Popup banner text when multiple unread messages.",
+    "placeholders": {
+      "count": {"content": "$1", "example": "3"},
+      "names": {"content": "$2", "example": "meeple_marc, alice"}
+    }
+  },
+  "msgBannerNewMessage": {
+    "message": "1 new message",
+    "description": "Popup banner fallback when sender name is unavailable (singular)."
+  },
+  "msgBannerNewMessages": {
+    "message": "$count$ new messages",
+    "description": "Popup banner fallback when sender name is unavailable (plural).",
+    "placeholders": {
+      "count": {"content": "$1", "example": "3"}
+    }
   }
 }
