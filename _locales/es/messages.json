@@ -550,6 +550,29 @@
       "count": {"content": "$2", "example": "3"}
     }
   },
+  "optionsNotifSessionInviteLabel": {
+    "message": "Invitaciones a noches de juegos"
+  },
+  "optionsNotifSessionInviteDesc": {
+    "message": "Recibe notificaciones cuando alguien te invite a una noche de juegos"
+  },
+  "notifSessionInviteTitle": {
+    "message": "Invitación a noche de juegos"
+  },
+  "notifSessionInviteOne": {
+    "message": "$host$ te invita a \"$title$\"",
+    "placeholders": {
+      "host": {"content": "$1", "example": "meeple_marc"},
+      "title": {"content": "$2", "example": "Noche de juegos del viernes"}
+    }
+  },
+  "notifSessionInviteMany": {
+    "message": "$host$ y $count$ más te han invitado a noches de juegos",
+    "placeholders": {
+      "host": {"content": "$1", "example": "meeple_marc"},
+      "count": {"content": "$2", "example": "2"}
+    }
+  },
   "msgBannerNewMessageFrom": {
     "message": "Nuevo mensaje de $name$",
     "placeholders": {"name": {"content": "$1", "example": "meeple_marc"}}

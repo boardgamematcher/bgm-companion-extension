@@ -46,6 +46,11 @@ async function loadNotifSettings() {
 
   const { matchNotifEnabled = true } = await chrome.storage.local.get('matchNotifEnabled');
   document.getElementById('notif-match').checked = matchNotifEnabled;
+
+  const { sessionInviteNotifEnabled = true } = await chrome.storage.local.get(
+    'sessionInviteNotifEnabled'
+  );
+  document.getElementById('notif-session-invite').checked = sessionInviteNotifEnabled;
 }
 
 // Setup event listeners
@@ -77,6 +82,13 @@ function setupEventListeners() {
     await chrome.storage.local.set({ matchNotifEnabled: e.target.checked });
     if (e.target.checked) {
       chrome.runtime.sendMessage({ action: 'pollMatches' }).catch(() => {});
+    }
+  });
+
+  document.getElementById('notif-session-invite').addEventListener('change', async (e) => {
+    await chrome.storage.local.set({ sessionInviteNotifEnabled: e.target.checked });
+    if (e.target.checked) {
+      chrome.runtime.sendMessage({ action: 'pollSessionInvites' }).catch(() => {});
     }
   });
 
