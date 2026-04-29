@@ -5,6 +5,11 @@ let currentPattern = null;
 let currentUser = null;
 let bggUsername = null;
 
+// State held across the extraction review panel
+let _reviewTab = null;
+let _reviewGames = null;
+let _reviewDomain = null;
+
 // Initialize popup
 document.addEventListener('DOMContentLoaded', async () => {
   loadTheme();
@@ -26,6 +31,23 @@ function setupEventListeners() {
   document.getElementById('bggSyncBtn').addEventListener('click', handleBggSync);
   document.getElementById('bggSyncClear').addEventListener('click', handleBggSyncClear);
   document.getElementById('bgaTeaserSignin').addEventListener('click', handleLogin);
+
+  document.getElementById('review-cancel').addEventListener('click', hideReviewPanel);
+  document.getElementById('review-confirm').addEventListener('click', confirmExtract);
+  document.getElementById('review-select-all').addEventListener('click', () => {
+    document.querySelectorAll('.review-game-cb').forEach((cb) => (cb.checked = true));
+    updateReviewCount();
+  });
+  document.getElementById('review-deselect-all').addEventListener('click', () => {
+    document.querySelectorAll('.review-game-cb').forEach((cb) => (cb.checked = false));
+    updateReviewCount();
+  });
+  document.getElementById('review-select-new').addEventListener('click', () => {
+    document.querySelectorAll('.review-game-cb').forEach((cb) => {
+      cb.checked = cb.closest('.review-game-row').dataset.status === 'new';
+    });
+    updateReviewCount();
+  });
 }
 
 function handleAvatarClick(e) {
@@ -322,6 +344,9 @@ async function handleExtract() {
     return;
   }
 
+  const extractBtn = document.getElementById('extract-btn');
+  extractBtn.disabled = true;
+
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     if (!tab || !tab.url) {
@@ -346,53 +371,149 @@ async function handleExtract() {
       return;
     }
 
-    const games = response.games;
-
-    // POST structured data to BGM and open results page
-    const payload = { source: currentDomain, url: tab.url, games };
-    try {
-      const postResponse = await fetch(BGM_BASE_URL + '/api/extract/extension', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify(payload),
-      });
-
-      if (postResponse.ok) {
-        const result = await postResponse.json();
-        if (result && result.job_id) {
-          chrome.tabs.create({ url: BGM_BASE_URL + '/extract?job=' + result.job_id });
-        } else {
-          console.warn('Invalid API response, missing job_id');
-          openFallbackExtraction(tab.url);
-          return;
-        }
-      } else {
-        console.warn('API returned', postResponse.status);
-        openFallbackExtraction(tab.url);
-        return;
-      }
-    } catch (fetchError) {
-      console.warn('POST to BGM failed:', fetchError);
-      openFallbackExtraction(tab.url);
-      return;
-    }
-
-    // Update stats
-    const stats = {
-      lastExtraction: {
-        domain: currentDomain,
-        count: games.length,
-        timestamp: Date.now(),
-      },
-    };
-    await chrome.runtime.sendMessage({ action: 'updateStats', stats });
-    updateStatsDisplay(stats);
-    window.close();
+    // Show review panel — let the user confirm before opening the extract page
+    _reviewTab = tab;
+    _reviewGames = response.games;
+    _reviewDomain = currentDomain;
+    await showReviewPanel(response.games);
   } catch (error) {
+    extractBtn.disabled = false;
     console.error('Error extracting:', error);
     showMessage(chrome.i18n.getMessage('popupErrorPrefix', [error.message]), 'error');
   }
+}
+
+async function showReviewPanel(games) {
+  document.getElementById('card-extract').style.display = 'none';
+  document.getElementById('card-review').style.display = '';
+
+  const loading = document.getElementById('review-loading');
+  const content = document.getElementById('review-content');
+  loading.style.display = '';
+  content.style.display = 'none';
+
+  let previewData = null;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 5000);
+  try {
+    const resp = await fetch(BGM_BASE_URL + '/api/extract/preview', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ games }),
+      signal: controller.signal,
+    });
+    if (resp.ok) {
+      previewData = await resp.json();
+    }
+  } catch (e) {
+    console.warn('Preview API failed:', e);
+  } finally {
+    clearTimeout(timer);
+  }
+
+  loading.style.display = 'none';
+
+  const fallback = games.map((g) => ({ name: g.name, status: 'unrecognised', bgm_name: null }));
+  const previewGames = Array.isArray(previewData?.games) ? previewData.games : fallback;
+
+  const gameList = document.getElementById('review-game-list');
+  gameList.innerHTML = '';
+  for (const g of previewGames) {
+    const row = document.createElement('label');
+    row.className = 'review-game-row';
+    row.dataset.status = g.status;
+
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.className = 'review-game-cb';
+    cb.dataset.name = g.name;
+    cb.checked = g.status === 'new';
+    cb.addEventListener('change', updateReviewCount);
+
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'review-game-name';
+    nameSpan.textContent = g.bgm_name || g.name;
+
+    const badge = document.createElement('span');
+    const statusKey = 'popupReviewStatus' + g.status.charAt(0).toUpperCase() + g.status.slice(1);
+    badge.className = `review-badge review-badge-${g.status}`;
+    badge.textContent = chrome.i18n.getMessage(statusKey) || g.status;
+
+    row.appendChild(cb);
+    row.appendChild(nameSpan);
+    row.appendChild(badge);
+    gameList.appendChild(row);
+  }
+
+  content.style.display = '';
+  updateReviewCount();
+}
+
+function hideReviewPanel() {
+  document.getElementById('card-review').style.display = 'none';
+  document.getElementById('card-extract').style.display = '';
+  document.getElementById('extract-btn').disabled = false;
+}
+
+function updateReviewCount() {
+  const count = document.querySelectorAll('.review-game-cb:checked').length;
+  document.getElementById('review-count').textContent = chrome.i18n.getMessage('popupReviewCount', [
+    String(count),
+  ]);
+  document.getElementById('review-confirm').disabled = count === 0;
+}
+
+async function confirmExtract() {
+  const checkedNames = new Set(
+    [...document.querySelectorAll('.review-game-cb:checked')].map((cb) => cb.dataset.name)
+  );
+  const selected = _reviewGames.filter((g) => checkedNames.has(g.name));
+  if (!selected.length) return;
+
+  const tab = _reviewTab;
+  const domain = _reviewDomain;
+  hideReviewPanel();
+
+  const payload = { source: domain, url: tab.url, games: selected };
+  try {
+    const postResponse = await fetch(BGM_BASE_URL + '/api/extract/extension', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify(payload),
+    });
+
+    if (postResponse.ok) {
+      const result = await postResponse.json();
+      if (result && result.job_id) {
+        chrome.tabs.create({ url: BGM_BASE_URL + '/extract?job=' + result.job_id });
+      } else {
+        console.warn('Invalid API response, missing job_id');
+        openFallbackExtraction(tab.url);
+        return;
+      }
+    } else {
+      console.warn('API returned', postResponse.status);
+      openFallbackExtraction(tab.url);
+      return;
+    }
+  } catch (fetchError) {
+    console.warn('POST to BGM failed:', fetchError);
+    openFallbackExtraction(tab.url);
+    return;
+  }
+
+  const stats = {
+    lastExtraction: {
+      domain,
+      count: selected.length,
+      timestamp: Date.now(),
+    },
+  };
+  await chrome.runtime.sendMessage({ action: 'updateStats', stats });
+  updateStatsDisplay(stats);
+  window.close();
 }
 
 // ── Stats ──

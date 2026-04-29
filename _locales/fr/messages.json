@@ -37,6 +37,20 @@
       "count": {"content": "$1", "example": "73"}
     }
   },
+  "popupReviewTitle": {"message": "Vérifier les jeux trouvés"},
+  "popupReviewLoading": {"message": "Chargement…"},
+  "popupReviewSelectNew": {"message": "Nouveaux seulement"},
+  "popupReviewSelectAll": {"message": "Tout"},
+  "popupReviewDeselectAll": {"message": "Aucun"},
+  "popupReviewCancel": {"message": "Annuler"},
+  "popupReviewConfirm": {"message": "Extraire la sélection"},
+  "popupReviewCount": {
+    "message": "$count$ sélectionné(s)",
+    "placeholders": {"count": {"content": "$1", "example": "5"}}
+  },
+  "popupReviewStatusNew": {"message": "nouveau"},
+  "popupReviewStatusDuplicate": {"message": "dans ta collection"},
+  "popupReviewStatusUnrecognised": {"message": "non reconnu"},
   "popupSiteDetected": {
     "message": "$site$ détecté",
     "placeholders": {
