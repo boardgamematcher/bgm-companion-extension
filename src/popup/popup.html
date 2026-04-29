@@ -58,6 +58,48 @@
           </div>
         </div>
 
+        <!-- Review card (shown after extraction, before sending to BGM) -->
+        <div class="card" id="card-review" style="display: none">
+          <div class="card-top">
+            <div class="card-title" data-i18n="popupReviewTitle">Review extracted games</div>
+          </div>
+          <p class="card-body-text" id="review-loading" data-i18n="popupReviewLoading">
+            Loading preview…
+          </p>
+          <div id="review-content" style="display: none">
+            <div class="review-toggle-row">
+              <button class="btn-link" id="review-select-new" data-i18n="popupReviewSelectNew">
+                New only
+              </button>
+              <span class="review-sep">·</span>
+              <button class="btn-link" id="review-select-all" data-i18n="popupReviewSelectAll">
+                All
+              </button>
+              <span class="review-sep">·</span>
+              <button class="btn-link" id="review-deselect-all" data-i18n="popupReviewDeselectAll">
+                None
+              </button>
+            </div>
+            <div id="review-game-list" class="review-game-list"></div>
+            <div class="review-footer">
+              <span class="review-count" id="review-count"></span>
+              <div class="review-btns">
+                <button class="btn-outline btn-sm" id="review-cancel" data-i18n="popupReviewCancel">
+                  Cancel
+                </button>
+                <button
+                  class="btn-primary btn-sm"
+                  id="review-confirm"
+                  data-i18n="popupReviewConfirm"
+                  disabled
+                >
+                  Extract selected
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Unsupported site card -->
         <div class="card" id="card-unsupported" style="display: none">
           <div class="card-top">

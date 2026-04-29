@@ -47,6 +47,53 @@
       "count": {"content": "$1", "example": "73"}
     }
   },
+  "popupReviewTitle": {
+    "message": "Review extracted games",
+    "description": "Title of the review panel shown before sending games to BGM."
+  },
+  "popupReviewLoading": {
+    "message": "Loading preview…",
+    "description": "Loading text while the preview API is being called."
+  },
+  "popupReviewSelectNew": {
+    "message": "New only",
+    "description": "Toggle button to select only games not yet in the user's collection."
+  },
+  "popupReviewSelectAll": {
+    "message": "All",
+    "description": "Toggle button to select all games in the review list."
+  },
+  "popupReviewDeselectAll": {
+    "message": "None",
+    "description": "Toggle button to deselect all games in the review list."
+  },
+  "popupReviewCancel": {
+    "message": "Cancel",
+    "description": "Cancel button in the extraction review panel."
+  },
+  "popupReviewConfirm": {
+    "message": "Extract selected",
+    "description": "Confirm button to send selected games to BGM."
+  },
+  "popupReviewCount": {
+    "message": "$count$ selected",
+    "description": "Count of selected games in the review panel.",
+    "placeholders": {
+      "count": {"content": "$1", "example": "5"}
+    }
+  },
+  "popupReviewStatusNew": {
+    "message": "new",
+    "description": "Badge label for a game matched in catalog but not yet in the user's collection."
+  },
+  "popupReviewStatusDuplicate": {
+    "message": "in collection",
+    "description": "Badge label for a game already in the user's collection."
+  },
+  "popupReviewStatusUnrecognised": {
+    "message": "unrecognised",
+    "description": "Badge label for a game not found in the BGM catalog."
+  },
   "popupSiteDetected": {
     "message": "$site$ detected",
     "description": "Pill text under the extract card title (e.g. 'Veepee Catalog detected').",
