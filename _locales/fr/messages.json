@@ -605,5 +605,34 @@
   },
   "wishlistBadgeLabel": {
     "message": "✓ Dans ta liste de souhaits"
+  },
+
+  "ctxMenuSearchGame": {
+    "message": "Rechercher \"%s\" sur BoardGameMatcher"
+  },
+  "notifGameFoundTitle": {
+    "message": "Jeu trouvé sur BoardGameMatcher"
+  },
+  "notifGameFoundBody": {
+    "message": "$name$ ($year$)",
+    "placeholders": {
+      "name": {"content": "$1", "example": "Wingspan"},
+      "year": {"content": "$2", "example": "2019"}
+    }
+  },
+  "notifGameFoundBodyNoYear": {
+    "message": "$name$",
+    "placeholders": {
+      "name": {"content": "$1", "example": "Wingspan"}
+    }
+  },
+  "notifGameNotFoundTitle": {
+    "message": "Aucun jeu trouvé"
+  },
+  "notifGameNotFoundBody": {
+    "message": "Aucun résultat pour \"$query$\" sur BoardGameMatcher",
+    "placeholders": {
+      "query": {"content": "$1", "example": "Wingspan"}
+    }
   }
 }

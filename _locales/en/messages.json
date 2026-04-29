@@ -823,5 +823,40 @@
     "placeholders": {
       "count": {"content": "$1", "example": "3"}
     }
+  },
+
+  "ctxMenuSearchGame": {
+    "message": "Search \"%s\" on BoardGameMatcher",
+    "description": "Right-click context menu entry for searching selected text as a game title. %s is filled by Chrome with the selected text — keep the placeholder."
+  },
+  "notifGameFoundTitle": {
+    "message": "Game found on BoardGameMatcher",
+    "description": "Title of the browser notification when a game search by selected text returns a result."
+  },
+  "notifGameFoundBody": {
+    "message": "$name$ ($year$)",
+    "description": "Notification body when a game is found and has a publication year.",
+    "placeholders": {
+      "name": {"content": "$1", "example": "Wingspan"},
+      "year": {"content": "$2", "example": "2019"}
+    }
+  },
+  "notifGameFoundBodyNoYear": {
+    "message": "$name$",
+    "description": "Notification body when a game is found but has no publication year.",
+    "placeholders": {
+      "name": {"content": "$1", "example": "Wingspan"}
+    }
+  },
+  "notifGameNotFoundTitle": {
+    "message": "No game found",
+    "description": "Title of the browser notification when a game search by selected text returns no results."
+  },
+  "notifGameNotFoundBody": {
+    "message": "No match for \"$query$\" on BoardGameMatcher",
+    "description": "Notification body when no game matches the selected text.",
+    "placeholders": {
+      "query": {"content": "$1", "example": "Wingspan"}
+    }
   }
 }
