@@ -40,40 +40,7 @@
 
       <!-- ── Main content ── -->
       <main class="main" id="main">
-        <!-- Extract zone — always visible, enabled on shop pages -->
-        <div id="extract-zone">
-          <div id="extract-ctx-pill" class="ctx-pill shop-ctx" style="display: none">
-            <span class="dot"></span>
-            <span id="ctx-shop-name"></span>
-          </div>
-          <button
-            class="btn-primary btn-primary--idle"
-            id="extract-btn"
-            disabled
-            data-i18n="popupExtractButton"
-          >
-            Extract &amp; review
-          </button>
-          <p class="card-sub" id="shop-wishlist-count" style="display: none"></p>
-          <p class="card-sub" id="shop-last-extraction" style="display: none"></p>
-        </div>
-
-        <!-- Shop card — sign-in nudge when not logged in on a shop page -->
-        <div id="card-shop" style="display: none">
-          <div id="shop-loggedout">
-            <p class="card-lead" data-i18n="popupShopSigninLead">
-              Sign in to match them against your collection
-            </p>
-            <button class="btn-primary" id="shop-signin-btn" data-i18n="popupLoginButton">
-              Sign in to BGM
-            </button>
-            <a class="card-sublink" id="shop-signup-link" href="#" data-i18n="popupLoginSignup"
-              >Create a free account &rarr;</a
-            >
-          </div>
-        </div>
-
-        <!-- Review card -->
+        <!-- Review card — overlays tab panes during review -->
         <div id="card-review" style="display: none">
           <div class="review-header">
             <button class="btn-back" id="review-back">&#8592;</button>
@@ -119,7 +86,7 @@
           </div>
         </div>
 
-        <!-- Success card -->
+        <!-- Success card — overlays tab panes after extract -->
         <div id="card-success" style="display: none">
           <div class="ctx-pill shop-ctx">
             <span class="dot"></span>
@@ -142,229 +109,276 @@
           </button>
         </div>
 
-        <!-- Neutral card — any page, logged in -->
-        <div id="card-neutral" style="display: none">
-          <div class="wl-input-row">
-            <input
-              id="wishlist-input"
-              type="text"
-              data-i18n-placeholder="popupWishlistPlaceholder"
-              placeholder="Search a board game…"
-              autocomplete="off"
-            />
+        <!-- ── Tab panes ── -->
+        <div id="tab-panes">
+          <!-- ══ EXTRACT TAB ══ -->
+          <div id="tab-extract" class="tab-pane active">
+            <!-- Idle: not on a supported page -->
+            <div id="extract-idle" class="extract-idle">
+              <div class="extract-anim">
+                <div class="extract-anim-track">
+                  <div class="extract-anim-card">
+                    <span style="font-size: 13px">🛒</span>
+                    <span style="font-size: 11px; color: var(--text-secondary)">Shop page</span>
+                  </div>
+                  <span class="extract-anim-arrow">→</span>
+                  <div style="display: flex; flex-direction: column; gap: 3px">
+                    <div class="extract-anim-bar"></div>
+                    <div class="extract-anim-bar" style="width: 56px; animation-delay: 0.2s"></div>
+                    <div class="extract-anim-bar" style="width: 68px; animation-delay: 0.4s"></div>
+                  </div>
+                  <span class="extract-anim-arrow">→</span>
+                  <span class="extract-anim-bgm">BGM</span>
+                </div>
+              </div>
+              <p class="extract-idle-text">
+                <strong>Browsing a shop? BGM spots the games.</strong><br />
+                Open a supported shop page and this tab activates automatically — extract the whole
+                listing into your collection in one click.
+              </p>
+            </div>
+
+            <!-- Active: shop page detected -->
+            <div id="extract-active" style="display: none">
+              <div id="extract-ctx-pill" class="ctx-pill shop-ctx" style="display: none">
+                <span class="dot"></span>
+                <span id="ctx-shop-name"></span>
+              </div>
+              <button class="btn-primary" id="extract-btn" disabled data-i18n="popupExtractButton">
+                Extract &amp; review
+              </button>
+              <p class="card-sub" id="shop-wishlist-count" style="display: none"></p>
+              <p class="card-sub" id="shop-last-extraction" style="display: none"></p>
+            </div>
+
+            <!-- BGA Import Panel -->
+            <div id="bgaPanel" style="display: none">
+              <div class="ctx-pill play-ctx">
+                <span class="dot"></span>
+                <span data-i18n="popupBgaCtx">Board Game Arena</span>
+              </div>
+              <p class="card-lead" data-i18n="popupBgaLead">
+                Import your play history to track stats and earn BGM badges
+              </p>
+              <div class="bga-stats-row" id="bgaStatsRow" style="display: none">
+                <span id="bgaStatText" class="bga-stat-text"></span>
+                <a
+                  id="bgaPlaysLink"
+                  class="feature-link"
+                  href="#"
+                  target="_blank"
+                  rel="noopener"
+                  data-i18n="popupBgaPlaysLink"
+                  >View your play history &rarr;</a
+                >
+              </div>
+              <div class="bga-teaser-row" id="bgaTeaserRow" style="display: none">
+                <span class="bga-teaser-blurred">42 plays &middot; 68% win rate</span>
+                <a id="bgaTeaserSignin" class="feature-link" href="#" data-i18n="popupBgaTeaserCta"
+                  >Sign in to track your stats</a
+                >
+              </div>
+              <button
+                id="bgaImportBtn"
+                class="btn-primary"
+                data-i18n="popupBgaButton"
+                style="margin-top: 12px"
+              >
+                Import BGA Plays
+              </button>
+              <div id="bgaStatus" class="import-status"></div>
+            </div>
+
+            <!-- Yucata Import Panel -->
+            <div id="yucataPanel" style="display: none">
+              <div class="ctx-pill play-ctx">
+                <span class="dot"></span>
+                <span data-i18n="popupYucataCtx">Yucata</span>
+              </div>
+              <p class="card-lead" data-i18n="popupYucataLead">
+                Import your play history to track stats and earn BGM badges
+              </p>
+              <button
+                id="yucataImportBtn"
+                class="btn-primary"
+                data-i18n="popupYucataButton"
+                style="margin-top: 12px"
+              >
+                Import Yucata Plays
+              </button>
+              <div id="yucataStatus" class="import-status"></div>
+            </div>
+
+            <!-- BGG Plays Import Panel -->
+            <div id="bggPanel" style="display: none">
+              <div class="ctx-pill play-ctx">
+                <span class="dot"></span>
+                <span data-i18n="popupBggCtx">BoardGameGeek</span>
+              </div>
+              <p class="card-lead" data-i18n="popupBggLead">
+                Import your BGG play history to track stats and earn BGM badges
+              </p>
+              <button
+                id="bggImportBtn"
+                class="btn-primary"
+                data-i18n="popupBggButton"
+                style="margin-top: 12px"
+              >
+                Import BGG Plays
+              </button>
+              <div id="bggStatus" class="import-status"></div>
+            </div>
+
+            <!-- BGG Collection Sync -->
+            <div id="bggSyncPanel" style="display: none">
+              <div class="sync-divider"></div>
+              <p class="section-label" data-i18n="popupBggSyncTitle">Sync BGG Collection</p>
+              <p class="card-body-text" data-i18n="popupBggSyncBody">
+                Import your owned games, wishlist and ratings from BoardGameGeek.
+              </p>
+              <p class="bgg-sync-user-row" id="bggSyncAsRow" style="display: none">
+                <span id="bggSyncAsText"></span
+                ><a href="#" id="bggSyncClear" class="bgg-sync-clear" data-i18n="popupBggSyncNotYou"
+                  >not you?</a
+                >
+              </p>
+              <button
+                id="bggSyncBtn"
+                class="btn-primary"
+                data-i18n="popupBggSyncButton"
+                disabled
+                style="margin-top: 10px"
+              >
+                Import Collection
+              </button>
+              <div id="bggSyncStatus" class="import-status"></div>
+            </div>
           </div>
-          <div class="col-chips-row">
-            <span class="col-chips-label">
-              <span data-i18n="popupCollAddTo">Add to:</span>
-              <span class="col-chips-readout" id="col-chips-readout"></span>
-            </span>
-            <span class="col-chips-hint" data-i18n="popupCollChipsHint"
-              >tap to toggle, pick several</span
-            >
+          <!-- /tab-extract -->
+
+          <!-- ══ COLLECTION TAB ══ -->
+          <div id="tab-collection" class="tab-pane">
+            <!-- Login card -->
+            <div id="card-login" style="display: none">
+              <p class="login-tagline" data-i18n="popupLoginTagline">Your board game assistant</p>
+              <ul class="feature-bullets">
+                <li data-i18n="popupFeatureBullet1">See what you own while browsing shops</li>
+                <li data-i18n="popupFeatureBullet2">Import plays from BGA &amp; Yucata</li>
+                <li data-i18n="popupFeatureBullet3">Sync your BGG collection</li>
+                <li data-i18n="popupFeatureBullet4">Build a wishlist, find players</li>
+              </ul>
+              <button class="btn-primary" id="login-btn" data-i18n="popupLoginButton">
+                Sign in to BoardGameMatcher
+              </button>
+              <a class="card-sublink" id="signup-link" href="#" data-i18n="popupLoginSignup"
+                >Create a free account &rarr;</a
+              >
+            </div>
+
+            <!-- Shop sign-in nudge (shop page + logged out) -->
+            <div id="card-shop" style="display: none">
+              <div id="shop-loggedout">
+                <p class="card-lead" data-i18n="popupShopSigninLead">
+                  Sign in to match them against your collection
+                </p>
+                <button class="btn-primary" id="shop-signin-btn" data-i18n="popupLoginButton">
+                  Sign in to BGM
+                </button>
+                <a class="card-sublink" id="shop-signup-link" href="#" data-i18n="popupLoginSignup"
+                  >Create a free account &rarr;</a
+                >
+              </div>
+            </div>
+
+            <!-- Logged-in: wishlist + chips -->
+            <div id="card-neutral" style="display: none">
+              <div class="wl-input-row">
+                <input
+                  id="wishlist-input"
+                  type="text"
+                  data-i18n-placeholder="popupWishlistPlaceholder"
+                  placeholder="Search a board game…"
+                  autocomplete="off"
+                />
+              </div>
+              <div class="col-chips-row">
+                <span class="col-chips-label">
+                  <span data-i18n="popupCollAddTo">Add to:</span>
+                  <span class="col-chips-readout" id="col-chips-readout"></span>
+                </span>
+                <span class="col-chips-hint" data-i18n="popupCollChipsHint"
+                  >tap to toggle, pick several</span
+                >
+              </div>
+              <div class="col-chips" id="col-chips"></div>
+              <div class="wl-results" id="wishlist-results"></div>
+              <div class="wl-footer" id="wl-footer">
+                <span class="wl-count" id="wishlist-count"></span>
+                <a
+                  class="wl-link"
+                  id="wishlist-link"
+                  href="#"
+                  target="_blank"
+                  rel="noopener"
+                  data-i18n="popupCollViewAll"
+                  >View collection →</a
+                >
+              </div>
+            </div>
           </div>
-          <div class="col-chips" id="col-chips"></div>
-          <div class="wl-results" id="wishlist-results"></div>
-          <div class="wl-footer" id="wl-footer">
-            <span class="wl-count" id="wishlist-count"></span>
+          <!-- /tab-collection -->
+
+          <!-- ══ PLAYERS TAB ══ -->
+          <div id="tab-friends" class="tab-pane">
+            <p class="card-lead" style="margin-top: 4px">
+              Find players who share your games, wishlist, or play style.
+            </p>
             <a
-              class="wl-link"
-              id="wishlist-link"
+              class="btn-primary"
+              id="players-link"
               href="#"
-              target="_blank"
-              rel="noopener"
-              data-i18n="popupCollViewAll"
-              >View collection →</a
+              style="margin-top: 8px; display: block; text-align: center; text-decoration: none"
+              >Find players on BGM →</a
             >
           </div>
-        </div>
 
-        <!-- Login card — any page, logged out -->
-        <div id="card-login" style="display: none">
-          <p class="login-tagline" data-i18n="popupLoginTagline">Your board game assistant</p>
-          <ul class="feature-bullets">
-            <li data-i18n="popupFeatureBullet1">See what you own while browsing shops</li>
-            <li data-i18n="popupFeatureBullet2">Import plays from BGA &amp; Yucata</li>
-            <li data-i18n="popupFeatureBullet3">Sync your BGG collection</li>
-            <li data-i18n="popupFeatureBullet4">Build a wishlist, find players</li>
-          </ul>
-          <button class="btn-primary" id="login-btn" data-i18n="popupLoginButton">
-            Sign in to BoardGameMatcher
-          </button>
-          <a class="card-sublink" id="signup-link" href="#" data-i18n="popupLoginSignup"
-            >Create a free account &rarr;</a
-          >
+          <!-- ══ MORE TAB ══ -->
+          <div id="tab-more" class="tab-pane">
+            <div class="more-list">
+              <button class="more-item" id="settings-more-btn">
+                <span class="more-icon">⚙️</span>
+                <div class="more-info">
+                  <div class="more-title">Settings</div>
+                  <div class="more-sub">Language, preferences</div>
+                </div>
+                <span class="more-chevron">›</span>
+              </button>
+            </div>
+          </div>
+          <!-- /tab-more -->
         </div>
-
-        <!-- BGA Import Panel — visible only on boardgamearena.com -->
-        <div id="bgaPanel" style="display: none">
-          <div class="ctx-pill play-ctx">
-            <span class="dot"></span>
-            <span data-i18n="popupBgaCtx">Board Game Arena</span>
-          </div>
-          <p class="card-lead" data-i18n="popupBgaLead">
-            Import your play history to track stats and earn BGM badges
-          </p>
-          <div class="bga-stats-row" id="bgaStatsRow" style="display: none">
-            <span id="bgaStatText" class="bga-stat-text"></span>
-            <a
-              id="bgaPlaysLink"
-              class="feature-link"
-              href="#"
-              target="_blank"
-              rel="noopener"
-              data-i18n="popupBgaPlaysLink"
-              >View your play history &rarr;</a
-            >
-          </div>
-          <div class="bga-teaser-row" id="bgaTeaserRow" style="display: none">
-            <span class="bga-teaser-blurred">42 plays &middot; 68% win rate</span>
-            <a id="bgaTeaserSignin" class="feature-link" href="#" data-i18n="popupBgaTeaserCta">
-              Sign in to track your stats
-            </a>
-          </div>
-          <button
-            id="bgaImportBtn"
-            class="btn-primary"
-            data-i18n="popupBgaButton"
-            style="margin-top: 12px"
-          >
-            Import BGA Plays
-          </button>
-          <div id="bgaStatus" class="import-status"></div>
-          <div class="feature-strips secondary">
-            <div class="feature-strip">
-              <span class="fstrip-head" data-i18n="popupFeatureShopTitle">On a game store</span>
-              <span class="fstrip-sub" data-i18n="popupFeatureShopDesc"
-                >See owned vs new · get links to BGM game pages</span
-              >
-            </div>
-            <div class="feature-strip">
-              <span class="fstrip-head" data-i18n="popupFeatureBggTitle">On BoardGameGeek</span>
-              <span class="fstrip-sub" data-i18n="popupFeatureBggDesc">Sync your owned games</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Yucata Import Panel — visible only on yucata.de -->
-        <div id="yucataPanel" style="display: none">
-          <div class="ctx-pill play-ctx">
-            <span class="dot"></span>
-            <span data-i18n="popupYucataCtx">Yucata</span>
-          </div>
-          <p class="card-lead" data-i18n="popupYucataLead">
-            Import your play history to track stats and earn BGM badges
-          </p>
-          <button
-            id="yucataImportBtn"
-            class="btn-primary"
-            data-i18n="popupYucataButton"
-            style="margin-top: 12px"
-          >
-            Import Yucata Plays
-          </button>
-          <div id="yucataStatus" class="import-status"></div>
-          <div class="feature-strips secondary">
-            <div class="feature-strip">
-              <span class="fstrip-head" data-i18n="popupFeatureShopTitle">On a game store</span>
-              <span class="fstrip-sub" data-i18n="popupFeatureShopDesc"
-                >See owned vs new · get links to BGM game pages</span
-              >
-            </div>
-            <div class="feature-strip">
-              <span class="fstrip-head" data-i18n="popupFeatureBggTitle">On BoardGameGeek</span>
-              <span class="fstrip-sub" data-i18n="popupFeatureBggDesc">Sync your owned games</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- BGG Plays Import Panel — visible only on boardgamegeek.com -->
-        <div id="bggPanel" style="display: none">
-          <div class="ctx-pill play-ctx">
-            <span class="dot"></span>
-            <span data-i18n="popupBggCtx">BoardGameGeek</span>
-          </div>
-          <p class="card-lead" data-i18n="popupBggLead">
-            Import your BGG play history to track stats and earn BGM badges
-          </p>
-          <button
-            id="bggImportBtn"
-            class="btn-primary"
-            data-i18n="popupBggButton"
-            style="margin-top: 12px"
-          >
-            Import BGG Plays
-          </button>
-          <div id="bggStatus" class="import-status"></div>
-        </div>
-
-        <!-- BGG Collection Sync — visible only on boardgamegeek.com, logged in -->
-        <div id="bggSyncPanel" style="display: none">
-          <div class="sync-divider"></div>
-          <p class="section-label" data-i18n="popupBggSyncTitle">Sync BGG Collection</p>
-          <p class="card-body-text" data-i18n="popupBggSyncBody">
-            Import your owned games, wishlist and ratings from BoardGameGeek.
-          </p>
-          <p class="bgg-sync-user-row" id="bggSyncAsRow" style="display: none">
-            <span id="bggSyncAsText"></span
-            ><a href="#" id="bggSyncClear" class="bgg-sync-clear" data-i18n="popupBggSyncNotYou"
-              >not you?</a
-            >
-          </p>
-          <button
-            id="bggSyncBtn"
-            class="btn-primary"
-            data-i18n="popupBggSyncButton"
-            disabled
-            style="margin-top: 10px"
-          >
-            Import Collection
-          </button>
-          <div id="bggSyncStatus" class="import-status"></div>
-          <div class="feature-strips secondary">
-            <div class="feature-strip">
-              <span class="fstrip-head" data-i18n="popupFeatureShopTitle">On a game store</span>
-              <span class="fstrip-sub" data-i18n="popupFeatureShopDesc"
-                >See owned vs new · get links to BGM game pages</span
-              >
-            </div>
-            <div class="feature-strip">
-              <span class="fstrip-head" data-i18n="popupFeatureBgaTitle"
-                >On Board Game Arena or Yucata</span
-              >
-              <span class="fstrip-sub" data-i18n="popupFeatureBgaDesc"
-                >Import your play history</span
-              >
-            </div>
-          </div>
-        </div>
+        <!-- #tab-panes -->
       </main>
 
-      <!-- ── Bottom nav — logged-in only ── -->
-      <nav id="bottom-nav" class="bottom-nav" style="display: none">
-        <a id="bn-profile" class="bn-item" href="#">
-          <svg class="bn-icon" viewBox="0 0 20 20" fill="currentColor">
-            <path
-              d="M10 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 2c-4.418 0-8 1.79-8 4v1h16v-1c0-2.21-3.582-4-8-4z"
-            />
-          </svg>
-          <span data-i18n="bnProfile">Profile</span>
-        </a>
-        <a id="bn-players" class="bn-item" href="#">
-          <svg class="bn-icon" viewBox="0 0 20 20" fill="currentColor">
-            <path
-              d="M13 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM18 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM6 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM15.93 17c.047-.165.07-.34.07-.522 0-2.1-2.11-3.801-4.71-3.955A5.002 5.002 0 0 1 10 13a5.002 5.002 0 0 1-1.29-.477C6.11 13.2 4 14.9 4 17c0 .182.023.357.07.522L4 17h12l-.07-.001z"
-            />
-          </svg>
+      <!-- ── Bottom nav ── -->
+      <nav id="bottom-nav" class="bottom-nav">
+        <button class="bn-item active" id="bn-extract">
+          <span class="bn-icon">📥</span>
+          <span>Extract</span>
+          <span class="bn-dot"></span>
+        </button>
+        <button class="bn-item" id="bn-collection">
+          <span class="bn-icon">📚</span>
+          <span data-i18n="bnCollection">Collection</span>
+        </button>
+        <button class="bn-item" id="bn-friends">
+          <span class="bn-icon">👥</span>
           <span data-i18n="bnPlayers">Players</span>
-        </a>
-        <a id="bn-wishlist" class="bn-item" href="#">
-          <svg class="bn-icon" viewBox="0 0 20 20" fill="currentColor">
-            <path
-              d="M10 17.25l-1.45-1.32C4.4 11.86 2 9.69 2 7a5 5 0 0 1 8-4 5 5 0 0 1 8 4c0 2.69-2.4 4.86-6.55 8.93L10 17.25z"
-            />
-          </svg>
-          <span data-i18n="bnWishlist">Wishlist</span>
-        </a>
+        </button>
+        <button class="bn-item" id="bn-more">
+          <span class="bn-icon">⚙️</span>
+          <span>More</span>
+        </button>
       </nav>
 
       <!-- ── Message toast ── -->

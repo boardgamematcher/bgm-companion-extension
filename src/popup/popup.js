@@ -76,6 +76,23 @@ function setupEventListeners() {
     const href = e.currentTarget.href;
     if (href && href !== '#') chrome.tabs.create({ url: href });
   });
+
+  document.getElementById('bn-extract').addEventListener('click', () => switchTab('extract'));
+  document.getElementById('bn-collection').addEventListener('click', () => switchTab('collection'));
+  document.getElementById('bn-friends').addEventListener('click', () => {
+    chrome.tabs.create({ url: `${BGM_BASE_URL}/play/players` });
+  });
+  document.getElementById('bn-more').addEventListener('click', () => switchTab('more'));
+
+  const settingsMoreBtn = document.getElementById('settings-more-btn');
+  if (settingsMoreBtn) settingsMoreBtn.addEventListener('click', handleSettings);
+
+  const playersLink = document.getElementById('players-link');
+  if (playersLink)
+    playersLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      chrome.tabs.create({ url: `${BGM_BASE_URL}/play/players` });
+    });
 }
 
 function handleAvatarClick(e) {
@@ -85,65 +102,59 @@ function handleAvatarClick(e) {
 
 // ── Card layout ──
 
-function hideAllMainCards() {
-  [
-    'extract-zone',
-    'card-shop',
-    'card-review',
-    'card-success',
-    'card-neutral',
-    'card-login',
-    'bggSyncPanel',
-    'bottom-nav',
-  ].forEach((id) => {
-    const el = document.getElementById(id);
-    if (el) el.style.display = 'none';
-  });
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-pane').forEach((p) => p.classList.remove('active'));
+  document.querySelectorAll('.bn-item').forEach((b) => b.classList.remove('active'));
+  const pane = document.getElementById('tab-' + tabId);
+  if (pane) pane.classList.add('active');
+  const btn = document.getElementById('bn-' + tabId);
+  if (btn) btn.classList.add('active');
 }
 
 function applyCardLayout() {
-  hideAllMainCards();
+  const bnExtract = document.getElementById('bn-extract');
+  if (bnExtract) bnExtract.classList.remove('compatible');
 
-  // Extract zone is always shown; enable it only on shop pages
-  const extractZone = document.getElementById('extract-zone');
-  const extractBtn = document.getElementById('extract-btn');
-  const extractPill = document.getElementById('extract-ctx-pill');
-  extractZone.style.display = '';
+  // Reset extract tab sub-sections
+  document.getElementById('extract-idle').style.display = 'none';
+  document.getElementById('extract-active').style.display = 'none';
+
   if (siteContext === 'shop') {
-    extractBtn.disabled = false;
-    extractBtn.classList.remove('btn-primary--idle');
-    extractPill.style.display = '';
+    document.getElementById('extract-active').style.display = '';
+    document.getElementById('extract-ctx-pill').style.display = '';
+    const btn = document.getElementById('extract-btn');
+    btn.disabled = false;
+    btn.classList.remove('btn-primary--idle');
+    if (bnExtract) bnExtract.classList.add('compatible');
+    switchTab('extract');
+  } else if (siteContext === 'bga' || siteContext === 'yucata' || siteContext === 'bgg') {
+    // Platform panels are managed by the import scripts; just activate the tab
+    if (bnExtract) bnExtract.classList.add('compatible');
+    switchTab('extract');
+    if (siteContext === 'bgg' && currentUser) showBggSyncPanel(currentUser);
   } else {
-    extractBtn.disabled = true;
-    extractBtn.classList.add('btn-primary--idle');
-    extractPill.style.display = 'none';
+    document.getElementById('extract-idle').style.display = '';
   }
+
+  // Collection tab: show the right card based on auth state
+  const cardLogin = document.getElementById('card-login');
+  const cardNeutral = document.getElementById('card-neutral');
+  const cardShop = document.getElementById('card-shop');
+  cardLogin.style.display = 'none';
+  cardNeutral.style.display = 'none';
+  cardShop.style.display = 'none';
 
   if (!currentUser) {
     if (siteContext === 'shop') {
-      document.getElementById('card-shop').style.display = '';
-    } else if (siteContext === 'bga' || siteContext === 'yucata' || siteContext === 'bgg') {
-      // platform panels managed by bga-import.js / yucata-import.js / bgg-import.js
+      cardShop.style.display = '';
     } else {
-      document.getElementById('card-login').style.display = '';
+      cardLogin.style.display = '';
     }
-    return;
-  }
-
-  document.getElementById('bottom-nav').style.display = '';
-  document.getElementById('card-neutral').style.display = '';
-
-  switch (siteContext) {
-    case 'shop':
-      if (_activeTabId) setTimeout(() => loadShopWishlistCount(_activeTabId), 400);
-      break;
-    case 'bga':
-    case 'yucata':
-      // platform panels managed by bga-import.js / yucata-import.js / bgg-import.js
-      break;
-    case 'bgg':
-      showBggSyncPanel(currentUser);
-      break;
+  } else {
+    cardNeutral.style.display = '';
+    if (siteContext === 'shop' && _activeTabId) {
+      setTimeout(() => loadShopWishlistCount(_activeTabId), 400);
+    }
   }
 }
 
@@ -382,32 +393,9 @@ async function countGames(tabId, pattern) {
 // ── Bottom nav ──
 
 function setupBottomNav(user) {
-  const u = encodeURIComponent(user.username || '');
-
-  const profile = document.getElementById('bn-profile');
-  const players = document.getElementById('bn-players');
-  const wishlist = document.getElementById('bn-wishlist');
-
-  if (profile) {
-    profile.href = `${BGM_BASE_URL}/users/${u}`;
-    profile.addEventListener('click', (e) => {
-      e.preventDefault();
-      chrome.tabs.create({ url: profile.href });
-    });
-  }
-  if (players) {
-    players.href = `${BGM_BASE_URL}/play/players`;
-    players.addEventListener('click', (e) => {
-      e.preventDefault();
-      chrome.tabs.create({ url: players.href });
-    });
-  }
-  if (wishlist) {
-    wishlist.href = `${BGM_BASE_URL}/collections/${u}?tab=wishlist`;
-    wishlist.addEventListener('click', (e) => {
-      e.preventDefault();
-      chrome.tabs.create({ url: wishlist.href });
-    });
+  const link = document.getElementById('wishlist-link');
+  if (link && user.username) {
+    link.href = `${BGM_BASE_URL}/collections/${encodeURIComponent(user.username)}`;
   }
 }
 
@@ -484,8 +472,7 @@ async function handleExtract() {
 
 async function showReviewPanel(games) {
   document.getElementById('review-domain').textContent = currentDomain || '';
-  document.getElementById('extract-zone').style.display = 'none';
-  document.getElementById('card-shop').style.display = 'none';
+  document.getElementById('tab-panes').style.display = 'none';
   document.getElementById('card-review').style.display = '';
 
   const loading = document.getElementById('review-loading');
@@ -548,7 +535,7 @@ async function showReviewPanel(games) {
 
 function hideReviewPanel() {
   document.getElementById('card-review').style.display = 'none';
-  applyCardLayout();
+  document.getElementById('tab-panes').style.display = '';
 }
 
 function updateReviewCount() {
@@ -609,7 +596,7 @@ async function confirmExtract() {
 // ── Success state ──
 
 function showSuccessState(count, domain, jobId) {
-  hideAllMainCards();
+  document.getElementById('tab-panes').style.display = 'none';
   document.getElementById('card-success').style.display = '';
   document.getElementById('ctx-success-name').textContent = domain;
   document.getElementById('success-msg').textContent = chrome.i18n.getMessage('popupSuccessMsg', [
@@ -627,7 +614,8 @@ function hideSuccessState() {
     clearTimeout(_successTimer);
     _successTimer = null;
   }
-  applyCardLayout();
+  document.getElementById('card-success').style.display = 'none';
+  document.getElementById('tab-panes').style.display = '';
 }
 
 // ── Stats ──
