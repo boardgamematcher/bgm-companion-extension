@@ -37,6 +37,8 @@
     norm: normalizeName(item.title),
   }));
 
+  let bgmWishlistCount = 0;
+
   function scanAndBadge() {
     // Build the selector: when a card_selector is present use the inner title
     // selector so we match the per-card element, not random page text.
@@ -57,6 +59,7 @@
       if (!match) continue;
 
       el.dataset.bgmBadgeDone = '1';
+      bgmWishlistCount++;
 
       const badge = document.createElement('a');
       badge.className = 'bgm-wishlist-badge';
@@ -67,6 +70,9 @@
 
       el.insertAdjacentElement('afterend', badge);
     }
+
+    // Expose count for the extension popup to read
+    document.documentElement.dataset.bgmWishlistCount = String(bgmWishlistCount);
   }
 
   scanAndBadge();

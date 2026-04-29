@@ -4,11 +4,15 @@ let currentDomain = null;
 let currentPattern = null;
 let currentUser = null;
 let bggUsername = null;
+let siteContext = 'neutral'; // 'shop' | 'bga' | 'yucata' | 'bgg' | 'neutral'
 
 // State held across the extraction review panel
 let _reviewTab = null;
 let _reviewGames = null;
 let _reviewDomain = null;
+
+// State for the success card
+let _successTimer = null;
 
 // Initialize popup
 document.addEventListener('DOMContentLoaded', async () => {
@@ -26,12 +30,15 @@ function setupEventListeners() {
   document.getElementById('theme-toggle-btn').addEventListener('click', toggleTheme);
   document.getElementById('login-btn').addEventListener('click', handleLogin);
   document.getElementById('signup-link').addEventListener('click', handleSignup);
+  document.getElementById('shop-signin-btn').addEventListener('click', handleLogin);
+  document.getElementById('shop-signup-link').addEventListener('click', handleSignup);
   document.getElementById('wishlist-input').addEventListener('input', handleWishlistInput);
   document.getElementById('user-avatar').addEventListener('click', handleAvatarClick);
   document.getElementById('bggSyncBtn').addEventListener('click', handleBggSync);
   document.getElementById('bggSyncClear').addEventListener('click', handleBggSyncClear);
   document.getElementById('bgaTeaserSignin').addEventListener('click', handleLogin);
 
+  document.getElementById('review-back').addEventListener('click', hideReviewPanel);
   document.getElementById('review-cancel').addEventListener('click', hideReviewPanel);
   document.getElementById('review-confirm').addEventListener('click', confirmExtract);
   document.getElementById('review-select-all').addEventListener('click', () => {
@@ -48,12 +55,71 @@ function setupEventListeners() {
     });
     updateReviewCount();
   });
+
+  document.getElementById('success-extract-again').addEventListener('click', hideSuccessState);
+  document.getElementById('success-link').addEventListener('click', (e) => {
+    e.preventDefault();
+    const href = e.currentTarget.href;
+    if (href && href !== '#') chrome.tabs.create({ url: href });
+  });
 }
 
 function handleAvatarClick(e) {
   const url = e.currentTarget.dataset.profileUrl;
-  if (url) {
-    chrome.tabs.create({ url });
+  if (url) chrome.tabs.create({ url });
+}
+
+// ── Card layout ──
+
+function hideAllMainCards() {
+  [
+    'card-shop',
+    'card-review',
+    'card-success',
+    'card-neutral',
+    'card-login',
+    'bggSyncPanel',
+    'bottom-nav',
+  ].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+}
+
+function applyCardLayout() {
+  hideAllMainCards();
+
+  if (!currentUser) {
+    if (siteContext === 'shop') {
+      document.getElementById('card-shop').style.display = '';
+      document.getElementById('shop-loggedin').style.display = 'none';
+      document.getElementById('shop-loggedout').style.display = '';
+    } else if (siteContext === 'bga' || siteContext === 'yucata' || siteContext === 'bgg') {
+      // platform panels managed by bga-import.js / yucata-import.js / bgg-import.js
+    } else {
+      document.getElementById('card-login').style.display = '';
+    }
+    return;
+  }
+
+  document.getElementById('bottom-nav').style.display = '';
+
+  switch (siteContext) {
+    case 'shop':
+      document.getElementById('card-shop').style.display = '';
+      document.getElementById('shop-loggedin').style.display = '';
+      document.getElementById('shop-loggedout').style.display = 'none';
+      break;
+    case 'bga':
+    case 'yucata':
+      // platform panels shown by their own import scripts
+      break;
+    case 'bgg':
+      showBggSyncPanel(currentUser);
+      break;
+    default:
+      document.getElementById('card-neutral').style.display = '';
+      break;
   }
 }
 
@@ -61,9 +127,7 @@ function handleAvatarClick(e) {
 
 async function checkAuth() {
   try {
-    const response = await fetch(BGM_BASE_URL + '/api/me', {
-      credentials: 'include',
-    });
+    const response = await fetch(BGM_BASE_URL + '/api/me', { credentials: 'include' });
     if (response.ok) {
       currentUser = await response.json();
       setLoggedIn(currentUser);
@@ -107,28 +171,17 @@ function setLoggedIn(user) {
     delete avatar.dataset.profileUrl;
   }
 
-  document.getElementById('card-login').style.display = 'none';
-  document.getElementById('card-teaser').style.display = 'none';
-  document.getElementById('banner-text').textContent =
-    chrome.i18n.getMessage('popupBannerLoggedIn');
-  showWishlistCard(user);
-  showQuickLinks(user);
-  showBggSyncPanel(user);
+  setupBottomNav(user);
+  setupWishlist(user);
   loadBgaStats(user);
   loadMsgBanner();
 }
 
 function setLoggedOut() {
   document.getElementById('user-avatar').style.display = 'none';
-  document.getElementById('card-login').style.display = '';
-  document.getElementById('card-wishlist').style.display = 'none';
-  document.getElementById('card-teaser').style.display = '';
-  document.getElementById('quick-links').style.display = 'none';
-  document.getElementById('bggSyncPanel').style.display = 'none';
-  document.getElementById('bgaTeaserRow').style.display = '';
   document.getElementById('msg-banner').style.display = 'none';
-  document.getElementById('banner-text').textContent =
-    chrome.i18n.getMessage('popupBannerLoggedOut');
+  const bgaTeaserRow = document.getElementById('bgaTeaserRow');
+  if (bgaTeaserRow) bgaTeaserRow.style.display = '';
 }
 
 function handleLogin() {
@@ -160,10 +213,10 @@ function applyTheme(theme) {
   const icon = document.getElementById('theme-icon');
   if (theme === 'light') {
     document.body.classList.add('light');
-    icon.innerHTML = '&#9788;'; // sun
+    icon.innerHTML = '&#9788;';
   } else {
     document.body.classList.remove('light');
-    icon.innerHTML = '&#9790;'; // moon
+    icon.innerHTML = '&#9790;';
   }
 }
 
@@ -173,66 +226,57 @@ async function checkSiteSupport() {
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     if (!tab || !tab.url) {
-      setUnsupported(null);
+      applyCardLayout();
       return;
     }
 
     const url = new URL(tab.url);
     currentDomain = url.hostname;
 
+    if (url.hostname.includes('boardgamearena.com')) {
+      siteContext = 'bga';
+      applyCardLayout();
+      return;
+    }
+    if (url.hostname.includes('yucata.de')) {
+      siteContext = 'yucata';
+      applyCardLayout();
+      return;
+    }
+    if (url.hostname.includes('boardgamegeek.com')) {
+      siteContext = 'bgg';
+      applyCardLayout();
+      return;
+    }
+
     chrome.runtime.sendMessage(
       { action: 'checkSiteSupport', domain: currentDomain, url: tab.url },
       async (response) => {
         if (chrome.runtime.lastError) {
           console.error('Message error:', chrome.runtime.lastError);
-          setUnsupported('Error checking site');
+          applyCardLayout();
           return;
         }
         if (response && response.supported) {
           currentPattern = response.pattern;
-          setSupported(response.pattern.name);
+          siteContext = 'shop';
+          document.getElementById('ctx-shop-name').textContent = response.pattern.name;
+          document.getElementById('ctx-success-name').textContent = response.pattern.name;
+          applyCardLayout();
           await countGames(tab.id, response.pattern);
         } else {
-          setUnsupported(currentDomain);
+          siteContext = 'neutral';
+          applyCardLayout();
         }
       }
     );
   } catch (error) {
     console.error('Error checking site support:', error);
-    setUnsupported('Error checking site');
+    applyCardLayout();
   }
-}
-
-function setSupported(siteName) {
-  document.getElementById('card-extract').style.display = '';
-  document.getElementById('card-unsupported').style.display = 'none';
-  document.getElementById('detected-site').textContent = chrome.i18n.getMessage(
-    'popupSiteDetected',
-    [siteName]
-  );
-  document.getElementById('extract-btn').disabled = false;
-  // Extract is the primary CTA when on a supported shop. Suppress the
-  // teaser pitch — the login card alone is enough sign-up nudge, and
-  // shop extraction does not require a BGM account.
-  document.getElementById('card-teaser').style.display = 'none';
-}
-
-function setUnsupported(domain) {
-  document.getElementById('card-extract').style.display = 'none';
-  document.getElementById('card-unsupported').style.display = '';
-  let msg;
-  if (domain === null) {
-    msg = chrome.i18n.getMessage('popupUnsupportedNoTab');
-  } else if (domain) {
-    msg = chrome.i18n.getMessage('popupUnsupportedDomain', [domain]);
-  } else {
-    msg = chrome.i18n.getMessage('popupUnsupportedDefault');
-  }
-  document.getElementById('unsupported-text').textContent = msg;
 }
 
 async function countGames(tabId, pattern) {
-  // Count items from a Next.js __NEXT_DATA__ payload (Veepee, etc.)
   if (pattern.data_source === 'next_data') {
     const itemsPath = pattern.next_data?.items_path;
     if (!itemsPath) return;
@@ -285,7 +329,7 @@ async function countGames(tabId, pattern) {
         );
       }
     } catch (_e) {
-      // Can't inject into this page (e.g. chrome:// URLs)
+      // Can't inject (e.g. chrome:// URLs)
     }
     return;
   }
@@ -306,7 +350,39 @@ async function countGames(tabId, pattern) {
       );
     }
   } catch (_e) {
-    // Can't inject into this page (e.g. chrome:// URLs)
+    // Can't inject (e.g. chrome:// URLs)
+  }
+}
+
+// ── Bottom nav ──
+
+function setupBottomNav(user) {
+  const u = encodeURIComponent(user.username || '');
+
+  const profile = document.getElementById('bn-profile');
+  const players = document.getElementById('bn-players');
+  const wishlist = document.getElementById('bn-wishlist');
+
+  if (profile) {
+    profile.href = `${BGM_BASE_URL}/users/${u}`;
+    profile.addEventListener('click', (e) => {
+      e.preventDefault();
+      chrome.tabs.create({ url: profile.href });
+    });
+  }
+  if (players) {
+    players.href = `${BGM_BASE_URL}/play/players`;
+    players.addEventListener('click', (e) => {
+      e.preventDefault();
+      chrome.tabs.create({ url: players.href });
+    });
+  }
+  if (wishlist) {
+    wishlist.href = `${BGM_BASE_URL}/collections/${u}?tab=wishlist`;
+    wishlist.addEventListener('click', (e) => {
+      e.preventDefault();
+      chrome.tabs.create({ url: wishlist.href });
+    });
   }
 }
 
@@ -354,7 +430,6 @@ async function handleExtract() {
       return;
     }
 
-    // Inject content script and extract structured data from the page
     let response = await sendExtractMessage(tab.id, currentPattern);
     if (response.error) {
       try {
@@ -371,7 +446,6 @@ async function handleExtract() {
       return;
     }
 
-    // Show review panel — let the user confirm before opening the extract page
     _reviewTab = tab;
     _reviewGames = response.games;
     _reviewDomain = currentDomain;
@@ -384,13 +458,14 @@ async function handleExtract() {
 }
 
 async function showReviewPanel(games) {
-  document.getElementById('card-extract').style.display = 'none';
+  document.getElementById('review-domain').textContent = currentDomain || '';
+  document.getElementById('card-shop').style.display = 'none';
   document.getElementById('card-review').style.display = '';
 
   const loading = document.getElementById('review-loading');
-  const content = document.getElementById('review-content');
+  const gameList = document.getElementById('review-game-list');
   loading.style.display = '';
-  content.style.display = 'none';
+  gameList.innerHTML = '';
 
   let previewData = null;
   const controller = new AbortController();
@@ -403,9 +478,7 @@ async function showReviewPanel(games) {
       body: JSON.stringify({ games }),
       signal: controller.signal,
     });
-    if (resp.ok) {
-      previewData = await resp.json();
-    }
+    if (resp.ok) previewData = await resp.json();
   } catch (e) {
     console.warn('Preview API failed:', e);
   } finally {
@@ -417,8 +490,6 @@ async function showReviewPanel(games) {
   const fallback = games.map((g) => ({ name: g.name, status: 'unrecognised', bgm_name: null }));
   const previewGames = Array.isArray(previewData?.games) ? previewData.games : fallback;
 
-  const gameList = document.getElementById('review-game-list');
-  gameList.innerHTML = '';
   for (const g of previewGames) {
     const row = document.createElement('label');
     row.className = 'review-game-row';
@@ -446,13 +517,12 @@ async function showReviewPanel(games) {
     gameList.appendChild(row);
   }
 
-  content.style.display = '';
   updateReviewCount();
 }
 
 function hideReviewPanel() {
   document.getElementById('card-review').style.display = 'none';
-  document.getElementById('card-extract').style.display = '';
+  document.getElementById('card-shop').style.display = '';
   document.getElementById('extract-btn').disabled = false;
 }
 
@@ -487,7 +557,7 @@ async function confirmExtract() {
     if (postResponse.ok) {
       const result = await postResponse.json();
       if (result && result.job_id) {
-        chrome.tabs.create({ url: BGM_BASE_URL + '/extract?job=' + result.job_id });
+        showSuccessState(selected.length, domain, result.job_id);
       } else {
         console.warn('Invalid API response, missing job_id');
         openFallbackExtraction(tab.url);
@@ -505,15 +575,34 @@ async function confirmExtract() {
   }
 
   const stats = {
-    lastExtraction: {
-      domain,
-      count: selected.length,
-      timestamp: Date.now(),
-    },
+    lastExtraction: { domain, count: selected.length, timestamp: Date.now() },
   };
   await chrome.runtime.sendMessage({ action: 'updateStats', stats });
   updateStatsDisplay(stats);
-  window.close();
+}
+
+// ── Success state ──
+
+function showSuccessState(count, domain, jobId) {
+  hideAllMainCards();
+  document.getElementById('card-success').style.display = '';
+  document.getElementById('ctx-success-name').textContent = domain;
+  document.getElementById('success-msg').textContent = chrome.i18n.getMessage('popupSuccessMsg', [
+    String(count),
+  ]);
+  const link = document.getElementById('success-link');
+  link.href = jobId ? `${BGM_BASE_URL}/extract?job=${jobId}` : `${BGM_BASE_URL}/extract`;
+
+  if (_successTimer) clearTimeout(_successTimer);
+  _successTimer = setTimeout(hideSuccessState, 8000);
+}
+
+function hideSuccessState() {
+  if (_successTimer) {
+    clearTimeout(_successTimer);
+    _successTimer = null;
+  }
+  applyCardLayout();
 }
 
 // ── Stats ──
@@ -528,15 +617,17 @@ async function loadStats() {
 }
 
 function updateStatsDisplay(stats) {
-  const statsText = document.getElementById('stats-text');
+  const el = document.getElementById('shop-last-extraction');
+  if (!el) return;
   if (stats.lastExtraction && typeof stats.lastExtraction.count === 'number') {
     const { count, domain } = stats.lastExtraction;
-    statsText.textContent = chrome.i18n.getMessage('popupStatsLast', [
+    el.textContent = chrome.i18n.getMessage('popupStatsLast', [
       String(count),
       domain || chrome.i18n.getMessage('popupStatsUnknown'),
     ]);
+    el.style.display = '';
   } else {
-    statsText.textContent = chrome.i18n.getMessage('popupStatsEmpty');
+    el.style.display = 'none';
   }
 }
 
@@ -555,18 +646,6 @@ function handleSettings() {
   chrome.runtime.openOptionsPage();
 }
 
-// ── Quick links ──
-
-function showQuickLinks(user) {
-  const u = encodeURIComponent(user.username || '');
-  document.getElementById('ql-profile').href = `${BGM_BASE_URL}/users/${u}`;
-  document.getElementById('ql-matches').href = `${BGM_BASE_URL}/play/players`;
-  document.getElementById('ql-messages').href = `${BGM_BASE_URL}/messages`;
-  document.getElementById('ql-collection').href = `${BGM_BASE_URL}/collections/${u}`;
-  document.getElementById('ql-wishlist').href = `${BGM_BASE_URL}/collections/${u}?tab=wishlist`;
-  document.getElementById('quick-links').style.display = '';
-}
-
 // ── Wishlist quick-add ──
 
 const WISHLIST_DEBOUNCE_MS = 250;
@@ -575,8 +654,7 @@ let wishlistSearchTimer = null;
 let wishlistSearchAbort = null;
 let wishlistCount = null;
 
-function showWishlistCard(user) {
-  document.getElementById('card-wishlist').style.display = '';
+function setupWishlist(user) {
   const link = document.getElementById('wishlist-link');
   if (user.username) {
     link.href = `${BGM_BASE_URL}/collections/${encodeURIComponent(user.username)}?tab=wishlist`;
@@ -586,9 +664,7 @@ function showWishlistCard(user) {
 
 async function loadWishlistCount() {
   try {
-    const response = await fetch(`${BGM_BASE_URL}/api/collections/me`, {
-      credentials: 'include',
-    });
+    const response = await fetch(`${BGM_BASE_URL}/api/collections/me`, { credentials: 'include' });
     if (!response.ok) return;
     const data = await response.json();
     const list = (data && data.collections && data.collections.wishlist) || [];
@@ -756,7 +832,7 @@ async function loadBgaStats(user) {
     statText.textContent = chrome.i18n.getMessage(key, args);
     document.getElementById('bgaStatsRow').style.display = '';
   } catch (_e) {
-    // stats are optional — silently skip
+    // stats are optional
   }
 }
 
@@ -797,10 +873,7 @@ async function loadMsgBanner() {
 async function showBggSyncPanel(_user) {
   document.getElementById('bggSyncPanel').style.display = '';
 
-  // 1. Try auto-detect from active tab if it's on BGG
   let detected = await detectBggUsername();
-
-  // 2. Fall back to last-saved username
   if (!detected) {
     const stored = await chrome.storage.local.get('bggUsername');
     detected = stored.bggUsername || null;

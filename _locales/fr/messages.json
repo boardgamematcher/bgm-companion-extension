@@ -50,7 +50,7 @@
   },
   "popupReviewStatusNew": {"message": "nouveau"},
   "popupReviewStatusDuplicate": {"message": "dans ta collection"},
-  "popupReviewStatusUnrecognised": {"message": "non reconnu"},
+  "popupReviewStatusUnrecognised": {"message": "?"},
   "popupSiteDetected": {
     "message": "$site$ détecté",
     "placeholders": {
