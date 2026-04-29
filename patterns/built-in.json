@@ -19,8 +19,8 @@
         },
         "items_path": "props.initialState.CatalogItems.result.items",
         "name_cleanup": {
-          "strip_prefix_pattern": "^.+?\\s+-\\s+Jeu(?:\\s+de\\s+(?:soci[eé]t[eé]|strat[eé]gie|carte(?:s)?|r[oô]le(?:s)?))?\\s+",
-          "strip_suffix_pattern": "(\\s*[-–]\\s*(?:\\d+\\s*(?:pi[eè]ces?|pcs?|pezzi|piezas?|Teile|stuks|pieces?)|d[eè]s?\\s+\\d+\\s*ans?|[àa]\\s*partir\\s+de\\s+\\d+\\s*ans?|from\\s+\\d+\\s+years?|ab\\s+\\d+\\s+Jahren?|desde\\s+\\d+\\s+a[ñn]os?|da\\s+\\d+\\s+anni|vanaf\\s+\\d+\\s+jaar|\\d+(?:\\s*[àa–-]\\s*\\d+)?\\s*joueurs?|jusqu'[àa]\\s*\\d+\\s*joueurs?))+\\s*$"
+          "strip_prefix_pattern": "^.+?\\s+-\\s+(?:Jeu(?:\\s+de\\s+(?:soci[e\u00e9]t[e\u00e9]|strat[e\u00e9]gie|carte(?:s)?|r[o\u00f4]le(?:s)?))?\\s+)?",
+          "strip_suffix_pattern": "(\\s*[-\u2013]\\s*(?:\\d+\\s*(?:pi[e\u00e8]ces?|pcs?|pezzi|piezas?|Teile|stuks|pieces?)|d[e\u00e8]s?\\s+\\d+\\s*ans?|[\u00e0a]\\s*partir\\s+de\\s+\\d+\\s*ans?|from\\s+\\d+\\s+years?|ab\\s+\\d+\\s+Jahren?|desde\\s+\\d+\\s+a[\u00f1n]os?|da\\s+\\d+\\s+anni|vanaf\\s+\\d+\\s+jaar|\\d+(?:\\s*[\u00e0a\u2013-]\\s*\\d+)?\\s*joueurs?|jusqu'[\u00e0a]\\s*\\d+\\s*joueurs?))+\\s*$"
         }
       },
       "threshold": 0.8,
@@ -78,6 +78,23 @@
       "url_pattern": "philibertnet\\.com/(?:fr|en|de|es|it)/?$"
     },
     {
+      "card_selector": "#center_column",
+      "domain": "philibertnet.com",
+      "filters": {
+        "deduplicate": true,
+        "exclude": [],
+        "include": null,
+        "trim": true
+      },
+      "image_selector": "#bigpic",
+      "name": "Philibert Product Page",
+      "price_selector": "#our_price_display",
+      "sale_price_selector": "#old_price_display",
+      "selector": "h1#product_name",
+      "threshold": 0.9,
+      "url_pattern": "philibertnet\\.com/(?:fr|en|de|es|it)/[^/]+/\\d+-"
+    },
+    {
       "card_selector": ".wrapper_product",
       "domain": "philibertnet.com",
       "filters": {
@@ -101,14 +118,14 @@
         "deduplicate": true,
         "exclude": [
           "^Sponsored",
-          "^Sponsorisé",
+          "^Sponsoris\u00e9",
           "^Advertisement",
-          "^Publicité",
+          "^Publicit\u00e9",
           "^Gesponsert",
           "^Anzeige",
           "^Patrocinado",
           "^Sponsorizzato",
-          "^Pubblicità",
+          "^Pubblicit\u00e0",
           "^Gesponsord",
           "^Sponsrad",
           "^Sponsorowane"
@@ -131,13 +148,13 @@
         "deduplicate": true,
         "exclude": [
           "^Sponsored",
-          "^Sponsorisé",
-          "^Publicité",
+          "^Sponsoris\u00e9",
+          "^Publicit\u00e9",
           "^Gesponsert",
           "^Anzeige",
           "^Patrocinado",
           "^Sponsorizzato",
-          "^Pubblicità",
+          "^Pubblicit\u00e0",
           "^Gesponsord",
           "^Sponsrad",
           "^Sponsorowane"
@@ -151,38 +168,6 @@
       "selector": "h2 span, .p13n-sc-truncate-desktop-type2",
       "threshold": 0.8,
       "url_pattern": "amazon\\.(com|fr|de|co\\.uk|es|it|nl|se|pl|ca|com\\.au|co\\.jp|be|at|com\\.mx|com\\.br|in|sg)/(gp/|Best-Sellers|b[/\\?])"
-    },
-    {
-      "card_selector": "[data-bltgi*=\"ProductList_Middle\"]",
-      "domain": "bol.com",
-      "filters": {
-        "deduplicate": true,
-        "exclude": [
-          "^Gesponsord",
-          "^Sponsorisé"
-        ],
-        "trim": true
-      },
-      "image_selector": "[data-bltgh*=\"ProductImage\"] img",
-      "name": "Bol.com",
-      "selector": "[data-bltgh*=\"ProductTitle\"] h2",
-      "threshold": 0.8,
-      "url_pattern": "bol\\.com/(?:nl|be)/(?:nl|fr)/(?:l|s)/"
-    },
-    {
-      "card_selector": ".product__card",
-      "domain": "coolshop.dk",
-      "filters": {
-        "deduplicate": true,
-        "trim": true
-      },
-      "image_selector": ".product__card-image",
-      "name": "Coolshop",
-      "price_selector": ".product__card-price--display, .product__card-price--discount",
-      "sale_price_selector": ".product__card-price--guide",
-      "selector": ".product__card-title",
-      "threshold": 0.8,
-      "url_pattern": "coolshop\\.(dk|de|se|no|fi|nl|pl|is|co|com)/"
     },
     {
       "card_selector": "a[href^=\"/r/\"]",
@@ -478,7 +463,7 @@
       "url_pattern": "milan-spiele\\.de"
     },
     {
-      "card_selector": ".product-box",
+      "card_selector": ".product-cell.thumbnail",
       "domain": "fantasywelt.de",
       "filters": {
         "deduplicate": true,
@@ -486,15 +471,19 @@
         "include": null,
         "trim": true
       },
-      "image_selector": "img",
+      "image_selector": ".image-box img",
       "name": "Fantasywelt",
-      "price_selector": ".product-price",
-      "selector": ".product-name, .product-title",
+      "name_cleanup": {
+        "strip_suffix_pattern": "\\s*\\([A-Z]{2,3}\\)\\s*$"
+      },
+      "price_selector": "strong.price",
+      "sale_price_selector": ".instead-of",
+      "selector": "h4.title",
       "threshold": 0.8,
       "url_pattern": "fantasywelt\\.de"
     },
     {
-      "card_selector": ".product-box, .product-item",
+      "card_selector": "li.ala",
       "domain": "spiele-offensive.de",
       "filters": {
         "deduplicate": true,
@@ -502,10 +491,10 @@
         "include": null,
         "trim": true
       },
-      "image_selector": "img",
+      "image_selector": ".ala_bild2 img",
       "name": "Spiele-Offensive",
-      "price_selector": ".product-price, .price",
-      "selector": ".product-title, .product-name, h3 a",
+      "price_selector": ".jn + div",
+      "selector": "a.alamain font",
       "threshold": 0.8,
       "url_pattern": "spiele-offensive\\.de"
     },
@@ -556,7 +545,39 @@
       "selector": ".product-title, h3 a",
       "threshold": 0.8,
       "url_pattern": "spieletaxi\\.de"
+    },
+    {
+      "card_selector": "[data-bltgi*=\"ProductList_Middle\"]",
+      "domain": "bol.com",
+      "filters": {
+        "deduplicate": true,
+        "exclude": [
+          "^Gesponsord",
+          "^Sponsoris\u00e9"
+        ],
+        "trim": true
+      },
+      "image_selector": "[data-bltgh*=\"ProductImage\"] img",
+      "name": "Bol.com",
+      "selector": "[data-bltgh*=\"ProductTitle\"] h2",
+      "threshold": 0.8,
+      "url_pattern": "bol\\.com/(?:nl|be)/(?:nl|fr)/(?:l|s)/"
+    },
+    {
+      "card_selector": ".product__card",
+      "domain": "coolshop.dk",
+      "filters": {
+        "deduplicate": true,
+        "trim": true
+      },
+      "image_selector": ".product__card-image",
+      "name": "Coolshop",
+      "price_selector": ".product__card-price--display, .product__card-price--discount",
+      "sale_price_selector": ".product__card-price--guide",
+      "selector": ".product__card-title",
+      "threshold": 0.8,
+      "url_pattern": "coolshop\\.(dk|de|se|no|fi|nl|pl|is|co|com)/"
     }
   ],
-  "version": "1.4.0"
+  "version": "1.3.0"
 }
