@@ -344,6 +344,9 @@ async function handleExtract() {
     return;
   }
 
+  const extractBtn = document.getElementById('extract-btn');
+  extractBtn.disabled = true;
+
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     if (!tab || !tab.url) {
@@ -374,6 +377,7 @@ async function handleExtract() {
     _reviewDomain = currentDomain;
     await showReviewPanel(response.games);
   } catch (error) {
+    extractBtn.disabled = false;
     console.error('Error extracting:', error);
     showMessage(chrome.i18n.getMessage('popupErrorPrefix', [error.message]), 'error');
   }
@@ -389,25 +393,29 @@ async function showReviewPanel(games) {
   content.style.display = 'none';
 
   let previewData = null;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 5000);
   try {
     const resp = await fetch(BGM_BASE_URL + '/api/extract/preview', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
       body: JSON.stringify({ games }),
+      signal: controller.signal,
     });
     if (resp.ok) {
       previewData = await resp.json();
     }
   } catch (e) {
     console.warn('Preview API failed:', e);
+  } finally {
+    clearTimeout(timer);
   }
 
   loading.style.display = 'none';
 
-  const previewGames =
-    previewData?.games ??
-    games.map((g) => ({ name: g.name, status: 'unrecognised', bgm_name: null }));
+  const fallback = games.map((g) => ({ name: g.name, status: 'unrecognised', bgm_name: null }));
+  const previewGames = Array.isArray(previewData?.games) ? previewData.games : fallback;
 
   const gameList = document.getElementById('review-game-list');
   gameList.innerHTML = '';
@@ -445,6 +453,7 @@ async function showReviewPanel(games) {
 function hideReviewPanel() {
   document.getElementById('card-review').style.display = 'none';
   document.getElementById('card-extract').style.display = '';
+  document.getElementById('extract-btn').disabled = false;
 }
 
 function updateReviewCount() {
