@@ -14,6 +14,9 @@ let _reviewDomain = null;
 // State for the success card
 let _successTimer = null;
 
+// Tab ID of the active shop page (set in checkSiteSupport)
+let _activeTabId = null;
+
 // Initialize popup
 document.addEventListener('DOMContentLoaded', async () => {
   loadTheme();
@@ -109,6 +112,7 @@ function applyCardLayout() {
       document.getElementById('card-shop').style.display = '';
       document.getElementById('shop-loggedin').style.display = '';
       document.getElementById('shop-loggedout').style.display = 'none';
+      if (_activeTabId) setTimeout(() => loadShopWishlistCount(_activeTabId), 400);
       break;
     case 'bga':
     case 'yucata':
@@ -260,6 +264,7 @@ async function checkSiteSupport() {
         if (response && response.supported) {
           currentPattern = response.pattern;
           siteContext = 'shop';
+          _activeTabId = tab.id;
           document.getElementById('ctx-shop-name').textContent = response.pattern.name;
           document.getElementById('ctx-success-name').textContent = response.pattern.name;
           applyCardLayout();
@@ -631,6 +636,23 @@ function updateStatsDisplay(stats) {
   }
 }
 
+async function loadShopWishlistCount(tabId) {
+  try {
+    const results = await chrome.scripting.executeScript({
+      target: { tabId },
+      func: () => document.documentElement.dataset.bgmWishlistCount,
+    });
+    const count = parseInt(results?.[0]?.result, 10);
+    const el = document.getElementById('shop-wishlist-count');
+    if (!el || isNaN(count) || count < 1) return;
+    const key = count === 1 ? 'popupShopWishlistSingular' : 'popupShopWishlistPlural';
+    el.textContent = chrome.i18n.getMessage(key, [String(count)]);
+    el.style.display = '';
+  } catch (_e) {
+    // content script not yet active or wrong origin — silently skip
+  }
+}
+
 // ── UI helpers ──
 
 function showMessage(text, type) {
@@ -793,6 +815,12 @@ async function addToWishlist(game, row, btn) {
       }
     );
     if (!response.ok) {
+      btn.disabled = false;
+      btn.textContent = chrome.i18n.getMessage('popupWishlistTryAgain');
+      return;
+    }
+    const data = await response.json().catch(() => ({}));
+    if (!data.added) {
       btn.disabled = false;
       btn.textContent = chrome.i18n.getMessage('popupWishlistTryAgain');
       return;

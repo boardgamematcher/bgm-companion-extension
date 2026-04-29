@@ -737,6 +737,17 @@
     "message": "Sign in to match them against your collection",
     "description": "Lead text on the shop card (logged-out state)."
   },
+  "popupShopWishlistSingular": {
+    "message": "1 wishlist game on this page",
+    "description": "Shop card: shown when exactly 1 wishlist game is found on the current shop page."
+  },
+  "popupShopWishlistPlural": {
+    "message": "$count$ wishlist games on this page",
+    "description": "Shop card: shown when 2+ wishlist games are found on the current shop page.",
+    "placeholders": {
+      "count": {"content": "$1", "example": "3"}
+    }
+  },
   "popupFeatureShopTitle": {
     "message": "On a game store",
     "description": "Feature strip heading explaining the shop extraction feature."
