@@ -131,6 +131,7 @@ function applyCardLayout() {
   }
 
   document.getElementById('bottom-nav').style.display = '';
+  document.getElementById('card-neutral').style.display = '';
 
   switch (siteContext) {
     case 'shop':
@@ -138,13 +139,10 @@ function applyCardLayout() {
       break;
     case 'bga':
     case 'yucata':
-      // platform panels shown by their own import scripts
+      // platform panels managed by bga-import.js / yucata-import.js / bgg-import.js
       break;
     case 'bgg':
       showBggSyncPanel(currentUser);
-      break;
-    default:
-      document.getElementById('card-neutral').style.display = '';
       break;
   }
 }
