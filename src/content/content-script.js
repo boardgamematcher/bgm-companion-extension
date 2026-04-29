@@ -110,7 +110,7 @@ function extractStructured(pattern) {
 
     // Extract price (current/sale price)
     const priceEl = pattern.price_selector ? card.querySelector(pattern.price_selector) : null;
-    const price = getText(priceEl);
+    const price = cleanName(getText(priceEl), pattern.price_cleanup);
 
     // Extract original/struck-through price
     const salePriceEl = pattern.sale_price_selector

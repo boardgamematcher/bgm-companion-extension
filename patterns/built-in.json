@@ -493,6 +493,9 @@
       },
       "image_selector": ".ala_bild2 img",
       "name": "Spiele-Offensive",
+      "price_cleanup": {
+        "strip_suffix_pattern": "\\s+inkl\\..+$"
+      },
       "price_selector": ".jn + div",
       "selector": "a.alamain font",
       "threshold": 0.8,
