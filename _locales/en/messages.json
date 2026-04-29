@@ -32,12 +32,8 @@
     }
   },
 
-  "popupExtractTitle": {
-    "message": "Board games on this page",
-    "description": "Title of the extract card when a supported shop is detected."
-  },
   "popupExtractButton": {
-    "message": "Extract All",
+    "message": "Extract & review",
     "description": "Default label of the main extract button."
   },
   "popupExtractCount": {
@@ -46,10 +42,6 @@
     "placeholders": {
       "count": {"content": "$1", "example": "73"}
     }
-  },
-  "popupReviewTitle": {
-    "message": "Review extracted games",
-    "description": "Title of the review panel shown before sending games to BGM."
   },
   "popupReviewLoading": {
     "message": "Loading preview…",
@@ -72,7 +64,7 @@
     "description": "Cancel button in the extraction review panel."
   },
   "popupReviewConfirm": {
-    "message": "Extract selected",
+    "message": "Add to BGM",
     "description": "Confirm button to send selected games to BGM."
   },
   "popupReviewCount": {
@@ -87,48 +79,12 @@
     "description": "Badge label for a game matched in catalog but not yet in the user's collection."
   },
   "popupReviewStatusDuplicate": {
-    "message": "in collection",
+    "message": "owned",
     "description": "Badge label for a game already in the user's collection."
   },
   "popupReviewStatusUnrecognised": {
-    "message": "unrecognised",
+    "message": "?",
     "description": "Badge label for a game not found in the BGM catalog."
-  },
-  "popupSiteDetected": {
-    "message": "$site$ detected",
-    "description": "Pill text under the extract card title (e.g. 'Veepee Catalog detected').",
-    "placeholders": {
-      "site": {"content": "$1", "example": "Veepee Catalog"}
-    }
-  },
-
-  "popupUnsupportedTitle": {
-    "message": "No games detected on this page",
-    "description": "Title of the card shown on unsupported pages."
-  },
-  "popupUnsupportedNoTab": {
-    "message": "Open a browser tab to use BGM Toolbox.",
-    "description": "Body text on the unsupported card when no active tab is detected."
-  },
-  "popupUnsupportedDefault": {
-    "message": "Open a supported board game shop to extract games.",
-    "description": "Body text on the unsupported card when no domain info is available."
-  },
-  "popupUnsupportedDomain": {
-    "message": "$domain$ is not a supported site yet.",
-    "description": "Body text on the unsupported card with the current domain.",
-    "placeholders": {
-      "domain": {"content": "$1", "example": "example.com"}
-    }
-  },
-
-  "popupStatsTitle": {
-    "message": "Last extraction",
-    "description": "Title of the stats card."
-  },
-  "popupStatsEmpty": {
-    "message": "No extractions yet",
-    "description": "Body text shown when there is no extraction history."
   },
   "popupStatsLast": {
     "message": "Last: $count$ games from $domain$",
@@ -140,8 +96,8 @@
   },
 
   "popupWishlistTitle": {
-    "message": "Add a game to your wishlist",
-    "description": "Title of the wishlist quick-add card (signed-in users)."
+    "message": "Add to wishlist",
+    "description": "Title of the wishlist quick-add section (signed-in users)."
   },
   "popupWishlistPlaceholder": {
     "message": "Search a board game…",
@@ -183,14 +139,6 @@
     "description": "Error shown when the wishlist search request fails."
   },
 
-  "popupLoginTitle": {
-    "message": "Get more from your games",
-    "description": "Title of the login CTA card (signed-out users)."
-  },
-  "popupLoginBody": {
-    "message": "Log plays, sync your collection, find players near you.",
-    "description": "Body text in the login CTA card."
-  },
   "popupLoginButton": {
     "message": "Sign in to BoardGameMatcher",
     "description": "Sign-in button in the login CTA card."
@@ -200,52 +148,11 @@
     "description": "Sign-up link below the login button."
   },
 
-  "popupTeaserTitle": {
-    "message": "A free BGM account unlocks",
-    "description": "Title of the teaser card listing logged-in benefits."
-  },
-  "popupTeaserPlays": {
-    "message": "Auto-log plays from BGA & Yucata",
-    "description": "Teaser bullet."
-  },
-  "popupTeaserWishlist": {
-    "message": "Save games you want to a wishlist",
-    "description": "Teaser bullet."
-  },
-  "popupTeaserBgg": {
-    "message": "Sync your BoardGameGeek collection",
-    "description": "Teaser bullet."
-  },
-  "popupTeaserStats": {
-    "message": "Track win rates & play stats",
-    "description": "Teaser bullet."
-  },
-  "popupTeaserPlayers": {
-    "message": "Find players who own games you want to play",
-    "description": "Teaser bullet."
-  },
-
-  "popupYucataTitle": {
-    "message": "Yucata Import",
-    "description": "Title of the Yucata import panel (visible only on yucata.de)."
-  },
-  "popupYucataBody": {
-    "message": "Import your Yucata play history to unlock badges and track statistics. Plays are saved to your BoardGameMatcher account; nothing is sent back to Yucata.",
-    "description": "Body text on the Yucata import panel."
-  },
   "popupYucataButton": {
     "message": "Import Yucata Plays",
     "description": "Button on the Yucata import panel."
   },
 
-  "popupBgaTitle": {
-    "message": "Board Game Arena Import",
-    "description": "Title of the BGA import panel (visible only on boardgamearena.com)."
-  },
-  "popupBgaBody": {
-    "message": "Import your BGA play history to unlock badges and track statistics. Plays are saved to your BoardGameMatcher account; nothing is sent back to BGA.",
-    "description": "Body text on the BGA import panel."
-  },
   "popupBgaButton": {
     "message": "Import BGA Plays",
     "description": "Button on the BGA import panel."
@@ -272,15 +179,6 @@
   "popupBgaTeaserCta": {
     "message": "Sign in to track your stats",
     "description": "CTA shown to logged-out users on BGA alongside blurred placeholder stats."
-  },
-
-  "popupBannerLoggedIn": {
-    "message": "Open BoardGameMatcher.com",
-    "description": "Bottom banner text when the user is signed in."
-  },
-  "popupBannerLoggedOut": {
-    "message": "Discover BoardGameMatcher.com",
-    "description": "Bottom banner text when the user is signed out."
   },
 
   "importYucataFetching": {
@@ -591,34 +489,6 @@
     "message": "Issues, feedback, and shop suggestions:",
     "description": "Help text introducing the support link."
   },
-  "qlProfile": {
-    "message": "Profile",
-    "description": "Quick-link label for the user profile page."
-  },
-  "qlMatches": {
-    "message": "Find Players",
-    "description": "Quick-link label for the find players page."
-  },
-  "qlMessages": {
-    "message": "Messages",
-    "description": "Quick-link label for the messages page."
-  },
-  "qlCollection": {
-    "message": "Collection",
-    "description": "Quick-link label for the game collection page."
-  },
-  "qlWishlist": {
-    "message": "Wishlist",
-    "description": "Quick-link label for the wishlist page."
-  },
-  "popupBggTitle": {
-    "message": "BoardGameGeek Import",
-    "description": "Title of the BGG import panel (visible only on boardgamegeek.com)."
-  },
-  "popupBggBody": {
-    "message": "Import your BGG play history to unlock badges and track statistics. Plays are saved to your BoardGameMatcher account; nothing is sent back to BGG.",
-    "description": "Body text on the BGG import panel."
-  },
   "popupBggButton": {
     "message": "Import BGG Plays",
     "description": "Button on the BGG import panel."
@@ -858,5 +728,128 @@
     "placeholders": {
       "query": {"content": "$1", "example": "Wingspan"}
     }
-  }
+  },
+  "popupShopLead": {
+    "message": "See which games on this page are new to your collection",
+    "description": "Lead text on the shop card (logged-in state)."
+  },
+  "popupShopSigninLead": {
+    "message": "Sign in to match them against your collection",
+    "description": "Lead text on the shop card (logged-out state)."
+  },
+  "popupShopWishlistSingular": {
+    "message": "1 wishlist game on this page",
+    "description": "Shop card: shown when exactly 1 wishlist game is found on the current shop page."
+  },
+  "popupShopWishlistPlural": {
+    "message": "$count$ wishlist games on this page",
+    "description": "Shop card: shown when 2+ wishlist games are found on the current shop page.",
+    "placeholders": {
+      "count": {"content": "$1", "example": "3"}
+    }
+  },
+  "popupFeatureShopTitle": {
+    "message": "On a game store",
+    "description": "Feature strip heading explaining the shop extraction feature."
+  },
+  "popupFeatureShopDesc": {
+    "message": "See owned vs new · get links to BGM game pages",
+    "description": "Feature strip sub-line for the shop extraction feature."
+  },
+  "popupFeatureBgaTitle": {
+    "message": "On Board Game Arena or Yucata",
+    "description": "Feature strip heading explaining the play import feature."
+  },
+  "popupFeatureBgaDesc": {
+    "message": "Import your play history",
+    "description": "Feature strip sub-line for the play import feature."
+  },
+  "popupFeatureBggTitle": {
+    "message": "On BoardGameGeek",
+    "description": "Feature strip heading explaining the BGG collection sync feature."
+  },
+  "popupFeatureBggDesc": {
+    "message": "Sync your owned games",
+    "description": "Feature strip sub-line for the BGG collection sync feature."
+  },
+  "popupLoginTagline": {
+    "message": "Your board game assistant",
+    "description": "Tagline shown above the feature bullets on the login card."
+  },
+  "popupFeatureBullet1": {
+    "message": "See what you own while browsing shops",
+    "description": "Login card feature bullet 1."
+  },
+  "popupFeatureBullet2": {
+    "message": "Import plays from BGA & Yucata",
+    "description": "Login card feature bullet 2."
+  },
+  "popupFeatureBullet3": {
+    "message": "Sync your BGG collection",
+    "description": "Login card feature bullet 3."
+  },
+  "popupFeatureBullet4": {
+    "message": "Build a wishlist, find players",
+    "description": "Login card feature bullet 4."
+  },
+  "popupSuccessMsg": {
+    "message": "$count$ games added to BGM",
+    "description": "Success card message shown after a successful shop extraction.",
+    "placeholders": {
+      "count": {"content": "$1", "example": "12"}
+    }
+  },
+  "popupSuccessLink": {
+    "message": "View results on BGM →",
+    "description": "Link on the success card to open the BGM extract results page."
+  },
+  "popupExtractAgain": {
+    "message": "Extract again",
+    "description": "Button on the success card to go back and extract from the same shop again."
+  },
+  "bnProfile": {
+    "message": "Profile",
+    "description": "Bottom nav label for the profile link."
+  },
+  "bnPlayers": {
+    "message": "Players",
+    "description": "Bottom nav label for the find-players link."
+  },
+  "bnWishlist": {
+    "message": "Wishlist",
+    "description": "Bottom nav label for the wishlist link."
+  },
+  "popupBgaCtx": {
+    "message": "Board Game Arena",
+    "description": "Context pill label shown at the top of the BGA import panel."
+  },
+  "popupBgaLead": {
+    "message": "Import your play history to track stats and earn BGM badges",
+    "description": "Lead text on the BGA import panel."
+  },
+  "popupYucataCtx": {
+    "message": "Yucata",
+    "description": "Context pill label shown at the top of the Yucata import panel."
+  },
+  "popupYucataLead": {
+    "message": "Import your play history to track stats and earn BGM badges",
+    "description": "Lead text on the Yucata import panel."
+  },
+  "popupBggCtx": {
+    "message": "BoardGameGeek",
+    "description": "Context pill label shown at the top of the BGG import panel."
+  },
+  "popupBggLead": {
+    "message": "Import your BGG play history to track stats and earn BGM badges",
+    "description": "Lead text on the BGG import panel."
+  },
+  "popupCollAddTo": { "message": "Add to:", "description": "Label before the collection type chips readout." },
+  "popupCollChipsHint": { "message": "tap to toggle, pick several", "description": "Hint next to collection type chips." },
+  "popupCollTypeOwn": { "message": "Own", "description": "Collection type: own." },
+  "popupCollTypePlayed": { "message": "Played", "description": "Collection type: played." },
+  "popupCollTypeWishlist": { "message": "Wishlist", "description": "Collection type: wishlist." },
+  "popupCollTypeWantToPlay": { "message": "Want to play", "description": "Collection type: want to play." },
+  "popupCollTypeWantToLearn": { "message": "Want to learn", "description": "Collection type: want to learn." },
+  "popupCollTypeCanTeach": { "message": "Can teach", "description": "Collection type: can teach." },
+  "popupCollViewAll": { "message": "View collection →", "description": "Footer link on the collection tab." }
 }

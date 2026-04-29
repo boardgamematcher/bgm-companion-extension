@@ -7,7 +7,7 @@
   </head>
   <body>
     <div class="popup" id="popup">
-      <!-- Header -->
+      <!-- ── Header ── -->
       <header class="header">
         <div class="brand">
           <div class="logo">B</div>
@@ -29,7 +29,7 @@
         </div>
       </header>
 
-      <!-- Unread messages banner -->
+      <!-- ── Unread messages banner ── -->
       <a id="msg-banner" class="msg-banner" href="#" style="display: none">
         <svg class="msg-banner-icon" viewBox="0 0 20 20" fill="currentColor">
           <path d="M2 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6l-4 3V4z" />
@@ -38,106 +38,129 @@
         <span class="msg-banner-arrow">&#8250;</span>
       </a>
 
-      <!-- Cards container -->
-      <div class="cards" id="cards">
-        <!-- Extraction card (shown when site is supported) -->
-        <div class="card" id="card-extract" style="display: none">
-          <div class="context-pill shop-ctx" id="context-pill">
+      <!-- ── Main content ── -->
+      <main class="main" id="main">
+        <!-- Shop card — game store, logged in -->
+        <div id="card-shop" style="display: none">
+          <div class="ctx-pill shop-ctx">
             <span class="dot"></span>
-            <span id="detected-site">Site detected</span>
+            <span id="ctx-shop-name"></span>
           </div>
-          <div class="card-top">
-            <div class="card-title" id="extract-title" data-i18n="popupExtractTitle">
-              Board games on this page
-            </div>
-          </div>
-          <div class="extract-row">
+          <div id="shop-loggedin">
+            <p class="card-lead" data-i18n="popupShopLead">
+              See which games on this page are new to your collection
+            </p>
             <button class="btn-primary" id="extract-btn" data-i18n="popupExtractButton">
-              Extract All
+              Extract &amp; review
+            </button>
+            <p class="card-sub" id="shop-wishlist-count" style="display: none"></p>
+            <p class="card-sub" id="shop-last-extraction" style="display: none"></p>
+          </div>
+          <div id="shop-loggedout" style="display: none">
+            <p class="card-lead" data-i18n="popupShopSigninLead">
+              Sign in to match them against your collection
+            </p>
+            <button class="btn-primary" id="shop-signin-btn" data-i18n="popupLoginButton">
+              Sign in to BGM
+            </button>
+            <a class="card-sublink" id="shop-signup-link" href="#" data-i18n="popupLoginSignup"
+              >Create a free account &rarr;</a
+            >
+          </div>
+        </div>
+
+        <!-- Review card -->
+        <div id="card-review" style="display: none">
+          <div class="review-header">
+            <button class="btn-back" id="review-back">&#8592;</button>
+            <span class="review-ctx" id="review-domain"></span>
+          </div>
+          <div class="review-toggles">
+            <button class="btn-link" id="review-select-all" data-i18n="popupReviewSelectAll">
+              All
+            </button>
+            <span class="sep">·</span>
+            <button class="btn-link" id="review-select-new" data-i18n="popupReviewSelectNew">
+              New only
+            </button>
+            <span class="sep">·</span>
+            <button class="btn-link" id="review-deselect-all" data-i18n="popupReviewDeselectAll">
+              None
             </button>
           </div>
-        </div>
-
-        <!-- Review card (shown after extraction, before sending to BGM) -->
-        <div class="card" id="card-review" style="display: none">
-          <div class="card-top">
-            <div class="card-title" data-i18n="popupReviewTitle">Review extracted games</div>
-          </div>
-          <p class="card-body-text" id="review-loading" data-i18n="popupReviewLoading">
-            Loading preview…
+          <p
+            id="review-loading"
+            class="card-sub"
+            style="display: none"
+            data-i18n="popupReviewLoading"
+          >
+            Loading…
           </p>
-          <div id="review-content" style="display: none">
-            <div class="review-toggle-row">
-              <button class="btn-link" id="review-select-new" data-i18n="popupReviewSelectNew">
-                New only
+          <div id="review-game-list" class="review-list"></div>
+          <div class="review-footer" id="review-footer">
+            <span id="review-count" class="review-count"></span>
+            <div class="review-actions">
+              <button class="btn-outline btn-sm" id="review-cancel" data-i18n="popupReviewCancel">
+                Cancel
               </button>
-              <span class="review-sep">·</span>
-              <button class="btn-link" id="review-select-all" data-i18n="popupReviewSelectAll">
-                All
+              <button
+                class="btn-primary btn-sm"
+                id="review-confirm"
+                data-i18n="popupReviewConfirm"
+                disabled
+              >
+                Add to BGM
               </button>
-              <span class="review-sep">·</span>
-              <button class="btn-link" id="review-deselect-all" data-i18n="popupReviewDeselectAll">
-                None
-              </button>
-            </div>
-            <div id="review-game-list" class="review-game-list"></div>
-            <div class="review-footer">
-              <span class="review-count" id="review-count"></span>
-              <div class="review-btns">
-                <button class="btn-outline btn-sm" id="review-cancel" data-i18n="popupReviewCancel">
-                  Cancel
-                </button>
-                <button
-                  class="btn-primary btn-sm"
-                  id="review-confirm"
-                  data-i18n="popupReviewConfirm"
-                  disabled
-                >
-                  Extract selected
-                </button>
-              </div>
             </div>
           </div>
         </div>
 
-        <!-- Unsupported site card -->
-        <div class="card" id="card-unsupported" style="display: none">
-          <div class="card-top">
-            <div class="card-title" data-i18n="popupUnsupportedTitle">
-              No games detected on this page
-            </div>
+        <!-- Success card -->
+        <div id="card-success" style="display: none">
+          <div class="ctx-pill shop-ctx">
+            <span class="dot"></span>
+            <span id="ctx-success-name"></span>
           </div>
-          <p class="card-body-text" id="unsupported-text" data-i18n="popupUnsupportedDefault">
-            Open a supported board game shop to extract games.
-          </p>
+          <div class="success-body">
+            <span class="success-check">&#10003;</span>
+            <p class="success-msg" id="success-msg"></p>
+          </div>
+          <a class="card-sublink" id="success-link" href="#" data-i18n="popupSuccessLink"
+            >View results on BGM &rarr;</a
+          >
+          <button
+            class="btn-outline"
+            id="success-extract-again"
+            data-i18n="popupExtractAgain"
+            style="margin-top: 10px"
+          >
+            Extract again
+          </button>
         </div>
 
-        <!-- Stats card -->
-        <div class="card" id="card-stats">
-          <div class="card-top">
-            <div class="card-title" data-i18n="popupStatsTitle">Last extraction</div>
-          </div>
-          <p class="card-body-text" id="stats-text" data-i18n="popupStatsEmpty">
-            No extractions yet
-          </p>
-        </div>
-
-        <!-- Wishlist quick-add card (shown when authenticated) -->
-        <div class="card wishlist-card" id="card-wishlist" style="display: none">
-          <div class="card-top">
-            <div class="card-title" data-i18n="popupWishlistTitle">Add a game to your wishlist</div>
-          </div>
-          <div class="quick-add-row">
+        <!-- Neutral card — any page, logged in -->
+        <div id="card-neutral" style="display: none">
+          <div class="wl-input-row">
             <input
               id="wishlist-input"
               type="text"
               data-i18n-placeholder="popupWishlistPlaceholder"
-              placeholder="Search a board game..."
+              placeholder="Search a board game…"
               autocomplete="off"
             />
           </div>
+          <div class="col-chips-row">
+            <span class="col-chips-label">
+              <span data-i18n="popupCollAddTo">Add to:</span>
+              <span class="col-chips-readout" id="col-chips-readout"></span>
+            </span>
+            <span class="col-chips-hint" data-i18n="popupCollChipsHint"
+              >tap to toggle, pick several</span
+            >
+          </div>
+          <div class="col-chips" id="col-chips"></div>
           <div class="wl-results" id="wishlist-results"></div>
-          <div class="wl-footer">
+          <div class="wl-footer" id="wl-footer">
             <span class="wl-count" id="wishlist-count"></span>
             <a
               class="wl-link"
@@ -145,247 +168,203 @@
               href="#"
               target="_blank"
               rel="noopener"
-              data-i18n="popupWishlistViewAll"
-              >View full wishlist &rarr;</a
+              data-i18n="popupCollViewAll"
+              >View collection →</a
             >
           </div>
         </div>
 
-        <!-- Login CTA card (shown when not authenticated) -->
-        <div class="card login-card" id="card-login" style="display: none">
-          <div class="login-card-inner">
-            <h3 class="login-title" data-i18n="popupLoginTitle">Get more from your games</h3>
-            <p class="card-body-text" data-i18n="popupLoginBody">
-              Log plays, sync your collection, find players near you.
-            </p>
-            <button
-              class="btn-primary"
-              id="login-btn"
-              style="margin-top: 10px"
-              data-i18n="popupLoginButton"
-            >
-              Sign in to BoardGameMatcher
-            </button>
-            <a class="login-signup" id="signup-link" href="#" data-i18n="popupLoginSignup"
-              >Create a free account &rarr;</a
-            >
-          </div>
-        </div>
-
-        <!-- Feature teaser card (shown when not authenticated) -->
-        <div class="card teaser-card" id="card-teaser" style="display: none">
-          <div class="card-top">
-            <div class="card-title" data-i18n="popupTeaserTitle">A free BGM account unlocks</div>
-          </div>
-          <ul class="teaser-list">
-            <li>
-              <span class="teaser-dot"></span
-              ><span data-i18n="popupTeaserPlays">Auto-log plays from BGA &amp; Yucata</span>
-            </li>
-            <li>
-              <span class="teaser-dot"></span
-              ><span data-i18n="popupTeaserWishlist">Save games you want to a wishlist</span>
-            </li>
-            <li>
-              <span class="teaser-dot"></span
-              ><span data-i18n="popupTeaserBgg">Sync your BoardGameGeek collection</span>
-            </li>
-            <li>
-              <span class="teaser-dot"></span
-              ><span data-i18n="popupTeaserStats">Track win rates &amp; play stats</span>
-            </li>
-            <li>
-              <span class="teaser-dot"></span
-              ><span data-i18n="popupTeaserPlayers"
-                >Find players who own games you want to play</span
-              >
-            </li>
+        <!-- Login card — any page, logged out -->
+        <div id="card-login" style="display: none">
+          <p class="login-tagline" data-i18n="popupLoginTagline">Your board game assistant</p>
+          <ul class="feature-bullets">
+            <li data-i18n="popupFeatureBullet1">See what you own while browsing shops</li>
+            <li data-i18n="popupFeatureBullet2">Import plays from BGA &amp; Yucata</li>
+            <li data-i18n="popupFeatureBullet3">Sync your BGG collection</li>
+            <li data-i18n="popupFeatureBullet4">Build a wishlist, find players</li>
           </ul>
+          <button class="btn-primary" id="login-btn" data-i18n="popupLoginButton">
+            Sign in to BoardGameMatcher
+          </button>
+          <a class="card-sublink" id="signup-link" href="#" data-i18n="popupLoginSignup"
+            >Create a free account &rarr;</a
+          >
         </div>
 
-        <!-- Yucata Import Panel (visible only on yucata.de) -->
-        <div class="card" id="yucataPanel" style="display: none">
-          <div class="card-top">
-            <div class="card-title" data-i18n="popupYucataTitle">Yucata Import</div>
+        <!-- BGA Import Panel — visible only on boardgamearena.com -->
+        <div id="bgaPanel" style="display: none">
+          <div class="ctx-pill play-ctx">
+            <span class="dot"></span>
+            <span data-i18n="popupBgaCtx">Board Game Arena</span>
           </div>
-          <p class="card-body-text" data-i18n="popupYucataBody">
-            Import your Yucata play history to unlock badges and track statistics. Plays are saved
-            to your BoardGameMatcher account; nothing is sent back to Yucata.
+          <p class="card-lead" data-i18n="popupBgaLead">
+            Import your play history to track stats and earn BGM badges
           </p>
-          <div class="extract-row" style="margin-top: 10px">
-            <button id="yucataImportBtn" class="btn-primary" data-i18n="popupYucataButton">
-              Import Yucata Plays
-            </button>
+          <div class="bga-stats-row" id="bgaStatsRow" style="display: none">
+            <span id="bgaStatText" class="bga-stat-text"></span>
+            <a
+              id="bgaPlaysLink"
+              class="feature-link"
+              href="#"
+              target="_blank"
+              rel="noopener"
+              data-i18n="popupBgaPlaysLink"
+              >View your play history &rarr;</a
+            >
           </div>
-          <div id="yucataStatus" class="import-status"></div>
-        </div>
-      </div>
-
-      <!-- BGA Import Panel (visible only on boardgamearena.com) -->
-      <div class="card" id="bgaPanel" style="display: none">
-        <div class="card-top">
-          <div class="card-title" data-i18n="popupBgaTitle">Board Game Arena Import</div>
-        </div>
-        <p class="card-body-text" data-i18n="popupBgaBody">
-          Import your BGA play history to unlock badges and track statistics. Plays are saved to
-          your BoardGameMatcher account; nothing is sent back to BGA.
-        </p>
-        <div class="bga-stats-row" id="bgaStatsRow" style="display: none">
-          <span id="bgaStatText" class="bga-stat-text"></span>
-          <a
-            id="bgaPlaysLink"
-            class="bga-plays-link"
-            href="#"
-            target="_blank"
-            rel="noopener"
-            data-i18n="popupBgaPlaysLink"
-            >View your play history →</a
+          <div class="bga-teaser-row" id="bgaTeaserRow" style="display: none">
+            <span class="bga-teaser-blurred">42 plays &middot; 68% win rate</span>
+            <a id="bgaTeaserSignin" class="feature-link" href="#" data-i18n="popupBgaTeaserCta">
+              Sign in to track your stats
+            </a>
+          </div>
+          <button
+            id="bgaImportBtn"
+            class="btn-primary"
+            data-i18n="popupBgaButton"
+            style="margin-top: 12px"
           >
-        </div>
-        <div class="bga-teaser-row" id="bgaTeaserRow" style="display: none">
-          <span class="bga-teaser-blurred">42 plays · 68% win rate</span>
-          <a id="bgaTeaserSignin" class="bga-plays-link" href="#" data-i18n="popupBgaTeaserCta"
-            >Sign in to track your stats</a
-          >
-        </div>
-        <div class="extract-row" style="margin-top: 10px">
-          <button id="bgaImportBtn" class="btn-primary" data-i18n="popupBgaButton">
             Import BGA Plays
           </button>
+          <div id="bgaStatus" class="import-status"></div>
+          <div class="feature-strips secondary">
+            <div class="feature-strip">
+              <span class="fstrip-head" data-i18n="popupFeatureShopTitle">On a game store</span>
+              <span class="fstrip-sub" data-i18n="popupFeatureShopDesc"
+                >See owned vs new · get links to BGM game pages</span
+              >
+            </div>
+            <div class="feature-strip">
+              <span class="fstrip-head" data-i18n="popupFeatureBggTitle">On BoardGameGeek</span>
+              <span class="fstrip-sub" data-i18n="popupFeatureBggDesc">Sync your owned games</span>
+            </div>
+          </div>
         </div>
-        <div id="bgaStatus" class="import-status"></div>
-      </div>
 
-      <!-- BGG Import Panel (visible only on boardgamegeek.com) -->
-      <div class="card" id="bggPanel" style="display: none">
-        <div class="card-top">
-          <div class="card-title" data-i18n="popupBggTitle">BoardGameGeek Import</div>
+        <!-- Yucata Import Panel — visible only on yucata.de -->
+        <div id="yucataPanel" style="display: none">
+          <div class="ctx-pill play-ctx">
+            <span class="dot"></span>
+            <span data-i18n="popupYucataCtx">Yucata</span>
+          </div>
+          <p class="card-lead" data-i18n="popupYucataLead">
+            Import your play history to track stats and earn BGM badges
+          </p>
+          <button
+            id="yucataImportBtn"
+            class="btn-primary"
+            data-i18n="popupYucataButton"
+            style="margin-top: 12px"
+          >
+            Import Yucata Plays
+          </button>
+          <div id="yucataStatus" class="import-status"></div>
+          <div class="feature-strips secondary">
+            <div class="feature-strip">
+              <span class="fstrip-head" data-i18n="popupFeatureShopTitle">On a game store</span>
+              <span class="fstrip-sub" data-i18n="popupFeatureShopDesc"
+                >See owned vs new · get links to BGM game pages</span
+              >
+            </div>
+            <div class="feature-strip">
+              <span class="fstrip-head" data-i18n="popupFeatureBggTitle">On BoardGameGeek</span>
+              <span class="fstrip-sub" data-i18n="popupFeatureBggDesc">Sync your owned games</span>
+            </div>
+          </div>
         </div>
-        <p class="card-body-text" data-i18n="popupBggBody">
-          Import your BGG play history to unlock badges and track statistics. Plays are saved to
-          your BoardGameMatcher account; nothing is sent back to BGG.
-        </p>
-        <div class="extract-row" style="margin-top: 10px">
-          <button id="bggImportBtn" class="btn-primary" data-i18n="popupBggButton">
+
+        <!-- BGG Plays Import Panel — visible only on boardgamegeek.com -->
+        <div id="bggPanel" style="display: none">
+          <div class="ctx-pill play-ctx">
+            <span class="dot"></span>
+            <span data-i18n="popupBggCtx">BoardGameGeek</span>
+          </div>
+          <p class="card-lead" data-i18n="popupBggLead">
+            Import your BGG play history to track stats and earn BGM badges
+          </p>
+          <button
+            id="bggImportBtn"
+            class="btn-primary"
+            data-i18n="popupBggButton"
+            style="margin-top: 12px"
+          >
             Import BGG Plays
           </button>
+          <div id="bggStatus" class="import-status"></div>
         </div>
-        <div id="bggStatus" class="import-status"></div>
-      </div>
 
-      <!-- Quick-links (logged-in only) -->
-      <div id="quick-links" class="quick-links" style="display: none">
-        <a
-          id="ql-profile"
-          class="ql-item"
-          href="#"
-          target="_blank"
-          rel="noopener"
-          data-i18n-title="qlProfile"
-        >
-          <svg class="ql-icon" viewBox="0 0 20 20" fill="currentColor">
+        <!-- BGG Collection Sync — visible only on boardgamegeek.com, logged in -->
+        <div id="bggSyncPanel" style="display: none">
+          <div class="sync-divider"></div>
+          <p class="section-label" data-i18n="popupBggSyncTitle">Sync BGG Collection</p>
+          <p class="card-body-text" data-i18n="popupBggSyncBody">
+            Import your owned games, wishlist and ratings from BoardGameGeek.
+          </p>
+          <p class="bgg-sync-user-row" id="bggSyncAsRow" style="display: none">
+            <span id="bggSyncAsText"></span
+            ><a href="#" id="bggSyncClear" class="bgg-sync-clear" data-i18n="popupBggSyncNotYou"
+              >not you?</a
+            >
+          </p>
+          <button
+            id="bggSyncBtn"
+            class="btn-primary"
+            data-i18n="popupBggSyncButton"
+            disabled
+            style="margin-top: 10px"
+          >
+            Import Collection
+          </button>
+          <div id="bggSyncStatus" class="import-status"></div>
+          <div class="feature-strips secondary">
+            <div class="feature-strip">
+              <span class="fstrip-head" data-i18n="popupFeatureShopTitle">On a game store</span>
+              <span class="fstrip-sub" data-i18n="popupFeatureShopDesc"
+                >See owned vs new · get links to BGM game pages</span
+              >
+            </div>
+            <div class="feature-strip">
+              <span class="fstrip-head" data-i18n="popupFeatureBgaTitle"
+                >On Board Game Arena or Yucata</span
+              >
+              <span class="fstrip-sub" data-i18n="popupFeatureBgaDesc"
+                >Import your play history</span
+              >
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- ── Bottom nav — logged-in only ── -->
+      <nav id="bottom-nav" class="bottom-nav" style="display: none">
+        <a id="bn-profile" class="bn-item" href="#">
+          <svg class="bn-icon" viewBox="0 0 20 20" fill="currentColor">
             <path
               d="M10 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 2c-4.418 0-8 1.79-8 4v1h16v-1c0-2.21-3.582-4-8-4z"
             />
           </svg>
-          <span data-i18n="qlProfile">Profile</span>
+          <span data-i18n="bnProfile">Profile</span>
         </a>
-        <a
-          id="ql-matches"
-          class="ql-item"
-          href="#"
-          target="_blank"
-          rel="noopener"
-          data-i18n-title="qlMatches"
-        >
-          <svg class="ql-icon" viewBox="0 0 20 20" fill="currentColor">
+        <a id="bn-players" class="bn-item" href="#">
+          <svg class="bn-icon" viewBox="0 0 20 20" fill="currentColor">
             <path
-              d="M9 2a7 7 0 1 0 4.472 12.617l3.71 3.71a1 1 0 0 0 1.414-1.414l-3.71-3.71A7 7 0 0 0 9 2zm0 2a5 5 0 1 1 0 10A5 5 0 0 1 9 4z"
-            />
-            <path
-              d="M9 7a1 1 0 0 1 1 1v.5h.5a1 1 0 0 1 0 2H10V11a1 1 0 0 1-2 0v-.5h-.5a1 1 0 0 1 0-2H8V8a1 1 0 0 1 1-1z"
+              d="M13 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM18 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM6 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM15.93 17c.047-.165.07-.34.07-.522 0-2.1-2.11-3.801-4.71-3.955A5.002 5.002 0 0 1 10 13a5.002 5.002 0 0 1-1.29-.477C6.11 13.2 4 14.9 4 17c0 .182.023.357.07.522L4 17h12l-.07-.001z"
             />
           </svg>
-          <span data-i18n="qlMatches">Find Players</span>
+          <span data-i18n="bnPlayers">Players</span>
         </a>
-        <a
-          id="ql-messages"
-          class="ql-item"
-          href="#"
-          target="_blank"
-          rel="noopener"
-          data-i18n-title="qlMessages"
-        >
-          <svg class="ql-icon" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M2 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6l-4 3V4z" />
-          </svg>
-          <span data-i18n="qlMessages">Messages</span>
-        </a>
-        <a
-          id="ql-collection"
-          class="ql-item"
-          href="#"
-          target="_blank"
-          rel="noopener"
-          data-i18n-title="qlCollection"
-        >
-          <svg class="ql-icon" viewBox="0 0 20 20" fill="currentColor">
-            <path
-              d="M4 3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2V3H4zm4 0v14h8a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H8zm2 3h4a1 1 0 0 1 0 2h-4a1 1 0 0 1 0-2zm0 4h4a1 1 0 0 1 0 2h-4a1 1 0 0 1 0-2z"
-            />
-          </svg>
-          <span data-i18n="qlCollection">Collection</span>
-        </a>
-        <a
-          id="ql-wishlist"
-          class="ql-item"
-          href="#"
-          target="_blank"
-          rel="noopener"
-          data-i18n-title="qlWishlist"
-        >
-          <svg class="ql-icon" viewBox="0 0 20 20" fill="currentColor">
+        <a id="bn-wishlist" class="bn-item" href="#">
+          <svg class="bn-icon" viewBox="0 0 20 20" fill="currentColor">
             <path
               d="M10 17.25l-1.45-1.32C4.4 11.86 2 9.69 2 7a5 5 0 0 1 8-4 5 5 0 0 1 8 4c0 2.69-2.4 4.86-6.55 8.93L10 17.25z"
             />
           </svg>
-          <span data-i18n="qlWishlist">Wishlist</span>
+          <span data-i18n="bnWishlist">Wishlist</span>
         </a>
-      </div>
+      </nav>
 
-      <!-- BGG Sync Panel (visible to all logged-in users) -->
-      <div class="card" id="bggSyncPanel" style="display: none">
-        <div class="card-top">
-          <div class="card-title" data-i18n="popupBggSyncTitle">Sync BGG Collection</div>
-        </div>
-        <p class="card-body-text" data-i18n="popupBggSyncBody">
-          Import your owned games, wishlist and ratings from BoardGameGeek.
-        </p>
-        <p class="card-body-text bgg-sync-user-row" id="bggSyncAsRow" style="display: none">
-          <span id="bggSyncAsText"></span
-          ><a href="#" id="bggSyncClear" class="bgg-sync-clear" data-i18n="popupBggSyncNotYou"
-            >not you?</a
-          >
-        </p>
-        <div class="extract-row" style="margin-top: 10px">
-          <button id="bggSyncBtn" class="btn-primary" data-i18n="popupBggSyncButton" disabled>
-            Import Collection
-          </button>
-        </div>
-        <div id="bggSyncStatus" class="import-status"></div>
-      </div>
-
-      <!-- Message toast -->
+      <!-- ── Message toast ── -->
       <div id="message" class="message hidden"></div>
-
-      <!-- Bottom banner -->
-      <a class="powered-banner" href="https://boardgamematcher.com" target="_blank" rel="noopener">
-        <div class="pb-logo">B</div>
-        <div class="pb-text" id="banner-text" data-i18n="popupBannerLoggedOut">
-          Discover BoardGameMatcher.com
-        </div>
-        <span class="pb-arrow">&rarr;</span>
-      </a>
     </div>
 
     <script src="../lib/i18n.js"></script>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BGM Popup — Interactive</title>
+<style>
+:root {
+  --bg-base:#14181c; --bg-surface:#1b2028; --bg-elevated:#242c34; --bg-hover:#2c353e;
+  --text-primary:#e1e3e5; --text-secondary:#99aabb; --text-muted:#667788;
+  --amber:#f5a623; --amber-bright:#ffc64d; --amber-glow:rgba(245,166,35,.12); --amber-on-btn:#14181c;
+  --green:#00c030; --red:#e74c3c; --blue:#4a9eff;
+  --border:rgba(255,255,255,.06); --border-hover:rgba(255,255,255,.12);
+  --r:4px; --r-md:6px; --r-pill:999px; --t:.15s cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:#0d1117;font-family:'Archivo',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:40px 24px 80px;gap:20px;}
+
+/* ── Page toggle ── */
+.page-toggle{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text-muted);}
+.page-toggle label{display:flex;align-items:center;gap:6px;cursor:pointer;color:var(--text-secondary);}
+.page-toggle input[type=checkbox]{accent-color:var(--amber);width:14px;height:14px;}
+
+/* ── Popup shell ── */
+.popup{width:360px;background:var(--bg-base);border:1px solid var(--border-hover);border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.7);}
+
+/* ── Header ── */
+.popup-header{height:48px;padding:0 14px;display:flex;align-items:center;justify-content:space-between;
+  background:var(--bg-surface);border-bottom:1px solid var(--border);border-radius:10px 10px 0 0;}
+.brand{display:flex;align-items:center;gap:8px;}
+.brand-logo{width:24px;height:24px;background:var(--amber);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--amber-on-btn);font-size:11px;font-weight:900;}
+.brand-name{font-size:13px;font-weight:800;color:var(--text-primary);letter-spacing:-.02em;}
+.brand-name span{color:var(--amber);}
+.avatar{width:26px;height:26px;border-radius:50%;background:var(--amber-glow);border:1px solid rgba(245,166,35,.3);color:var(--amber);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
+
+/* ── Tab panes ── */
+.tab-pane{display:none;padding:12px 14px 14px;}
+.tab-pane.active{display:block;}
+
+/* ── Search ── */
+.search-wrap{position:relative;margin-bottom:10px;}
+.wl-input{width:100%;padding:9px 32px 9px 11px;border:1px solid var(--border-hover);border-radius:var(--r);font-size:12px;background:var(--bg-elevated);color:var(--text-primary);font-family:inherit;outline:none;}
+.wl-input:focus{border-color:var(--amber);box-shadow:0 0 0 2px var(--amber-glow);}
+.wl-input::placeholder{color:var(--text-muted);}
+.search-icon{position:absolute;right:9px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--text-muted);pointer-events:none;}
+
+/* ── Chips ── */
+.chips-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;}
+.chips-label{font-size:10px;font-weight:700;color:var(--text-muted);letter-spacing:.04em;text-transform:uppercase;}
+.chips-hint{font-size:9.5px;color:var(--text-muted);}
+.type-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;}
+.type-chip{padding:5px 10px;border-radius:var(--r-pill);background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-muted);font-size:10.5px;font-weight:700;font-family:inherit;cursor:pointer;white-space:nowrap;transition:all var(--t);}
+.type-chip:hover{border-color:var(--border-hover);color:var(--text-secondary);}
+.type-chip.active{border-color:var(--amber);background:var(--amber-glow);color:var(--amber);}
+
+/* ── Results ── */
+.results{display:flex;flex-direction:column;gap:5px;}
+.result-row{display:flex;align-items:stretch;border-radius:var(--r);background:var(--bg-elevated);overflow:hidden;}
+.game-link{display:flex;align-items:center;gap:8px;flex:1;min-width:0;padding:7px 8px;text-decoration:none;color:inherit;cursor:pointer;border-right:1px solid var(--border);transition:background var(--t);}
+.game-link:hover{background:var(--bg-hover);}
+.game-link:hover .game-name{color:var(--amber);}
+.thumb{width:34px;height:34px;border-radius:3px;flex:none;background:var(--bg-hover);display:flex;align-items:center;justify-content:center;font-size:16px;}
+.info{flex:1;min-width:0;}
+.game-name{font-size:12px;font-weight:700;color:var(--text-primary);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color var(--t);}
+.game-sub{font-size:10.5px;color:var(--text-muted);}
+.ext-icon{font-size:9px;color:var(--text-muted);flex:none;opacity:0;transition:opacity var(--t);}
+.game-link:hover .ext-icon{opacity:1;}
+.action-zone{flex:none;padding:0 10px;display:flex;align-items:center;justify-content:center;min-height:48px;}
+.btn-add{padding:5px 9px;font-size:10.5px;font-weight:700;border-radius:var(--r);background:transparent;color:var(--amber);border:1px solid var(--amber);cursor:pointer;font-family:inherit;transition:all var(--t);white-space:nowrap;}
+.btn-add:hover{background:var(--amber);color:var(--amber-on-btn);}
+.btn-added{padding:5px 9px;font-size:10.5px;font-weight:700;border-radius:var(--r);background:rgba(0,192,48,.14);color:var(--green);border:1px solid transparent;white-space:nowrap;}
+
+/* ── Section header ── */
+.section-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.section-hd-title{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;}
+.section-hd-link{font-size:11px;font-weight:700;color:var(--amber);text-decoration:none;}
+
+/* ── Footer ── */
+.tab-footer{margin-top:10px;display:flex;align-items:center;justify-content:space-between;font-size:11px;}
+.foot-info{color:var(--text-muted);}
+.foot-link{color:var(--amber);font-weight:700;text-decoration:none;}
+
+/* ── Bottom nav ── */
+.bottom-nav{display:flex;justify-content:space-around;padding:8px 12px;border-top:1px solid var(--border);background:var(--bg-surface);border-radius:0 0 10px 10px;}
+.bn-item{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--text-muted);font-size:10px;font-weight:600;padding:4px 10px;border-radius:var(--r);cursor:pointer;transition:color var(--t),background var(--t);border:none;background:transparent;font-family:inherit;position:relative;}
+.bn-item:hover,.bn-item.active{color:var(--amber);background:var(--amber-glow);}
+.bn-icon{font-size:16px;line-height:1;}
+/* dot on Extract when active page */
+.bn-dot{position:absolute;top:3px;right:8px;width:6px;height:6px;border-radius:50%;background:var(--amber);display:none;}
+.bn-item.compatible .bn-dot{display:block;}
+
+/* ── Extract tab ── */
+.extract-idle{display:flex;flex-direction:column;align-items:center;gap:14px;padding:8px 0 4px;}
+.extract-anim{width:100%;height:80px;background:var(--bg-elevated);border-radius:var(--r-md);border:1px solid var(--border);overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;}
+.extract-anim-track{display:flex;align-items:center;gap:10px;animation:slide-in 2.4s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+@keyframes slide-in{
+  0%{transform:translateX(40px);opacity:0}
+  20%{transform:translateX(0);opacity:1}
+  70%{transform:translateX(0);opacity:1}
+  90%{transform:translateX(-40px);opacity:0}
+  100%{transform:translateX(-40px);opacity:0}
+}
+.extract-anim-card{background:var(--bg-surface);border:1px solid var(--border-hover);border-radius:var(--r);padding:6px 10px;display:flex;align-items:center;gap:6px;white-space:nowrap;}
+.extract-anim-arrow{font-size:18px;color:var(--amber);}
+.extract-anim-bgm{font-size:11px;font-weight:800;color:var(--amber);}
+.extract-idle-text{font-size:12px;color:var(--text-secondary);text-align:center;line-height:1.6;max-width:280px;}
+.extract-idle-text strong{color:var(--text-primary);}
+.extract-idle-sites{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;}
+.site-chip{padding:3px 8px;border-radius:var(--r-pill);background:var(--bg-elevated);border:1px solid var(--border);font-size:10.5px;color:var(--text-muted);}
+
+.extract-active{display:flex;flex-direction:column;gap:10px;}
+.extract-source{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg-elevated);border-radius:var(--r-md);border:1px solid var(--amber);margin-bottom:2px;}
+.extract-source-logo{width:28px;height:28px;border-radius:var(--r);background:#e7001b;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#fff;flex:none;}
+.extract-source-info{flex:1;}
+.extract-source-name{font-size:12px;font-weight:700;color:var(--text-primary);}
+.extract-source-sub{font-size:10.5px;color:var(--green);}
+.extract-btn{width:100%;padding:9px;border-radius:var(--r);background:var(--amber);color:var(--amber-on-btn);font-size:12px;font-weight:800;font-family:inherit;border:none;cursor:pointer;transition:background var(--t);}
+.extract-btn:hover{background:var(--amber-bright);}
+.extract-found{display:flex;flex-direction:column;gap:5px;}
+.extract-count{font-size:11px;color:var(--text-muted);margin-bottom:2px;}
+</style>
+</head>
+<body>
+
+<!-- Simulate compatible page toggle -->
+<div class="page-toggle">
+  <span>Simulate current page:</span>
+  <label><input type="checkbox" id="compat-toggle" onchange="setCompatible(this.checked)"> On a supported shop page</label>
+</div>
+
+<div class="popup">
+  <div class="popup-header">
+    <div class="brand">
+      <div class="brand-logo">B</div>
+      <div class="brand-name">Board<span>Game</span>Matcher</div>
+    </div>
+    <div class="avatar">J</div>
+  </div>
+
+  <!-- ══ EXTRACT TAB ══ -->
+  <div class="tab-pane" id="tab-extract">
+
+    <!-- idle: not on a page with games -->
+    <div class="extract-idle" id="extract-idle">
+      <div class="extract-anim">
+        <div class="extract-anim-track">
+          <div class="extract-anim-card">
+            <span style="font-size:13px">🛒</span>
+            <span style="font-size:11px;color:var(--text-secondary)">Shop page</span>
+          </div>
+          <span class="extract-anim-arrow">→</span>
+          <div style="display:flex;flex-direction:column;gap:3px">
+            <div style="height:8px;width:80px;background:var(--amber-glow);border:1px solid var(--amber);border-radius:2px;animation:pulse 1.2s ease-in-out infinite"></div>
+            <div style="height:8px;width:56px;background:var(--amber-glow);border:1px solid var(--amber);border-radius:2px;animation:pulse 1.2s ease-in-out infinite .2s"></div>
+            <div style="height:8px;width:68px;background:var(--amber-glow);border:1px solid var(--amber);border-radius:2px;animation:pulse 1.2s ease-in-out infinite .4s"></div>
+          </div>
+          <span class="extract-anim-arrow">→</span>
+          <span class="extract-anim-bgm">BGM</span>
+        </div>
+      </div>
+      <div class="extract-idle-text">
+        <strong>Browsing a shop? BGM spots the games.</strong><br>
+        Open a supported shop page and this tab activates automatically — extract the whole listing into your collection in one click.
+      </div>
+      <div class="extract-idle-sites" style="margin-top:-4px">
+        <span class="site-chip">Veepee</span>
+        <span class="site-chip">Philibert</span>
+        <span class="site-chip">Knapp</span>
+        <span class="site-chip">+ more soon</span>
+      </div>
+    </div>
+
+    <!-- active: games detected on current page -->
+    <div class="extract-active" id="extract-active" style="display:none">
+      <div class="extract-source">
+        <div class="extract-source-logo" style="background:var(--bg-elevated);font-size:16px">🌐</div>
+        <div class="extract-source-info">
+          <div class="extract-source-name">philibert.fr — Sale page</div>
+          <div class="extract-source-sub">🟢 24 games found on this page</div>
+        </div>
+      </div>
+      <div class="extract-found">
+        <div class="extract-count">Add all to:</div>
+        <div class="result-row">
+          <a class="game-link" href="#" onclick="return false">
+            <div class="thumb">🏝️</div>
+            <div class="info"><div class="game-name">Catan</div><div class="game-sub">Not in your collection</div></div>
+            <span class="ext-icon">↗</span>
+          </a>
+          <div class="action-zone"><button class="btn-add" onclick="addToCollection(this)">+ Wishlist</button></div>
+        </div>
+        <div class="result-row">
+          <a class="game-link" href="#" onclick="return false">
+            <div class="thumb">🦅</div>
+            <div class="info"><div class="game-name">Wingspan</div><div class="game-sub">Already in wishlist</div></div>
+            <span class="ext-icon">↗</span>
+          </a>
+          <div class="action-zone"><span class="btn-added">✓ Wishlist</span></div>
+        </div>
+        <div class="result-row">
+          <a class="game-link" href="#" onclick="return false">
+            <div class="thumb">⚙️</div>
+            <div class="info"><div class="game-name">Brass: Birmingham</div><div class="game-sub">Not in your collection</div></div>
+            <span class="ext-icon">↗</span>
+          </a>
+          <div class="action-zone"><button class="btn-add" onclick="addToCollection(this)">+ Wishlist</button></div>
+        </div>
+      </div>
+      <button class="extract-btn" onclick="simulateImport(this)">Add all 24 → Wishlist</button>
+    </div>
+
+  </div>
+
+  <!-- ══ COLLECTION TAB ══ -->
+  <div class="tab-pane active" id="tab-collection">
+    <div class="search-wrap">
+      <input class="wl-input" type="text" placeholder="Search a game…" value="Catan">
+      <span class="search-icon">🔍</span>
+    </div>
+    <div class="chips-row">
+      <span class="chips-label">Add to: <span id="chips-readout" style="color:var(--amber);font-weight:700;text-transform:none;letter-spacing:0">Wishlist</span></span>
+      <span class="chips-hint">tap to toggle, pick several</span>
+    </div>
+    <div class="type-chips" id="chips">
+      <button class="type-chip" onclick="toggleChip(this)" data-label="Own">📦 Own</button>
+      <button class="type-chip" onclick="toggleChip(this)" data-label="Played">✅ Played</button>
+      <button class="type-chip active" onclick="toggleChip(this)" data-label="Wishlist">✓ ⭐ Wishlist</button>
+      <button class="type-chip" onclick="toggleChip(this)" data-label="Want to play">🎯 Want to play</button>
+      <button class="type-chip" onclick="toggleChip(this)" data-label="Want to learn">📖 Want to learn</button>
+      <button class="type-chip" onclick="toggleChip(this)" data-label="Can teach">🎓 Can teach</button>
+    </div>
+    <div class="results">
+      <div class="result-row">
+        <a class="game-link" href="#" onclick="return false">
+          <div class="thumb">🏝️</div>
+          <div class="info"><div class="game-name">Catan</div><div class="game-sub">1995</div></div>
+          <span class="ext-icon">↗</span>
+        </a>
+        <div class="action-zone"><button class="btn-add" onclick="addToCollection(this)">+ Wishlist</button></div>
+      </div>
+      <div class="result-row">
+        <a class="game-link" href="#" onclick="return false">
+          <div class="thumb">🗺️</div>
+          <div class="info"><div class="game-name">Catan: Seafarers</div><div class="game-sub">1997</div></div>
+          <span class="ext-icon">↗</span>
+        </a>
+        <div class="action-zone"><button class="btn-add" onclick="addToCollection(this)">+ Wishlist</button></div>
+      </div>
+      <div class="result-row">
+        <a class="game-link" href="#" onclick="return false">
+          <div class="thumb">🏙️</div>
+          <div class="info"><div class="game-name">Catan: C&amp;K</div><div class="game-sub">1998</div></div>
+          <span class="ext-icon">↗</span>
+        </a>
+        <div class="action-zone"><span class="btn-added">✓ Own</span></div>
+      </div>
+    </div>
+    <div class="tab-footer">
+      <span class="foot-info">12 in wishlist</span>
+      <a class="foot-link" href="#">View collection →</a>
+    </div>
+  </div>
+
+  <!-- ══ FRIENDS TAB ══ -->
+  <div class="tab-pane" id="tab-friends">
+    <div class="section-hd">
+      <span class="section-hd-title">Friends</span>
+      <a class="section-hd-link" href="#">See all →</a>
+    </div>
+    <div class="results">
+      <div class="result-row">
+        <a class="game-link" href="#" onclick="return false">
+          <div class="thumb" style="background:var(--amber-glow);color:var(--amber);font-size:13px;font-weight:800">A</div>
+          <div class="info">
+            <div class="game-name">Alice</div>
+            <div class="game-sub" style="color:var(--green)">🟢 Online · can teach Brass</div>
+          </div>
+          <span class="ext-icon">↗</span>
+        </a>
+      </div>
+      <div class="result-row">
+        <a class="game-link" href="#" onclick="return false">
+          <div class="thumb" style="background:rgba(74,158,255,.12);color:var(--blue);font-size:13px;font-weight:800">B</div>
+          <div class="info">
+            <div class="game-name">Bob</div>
+            <div class="game-sub">Wants to play Wingspan with you</div>
+          </div>
+          <span class="ext-icon">↗</span>
+        </a>
+      </div>
+      <div class="result-row">
+        <a class="game-link" href="#" onclick="return false">
+          <div class="thumb" style="background:var(--bg-hover);color:var(--text-muted);font-size:13px;font-weight:800">C</div>
+          <div class="info">
+            <div class="game-name">Carol</div>
+            <div class="game-sub">Offline · owns 3 games you want</div>
+          </div>
+          <span class="ext-icon">↗</span>
+        </a>
+      </div>
+    </div>
+    <div class="tab-footer">
+      <span class="foot-info">8 friends</span>
+      <a class="foot-link" href="#">Find players →</a>
+    </div>
+  </div>
+
+  <!-- ══ MORE TAB ══ -->
+  <div class="tab-pane" id="tab-more">
+    <div style="display:flex;flex-direction:column;gap:6px;padding:4px 0;">
+      <a class="game-link" href="#" onclick="return false" style="border-radius:var(--r-md);border:1px solid var(--border);">
+        <div class="thumb">⚙️</div>
+        <div class="info"><div class="game-name">Settings</div><div class="game-sub">Language…</div></div>
+        <span class="ext-icon">↗</span>
+      </a>
+      <a class="game-link" href="#" onclick="return false" style="border-radius:var(--r-md);border:1px solid var(--border);">
+        <div class="thumb">❓</div>
+        <div class="info"><div class="game-name">Help &amp; feedback</div><div class="game-sub">Report an issue</div></div>
+        <span class="ext-icon">↗</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Bottom nav -->
+  <div class="bottom-nav">
+    <button class="bn-item" id="bn-extract" onclick="switchTab('extract',this)">
+      <span class="bn-icon">📥</span>Extract
+      <span class="bn-dot"></span>
+    </button>
+    <button class="bn-item active" id="bn-collection" onclick="switchTab('collection',this)"><span class="bn-icon">📚</span>Collection</button>
+    <button class="bn-item" id="bn-friends" onclick="switchTab('friends',this)"><span class="bn-icon">👥</span>Friends</button>
+    <button class="bn-item" id="bn-more" onclick="switchTab('more',this)"><span class="bn-icon">⚙️</span>More</button>
+  </div>
+</div>
+
+<div style="font-size:11px;color:var(--text-muted);text-align:center;max-width:360px;line-height:1.6">
+  Toggle "On a Veepee page" above to see the Extract tab activate automatically.
+</div>
+
+<script>
+/* ── Tab switching ── */
+function switchTab(id, btn){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.bn-item').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+/* ── Compatible page simulation ── */
+function setCompatible(on){
+  const btn = document.getElementById('bn-extract');
+  btn.classList.toggle('compatible', on);
+  document.getElementById('extract-idle').style.display = on ? 'none' : 'flex';
+  document.getElementById('extract-active').style.display = on ? 'flex' : 'none';
+  if(on) switchTab('extract', btn);
+  else {
+    // revert to collection if we just turned it off
+    switchTab('collection', document.getElementById('bn-collection'));
+  }
+}
+
+/* ── Collection chips ── */
+function activeLabels(){
+  return [...document.querySelectorAll('#chips .active')].map(c=>c.dataset.label);
+}
+function syncUI(){
+  const labels = activeLabels();
+  document.getElementById('chips-readout').textContent = labels.length ? labels.join(' · ') : '—';
+  document.querySelectorAll('#tab-collection .btn-add').forEach(b=>{
+    if(!labels.length){ b.textContent='+ Add'; b.disabled=true; b.style.opacity='.35'; b.style.cursor='default'; }
+    else { b.textContent='+ '+labels.join(' · '); b.disabled=false; b.style.opacity=''; b.style.cursor=''; }
+  });
+}
+function toggleChip(chip){
+  const on = !chip.classList.contains('active');
+  chip.classList.toggle('active');
+  const icon = chip.textContent.match(/\p{Emoji}/u)?.[0] ?? '';
+  chip.textContent = on ? '✓ '+icon+' '+chip.dataset.label : icon+' '+chip.dataset.label;
+  syncUI();
+}
+function addToCollection(btn){
+  const labels = activeLabels(); if(!labels.length) return;
+  const s = document.createElement('span'); s.className='btn-added'; s.textContent='✓ '+labels.join(' · ');
+  btn.replaceWith(s);
+}
+
+/* ── Extract import simulation ── */
+function simulateImport(btn){
+  btn.textContent = 'Importing…'; btn.disabled = true;
+  setTimeout(()=>{
+    btn.style.background = 'rgba(0,192,48,.2)';
+    btn.style.color = 'var(--green)';
+    btn.textContent = '✓ 24 games added to Wishlist';
+  }, 1200);
+}
+</script>
+</body>
+</html>
