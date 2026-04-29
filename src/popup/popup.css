@@ -563,11 +563,74 @@ body {
   box-shadow: 0 0 0 2px var(--amber-glow);
 }
 
+/* ── Collection type chips ── */
+.col-chips-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 8px 0 5px;
+}
+
+.col-chips-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.col-chips-readout {
+  color: var(--amber);
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0;
+  margin-left: 4px;
+}
+
+.col-chips-hint {
+  font-size: 9.5px;
+  color: var(--text-muted);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.col-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.col-chip {
+  padding: 4px 9px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 10.5px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+}
+
+.col-chip:hover {
+  border-color: var(--border-hover);
+  color: var(--text-secondary);
+}
+
+.col-chip.active {
+  border-color: var(--amber);
+  background: var(--amber-glow);
+  color: var(--amber);
+}
+
 .wl-results {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin-top: 8px;
+  gap: 5px;
+  margin-top: 4px;
 }
 
 .wl-results:empty {
@@ -576,16 +639,32 @@ body {
 
 .wl-result {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 6px;
+  align-items: stretch;
   border-radius: var(--radius);
   background: var(--bg-elevated);
+  overflow: hidden;
+}
+
+.wl-game-link {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  text-decoration: none;
+  color: inherit;
+  border-right: 1px solid var(--border);
+  cursor: pointer;
   transition: background var(--transition-fast);
 }
 
-.wl-result:hover {
+.wl-game-link:hover {
   background: var(--bg-hover);
+}
+
+.wl-game-link:hover .wl-name {
+  color: var(--amber);
 }
 
 .wl-thumb {
@@ -610,6 +689,7 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   letter-spacing: -0.01em;
+  transition: color var(--transition-fast);
 }
 
 .wl-year {
@@ -617,10 +697,17 @@ body {
   color: var(--text-muted);
 }
 
+.wl-add-zone {
+  flex: none;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+}
+
 .wl-btn-add {
   flex: none;
-  padding: 5px 9px;
-  font-size: 10.5px;
+  padding: 5px 8px;
+  font-size: 10px;
   font-weight: 700;
   border-radius: var(--radius);
   background: transparent;
@@ -628,6 +715,10 @@ body {
   border: 1px solid var(--amber);
   cursor: pointer;
   font-family: inherit;
+  white-space: nowrap;
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
   transition: all var(--transition-fast);
 }
 
@@ -643,13 +734,17 @@ body {
 
 .wl-btn-added {
   flex: none;
-  padding: 5px 9px;
-  font-size: 10.5px;
+  padding: 5px 8px;
+  font-size: 10px;
   font-weight: 700;
   border-radius: var(--radius);
   background: rgba(0, 192, 48, 0.14);
   color: var(--green);
   border: 1px solid transparent;
+  white-space: nowrap;
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .wl-error {

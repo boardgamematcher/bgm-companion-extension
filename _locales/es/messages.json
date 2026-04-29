@@ -634,5 +634,13 @@
     "placeholders": {
       "query": {"content": "$1", "example": "Wingspan"}
     }
-  }
-}
+  },
+  "popupCollAddTo": { "message": "Añadir a:", "description": "Label before the collection type chips readout." },
+  "popupCollChipsHint": { "message": "toca para activar, elige varios", "description": "Hint next to collection type chips." },
+  "popupCollTypeOwn": { "message": "Tengo", "description": "Collection type: own." },
+  "popupCollTypePlayed": { "message": "Jugado", "description": "Collection type: played." },
+  "popupCollTypeWishlist": { "message": "Lista de deseos", "description": "Collection type: wishlist." },
+  "popupCollTypeWantToPlay": { "message": "Quiero jugar", "description": "Collection type: want to play." },
+  "popupCollTypeWantToLearn": { "message": "Quiero aprender", "description": "Collection type: want to learn." },
+  "popupCollTypeCanTeach": { "message": "Puedo enseñar", "description": "Collection type: can teach." },
+  "popupCollViewAll": { "message": "Ver colección →", "description": "Footer link on the collection tab." }}

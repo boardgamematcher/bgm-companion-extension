@@ -140,7 +140,6 @@
 
         <!-- Neutral card — any page, logged in -->
         <div id="card-neutral" style="display: none">
-          <div class="section-label" data-i18n="popupWishlistTitle">Add to wishlist</div>
           <div class="wl-input-row">
             <input
               id="wishlist-input"
@@ -150,6 +149,16 @@
               autocomplete="off"
             />
           </div>
+          <div class="col-chips-row">
+            <span class="col-chips-label">
+              <span data-i18n="popupCollAddTo">Add to:</span>
+              <span class="col-chips-readout" id="col-chips-readout"></span>
+            </span>
+            <span class="col-chips-hint" data-i18n="popupCollChipsHint"
+              >tap to toggle, pick several</span
+            >
+          </div>
+          <div class="col-chips" id="col-chips"></div>
           <div class="wl-results" id="wishlist-results"></div>
           <div class="wl-footer" id="wl-footer">
             <span class="wl-count" id="wishlist-count"></span>
@@ -159,29 +168,9 @@
               href="#"
               target="_blank"
               rel="noopener"
-              data-i18n="popupWishlistViewAll"
-              >View full wishlist &rarr;</a
+              data-i18n="popupCollViewAll"
+              >View collection →</a
             >
-          </div>
-          <div class="feature-strips">
-            <div class="feature-strip">
-              <span class="fstrip-head" data-i18n="popupFeatureShopTitle">On a game store</span>
-              <span class="fstrip-sub" data-i18n="popupFeatureShopDesc"
-                >See owned vs new · get links to BGM game pages</span
-              >
-            </div>
-            <div class="feature-strip">
-              <span class="fstrip-head" data-i18n="popupFeatureBgaTitle"
-                >On Board Game Arena or Yucata</span
-              >
-              <span class="fstrip-sub" data-i18n="popupFeatureBgaDesc"
-                >Import your play history</span
-              >
-            </div>
-            <div class="feature-strip">
-              <span class="fstrip-head" data-i18n="popupFeatureBggTitle">On BoardGameGeek</span>
-              <span class="fstrip-sub" data-i18n="popupFeatureBggDesc">Sync your owned games</span>
-            </div>
           </div>
         </div>
 

@@ -17,6 +17,17 @@ let _successTimer = null;
 // Tab ID of the active shop page (set in checkSiteSupport)
 let _activeTabId = null;
 
+const COLLECTION_TYPES = [
+  { key: 'own', i18nKey: 'popupCollTypeOwn', emoji: '📦' },
+  { key: 'played', i18nKey: 'popupCollTypePlayed', emoji: '✅' },
+  { key: 'wishlist', i18nKey: 'popupCollTypeWishlist', emoji: '⭐' },
+  { key: 'wanttoplay', i18nKey: 'popupCollTypeWantToPlay', emoji: '🎯' },
+  { key: 'wanttolearn', i18nKey: 'popupCollTypeWantToLearn', emoji: '📖' },
+  { key: 'canteach', i18nKey: 'popupCollTypeCanTeach', emoji: '🎓' },
+];
+
+let selectedTypes = ['wishlist'];
+
 // Initialize popup
 document.addEventListener('DOMContentLoaded', async () => {
   loadTheme();
@@ -679,9 +690,64 @@ let wishlistCount = null;
 function setupWishlist(user) {
   const link = document.getElementById('wishlist-link');
   if (user.username) {
-    link.href = `${BGM_BASE_URL}/collections/${encodeURIComponent(user.username)}?tab=wishlist`;
+    link.href = `${BGM_BASE_URL}/collections/${encodeURIComponent(user.username)}`;
   }
+
+  chrome.storage.local.get('selectedCollectionTypes', (data) => {
+    if (data.selectedCollectionTypes?.length) {
+      selectedTypes = data.selectedCollectionTypes;
+    }
+    renderChips();
+    syncChipReadout();
+  });
+
   loadWishlistCount();
+}
+
+function getTypeLabel(typeKey) {
+  const type = COLLECTION_TYPES.find((t) => t.key === typeKey);
+  return type ? chrome.i18n.getMessage(type.i18nKey) || typeKey : typeKey;
+}
+
+function getAddButtonLabel() {
+  return '+ ' + selectedTypes.map(getTypeLabel).join(' · ');
+}
+
+function syncChipReadout() {
+  const readout = document.getElementById('col-chips-readout');
+  if (readout) readout.textContent = selectedTypes.map(getTypeLabel).join(' · ');
+}
+
+function renderChips() {
+  const container = document.getElementById('col-chips');
+  if (!container) return;
+  container.textContent = '';
+  for (const type of COLLECTION_TYPES) {
+    const isActive = selectedTypes.includes(type.key);
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'col-chip' + (isActive ? ' active' : '');
+    btn.dataset.typeKey = type.key;
+    const label = chrome.i18n.getMessage(type.i18nKey) || type.key;
+    btn.textContent = (isActive ? '✓ ' : '') + type.emoji + ' ' + label;
+    btn.addEventListener('click', () => toggleChip(type.key));
+    container.appendChild(btn);
+  }
+}
+
+function toggleChip(typeKey) {
+  const isActive = selectedTypes.includes(typeKey);
+  if (isActive && selectedTypes.length === 1) return; // keep at least one selected
+  selectedTypes = isActive
+    ? selectedTypes.filter((k) => k !== typeKey)
+    : [...selectedTypes, typeKey];
+  chrome.storage.local.set({ selectedCollectionTypes: selectedTypes });
+  renderChips();
+  syncChipReadout();
+  document.querySelectorAll('.wl-btn-add').forEach((btn) => {
+    btn.textContent = getAddButtonLabel();
+    btn.title = getAddButtonLabel();
+  });
 }
 
 async function loadWishlistCount() {
@@ -774,6 +840,17 @@ function buildWishlistRow(game) {
   const row = document.createElement('div');
   row.className = 'wl-result';
 
+  const link = document.createElement('a');
+  link.className = 'wl-game-link';
+  link.href = '#';
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const path = game.slug
+      ? `/boardgames/${encodeURIComponent(game.slug)}`
+      : `/search?q=${encodeURIComponent(game.name)}`;
+    chrome.tabs.create({ url: BGM_BASE_URL + path });
+  });
+
   const thumb = document.createElement('img');
   thumb.className = 'wl-thumb';
   thumb.alt = '';
@@ -791,50 +868,55 @@ function buildWishlistRow(game) {
   year.className = 'wl-year';
   if (game.year_published) year.textContent = String(game.year_published);
   info.append(name, year);
+  link.append(thumb, info);
 
+  const zone = document.createElement('div');
+  zone.className = 'wl-add-zone';
   const btn = document.createElement('button');
   btn.className = 'wl-btn-add';
   btn.type = 'button';
-  btn.textContent = chrome.i18n.getMessage('popupWishlistAdd');
-  btn.addEventListener('click', () => addToWishlist(game, row, btn));
+  btn.textContent = getAddButtonLabel();
+  btn.title = getAddButtonLabel();
+  btn.addEventListener('click', () => addToCollection(game, btn));
+  zone.appendChild(btn);
 
-  row.append(thumb, info, btn);
+  row.append(link, zone);
   return row;
 }
 
-async function addToWishlist(game, row, btn) {
+async function addToCollection(game, btn) {
   btn.disabled = true;
+  const typesToAdd = [...selectedTypes];
   try {
-    const response = await fetch(
-      `${BGM_BASE_URL}/api/collections/${encodeURIComponent(game.id)}/wishlist`,
-      {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: '{}',
-      }
+    const results = await Promise.all(
+      typesToAdd.map((type) =>
+        fetch(`${BGM_BASE_URL}/api/collections/${encodeURIComponent(game.id)}/${type}`, {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: '{}',
+        })
+          .then((r) => (r.ok ? r.json().catch(() => ({})) : Promise.resolve({})))
+          .catch(() => ({}))
+      )
     );
-    if (!response.ok) {
-      btn.disabled = false;
-      btn.textContent = chrome.i18n.getMessage('popupWishlistTryAgain');
-      return;
-    }
-    const data = await response.json().catch(() => ({}));
-    if (!data.added) {
+    const addedTypes = typesToAdd.filter((_, i) => results[i].added);
+    if (!addedTypes.length) {
       btn.disabled = false;
       btn.textContent = chrome.i18n.getMessage('popupWishlistTryAgain');
       return;
     }
     const marker = document.createElement('span');
     marker.className = 'wl-btn-added';
-    marker.textContent = chrome.i18n.getMessage('popupWishlistAdded');
+    marker.textContent = '✓ ' + addedTypes.map(getTypeLabel).join(' · ');
+    marker.title = marker.textContent;
     btn.replaceWith(marker);
-    if (wishlistCount !== null) {
+    if (addedTypes.includes('wishlist') && wishlistCount !== null) {
       wishlistCount += 1;
       renderWishlistCount();
     }
   } catch (error) {
-    console.warn('Add to wishlist failed:', error);
+    console.warn('Add to collection failed:', error);
     btn.disabled = false;
     btn.textContent = chrome.i18n.getMessage('popupWishlistTryAgain');
   }

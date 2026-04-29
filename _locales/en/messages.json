@@ -842,5 +842,14 @@
   "popupBggLead": {
     "message": "Import your BGG play history to track stats and earn BGM badges",
     "description": "Lead text on the BGG import panel."
-  }
+  },
+  "popupCollAddTo": { "message": "Add to:", "description": "Label before the collection type chips readout." },
+  "popupCollChipsHint": { "message": "tap to toggle, pick several", "description": "Hint next to collection type chips." },
+  "popupCollTypeOwn": { "message": "Own", "description": "Collection type: own." },
+  "popupCollTypePlayed": { "message": "Played", "description": "Collection type: played." },
+  "popupCollTypeWishlist": { "message": "Wishlist", "description": "Collection type: wishlist." },
+  "popupCollTypeWantToPlay": { "message": "Want to play", "description": "Collection type: want to play." },
+  "popupCollTypeWantToLearn": { "message": "Want to learn", "description": "Collection type: want to learn." },
+  "popupCollTypeCanTeach": { "message": "Can teach", "description": "Collection type: can teach." },
+  "popupCollViewAll": { "message": "View collection →", "description": "Footer link on the collection tab." }
 }
