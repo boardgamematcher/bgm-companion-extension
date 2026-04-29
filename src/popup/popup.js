@@ -124,7 +124,6 @@ function applyCardLayout() {
     document.getElementById('extract-ctx-pill').style.display = '';
     const btn = document.getElementById('extract-btn');
     btn.disabled = false;
-    btn.classList.remove('btn-primary--idle');
     if (bnExtract) bnExtract.classList.add('compatible');
     switchTab('extract');
   } else if (siteContext === 'bga' || siteContext === 'yucata' || siteContext === 'bgg') {
