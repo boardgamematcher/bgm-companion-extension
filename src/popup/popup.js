@@ -87,6 +87,7 @@ function handleAvatarClick(e) {
 
 function hideAllMainCards() {
   [
+    'extract-zone',
     'card-shop',
     'card-review',
     'card-success',
@@ -103,11 +104,24 @@ function hideAllMainCards() {
 function applyCardLayout() {
   hideAllMainCards();
 
+  // Extract zone is always shown; enable it only on shop pages
+  const extractZone = document.getElementById('extract-zone');
+  const extractBtn = document.getElementById('extract-btn');
+  const extractPill = document.getElementById('extract-ctx-pill');
+  extractZone.style.display = '';
+  if (siteContext === 'shop') {
+    extractBtn.disabled = false;
+    extractBtn.classList.remove('btn-primary--idle');
+    extractPill.style.display = '';
+  } else {
+    extractBtn.disabled = true;
+    extractBtn.classList.add('btn-primary--idle');
+    extractPill.style.display = 'none';
+  }
+
   if (!currentUser) {
     if (siteContext === 'shop') {
       document.getElementById('card-shop').style.display = '';
-      document.getElementById('shop-loggedin').style.display = 'none';
-      document.getElementById('shop-loggedout').style.display = '';
     } else if (siteContext === 'bga' || siteContext === 'yucata' || siteContext === 'bgg') {
       // platform panels managed by bga-import.js / yucata-import.js / bgg-import.js
     } else {
@@ -120,9 +134,6 @@ function applyCardLayout() {
 
   switch (siteContext) {
     case 'shop':
-      document.getElementById('card-shop').style.display = '';
-      document.getElementById('shop-loggedin').style.display = '';
-      document.getElementById('shop-loggedout').style.display = 'none';
       if (_activeTabId) setTimeout(() => loadShopWishlistCount(_activeTabId), 400);
       break;
     case 'bga':
@@ -475,6 +486,7 @@ async function handleExtract() {
 
 async function showReviewPanel(games) {
   document.getElementById('review-domain').textContent = currentDomain || '';
+  document.getElementById('extract-zone').style.display = 'none';
   document.getElementById('card-shop').style.display = 'none';
   document.getElementById('card-review').style.display = '';
 
@@ -538,8 +550,7 @@ async function showReviewPanel(games) {
 
 function hideReviewPanel() {
   document.getElementById('card-review').style.display = 'none';
-  document.getElementById('card-shop').style.display = '';
-  document.getElementById('extract-btn').disabled = false;
+  applyCardLayout();
 }
 
 function updateReviewCount() {

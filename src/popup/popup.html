@@ -40,23 +40,27 @@
 
       <!-- ── Main content ── -->
       <main class="main" id="main">
-        <!-- Shop card — game store, logged in -->
-        <div id="card-shop" style="display: none">
-          <div class="ctx-pill shop-ctx">
+        <!-- Extract zone — always visible, enabled on shop pages -->
+        <div id="extract-zone">
+          <div id="extract-ctx-pill" class="ctx-pill shop-ctx" style="display: none">
             <span class="dot"></span>
             <span id="ctx-shop-name"></span>
           </div>
-          <div id="shop-loggedin">
-            <p class="card-lead" data-i18n="popupShopLead">
-              See which games on this page are new to your collection
-            </p>
-            <button class="btn-primary" id="extract-btn" data-i18n="popupExtractButton">
-              Extract &amp; review
-            </button>
-            <p class="card-sub" id="shop-wishlist-count" style="display: none"></p>
-            <p class="card-sub" id="shop-last-extraction" style="display: none"></p>
-          </div>
-          <div id="shop-loggedout" style="display: none">
+          <button
+            class="btn-primary btn-primary--idle"
+            id="extract-btn"
+            disabled
+            data-i18n="popupExtractButton"
+          >
+            Extract &amp; review
+          </button>
+          <p class="card-sub" id="shop-wishlist-count" style="display: none"></p>
+          <p class="card-sub" id="shop-last-extraction" style="display: none"></p>
+        </div>
+
+        <!-- Shop card — sign-in nudge when not logged in on a shop page -->
+        <div id="card-shop" style="display: none">
+          <div id="shop-loggedout">
             <p class="card-lead" data-i18n="popupShopSigninLead">
               Sign in to match them against your collection
             </p>
