@@ -1,0 +1,27 @@
+name: Sync built-in profiles
+
+on:
+  schedule:
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download latest profiles.json
+        run: |
+          curl -fsSL \
+            https://raw.githubusercontent.com/boardgamematcher/site-profiles/main/profiles.json \
+            -o patterns/built-in.json
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git diff --quiet patterns/built-in.json && echo "No changes" && exit 0
+          git add patterns/built-in.json
+          git commit -m "chore: sync built-in profiles from site-profiles"
+          git push

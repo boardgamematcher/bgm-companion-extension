@@ -83,7 +83,7 @@ function extractStructured(pattern) {
   for (const card of cards) {
     // Extract name
     const nameEl = card.querySelector(pattern.selector);
-    const name = getText(nameEl);
+    const name = cleanName(getText(nameEl), pattern.name_cleanup);
     if (!name) continue;
 
     // Apply exclude filters

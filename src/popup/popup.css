@@ -234,6 +234,11 @@ body {
   flex: 1;
 }
 
+/* ── Extract zone ── */
+#extract-zone {
+  margin-bottom: 14px;
+}
+
 /* ── Context pill ── */
 .ctx-pill {
   display: inline-flex;
@@ -337,6 +342,20 @@ body {
   opacity: 0.4;
   cursor: not-allowed;
   transform: none;
+}
+
+@keyframes extract-idle {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.btn-primary--idle {
+  animation: extract-idle 2.5s ease-in-out infinite;
 }
 
 .btn-sm {

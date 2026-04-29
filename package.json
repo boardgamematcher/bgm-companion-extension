@@ -10,6 +10,7 @@
     "format": "prettier --write 'src/**/*.{js,css,html,json}'",
     "format:check": "prettier --check 'src/**/*.{js,css,html,json}'",
     "manifest:update": "node scripts/update-manifest-matches.js",
+    "sync-profiles": "cp ../site-profiles/profiles.json patterns/built-in.json",
     "test": "jest",
     "test:watch": "jest --watch"
   },
