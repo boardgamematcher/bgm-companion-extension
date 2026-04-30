@@ -172,6 +172,7 @@
         "*://*.veepee.nl/*"
       ],
       "js": [
+        "src/lib/normalize.js",
         "src/content/wishlist-badge.js"
       ],
       "css": [

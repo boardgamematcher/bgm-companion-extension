@@ -85,12 +85,3 @@
   });
   observer.observe(document.body, { childList: true, subtree: true });
 })();
-
-function normalizeName(name) {
-  return name
-    .toLowerCase()
-    .replace(/[''`]/g, '')
-    .replace(/[^\w\s]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
