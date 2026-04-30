@@ -18,7 +18,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 const bgaImportBtn = document.getElementById('bgaImportBtn');
 const bgaStatus = document.getElementById('bgaStatus');
 
-function setStatus(text, variant) {
+function setBgaStatus(text, variant) {
   if (!bgaStatus) return;
   bgaStatus.textContent = text;
   bgaStatus.classList.remove('is-error', 'is-success');
@@ -28,7 +28,7 @@ function setStatus(text, variant) {
 // Listen for progress updates from the service worker
 chrome.runtime.onMessage.addListener((message) => {
   if (message.action === 'playsImportProgress' && bgaStatus && bgaImportBtn?.disabled) {
-    setStatus(
+    setBgaStatus(
       chrome.i18n.getMessage('importSendingProgress', [
         String(message.current),
         String(message.total),
@@ -40,7 +40,7 @@ chrome.runtime.onMessage.addListener((message) => {
 if (bgaImportBtn) {
   bgaImportBtn.addEventListener('click', () => {
     bgaImportBtn.disabled = true;
-    setStatus(chrome.i18n.getMessage('importBgaFetching'));
+    setBgaStatus(chrome.i18n.getMessage('importBgaFetching'));
 
     // Send message to content script
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -50,16 +50,16 @@ if (bgaImportBtn) {
         if (chrome.runtime.lastError || !response) {
           const msg =
             chrome.runtime.lastError?.message || chrome.i18n.getMessage('importNoResponse');
-          setStatus(chrome.i18n.getMessage('importErrorPrefix', [msg]), 'is-error');
+          setBgaStatus(chrome.i18n.getMessage('importErrorPrefix', [msg]), 'is-error');
         } else if (response.success) {
           const { posted, skipped, errors } = response.data;
           const parts = [chrome.i18n.getMessage('importSuccess', [String(posted)])];
           if (skipped > 0)
             parts.push(chrome.i18n.getMessage('importNotFoundOnBgm', [String(skipped)]));
           if (errors > 0) parts.push(chrome.i18n.getMessage('importErrors', [String(errors)]));
-          setStatus(parts.join(' · '), 'is-success');
+          setBgaStatus(parts.join(' · '), 'is-success');
         } else {
-          setStatus(chrome.i18n.getMessage('importErrorPrefix', [response.error]), 'is-error');
+          setBgaStatus(chrome.i18n.getMessage('importErrorPrefix', [response.error]), 'is-error');
         }
       });
     });
