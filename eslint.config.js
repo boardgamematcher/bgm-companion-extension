@@ -11,6 +11,7 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.webextensions,
+        normalizeName: "readonly",
         PatternMatcher: "writable",
         Storage: "writable",
         YucataMapper: "writable",
