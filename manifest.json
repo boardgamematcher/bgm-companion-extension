@@ -17,7 +17,10 @@
   "host_permissions": [
     "https://boardgamematcher.com/*",
     "https://boardgamearena.com/*",
-    "https://en.boardgamearena.com/*"
+    "https://en.boardgamearena.com/*",
+    "https://tabletopia.com/*",
+    "https://www.spielbyweb.de/*",
+    "https://ludopedia.com.br/*"
   ],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; style-src 'self' 'unsafe-inline'"
@@ -209,6 +212,33 @@
         "src/content/bgg-scraper.js",
         "src/content/bgg-listener.js"
       ]
+    },
+    {
+      "matches": [
+        "https://tabletopia.com/*"
+      ],
+      "js": [
+        "src/content/tabletopia-scraper.js",
+        "src/content/tabletopia-listener.js"
+      ]
+    },
+    {
+      "matches": [
+        "https://ludopedia.com.br/*"
+      ],
+      "js": [
+        "src/content/ludopedia-scraper.js",
+        "src/content/ludopedia-listener.js"
+      ]
+    },
+    {
+      "matches": [
+        "https://www.spielbyweb.de/*"
+      ],
+      "js": [
+        "src/content/spielbyweb-scraper.js",
+        "src/content/spielbyweb-listener.js"
+      ]
     }
   ],
   "options_page": "src/options/options.html",
@@ -242,6 +272,22 @@
       "matches": [
         "https://boardgamearena.com/*",
         "https://en.boardgamearena.com/*"
+      ]
+    },
+    {
+      "resources": [
+        "patterns/tabletopia-mapping.json"
+      ],
+      "matches": [
+        "https://tabletopia.com/*"
+      ]
+    },
+    {
+      "resources": [
+        "patterns/spielbyweb-mapping.json"
+      ],
+      "matches": [
+        "https://www.spielbyweb.de/*"
       ]
     }
   ]

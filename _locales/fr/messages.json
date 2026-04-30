@@ -646,5 +646,20 @@
   "popupCollViewAll": { "message": "Voir la collection →", "description": "Footer link on the collection tab." },
   "popupBulkExtractButton": { "message": "Extraire toutes les pages", "description": "Button to start a bulk paginated extraction." },
   "popupBulkTitle": { "message": "Extraction en cours…", "description": "Title shown on the bulk progress overlay." },
-  "popupBulkCancel": { "message": "Annuler et garder les résultats", "description": "Button to cancel a bulk extraction and keep what was found so far." }
+  "popupBulkCancel": { "message": "Annuler et garder les résultats", "description": "Button to cancel a bulk extraction and keep what was found so far." },
+
+  "popupTabletopiaCtx": { "message": "Tabletopia" },
+  "popupTabletopiaLead": { "message": "Importez votre historique de parties pour suivre vos stats et gagner des badges BGM" },
+  "popupTabletopiaButton": { "message": "Importer les parties Tabletopia" },
+  "importTabletopiaFetching": { "message": "Récupération de toutes les parties sur Tabletopia… veuillez patienter" },
+
+  "popupLudopediaCtx": { "message": "Ludopedia" },
+  "popupLudopediaLead": { "message": "Importez votre historique de parties pour suivre vos stats et gagner des badges BGM" },
+  "popupLudopediaButton": { "message": "Importer les parties Ludopedia" },
+  "importLudopediaFetching": { "message": "Récupération de toutes les parties sur Ludopedia… veuillez patienter" },
+
+  "popupSpielByWebCtx": { "message": "SpielByWeb" },
+  "popupSpielByWebLead": { "message": "Importez votre historique de parties pour suivre vos stats et gagner des badges BGM" },
+  "popupSpielByWebButton": { "message": "Importer les parties SpielByWeb" },
+  "importSpielByWebFetching": { "message": "Analyse des parties terminées sur cette page… veuillez patienter" }
 }
