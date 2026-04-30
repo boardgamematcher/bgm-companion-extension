@@ -151,8 +151,8 @@ function applyCardLayout() {
     }
   } else {
     cardNeutral.style.display = '';
-    if (siteContext === 'shop' && _activeTabId) {
-      setTimeout(() => loadShopWishlistCount(_activeTabId), 400);
+    if (siteContext === 'shop' && _activeTabId && currentPattern) {
+      loadPopupWishlistMatches(_activeTabId, currentPattern);
     }
   }
 }
@@ -643,20 +643,124 @@ function updateStatsDisplay(stats) {
   }
 }
 
-async function loadShopWishlistCount(tabId) {
+// Extract cleaned game title strings from the active tab.
+// Works for both CSS-selector and next_data profiles, applying name_cleanup
+// so that titles match against BGM wishlist entries.
+async function extractPageNames(tabId, pattern) {
   try {
+    if (pattern.data_source === 'next_data') {
+      const cfg = pattern.next_data;
+      if (!cfg || !cfg.items_path) return [];
+      const paths = Array.isArray(cfg.items_path) ? cfg.items_path : [cfg.items_path];
+      const fieldsName = (cfg.fields && cfg.fields.name) || null;
+      const nameCleanup = cfg.name_cleanup || null;
+      const results = await chrome.scripting.executeScript({
+        target: { tabId },
+        func: (paths, fieldsName, nameCleanup) => {
+          const script = document.getElementById('__NEXT_DATA__');
+          if (!script) return [];
+          let data;
+          try {
+            data = JSON.parse(script.textContent || '');
+          } catch {
+            return [];
+          }
+          const walk = (obj, path) => {
+            if (!path || obj == null) return undefined;
+            for (const part of path.split('.')) {
+              const m = part.match(/^([^[\]]+)((?:\[\d+\])*)$/);
+              if (!m) return undefined;
+              obj = obj == null ? undefined : obj[m[1]];
+              if (m[2]) {
+                for (const idx of m[2].match(/\d+/g) || []) {
+                  if (!Array.isArray(obj)) return undefined;
+                  obj = obj[parseInt(idx, 10)];
+                }
+              }
+              if (obj === undefined) return undefined;
+            }
+            return obj;
+          };
+          const applyCleanup = (name, cleanup) => {
+            if (!cleanup || typeof name !== 'string') return name;
+            let c = name;
+            if (cleanup.strip_prefix_pattern)
+              c = c.replace(new RegExp(cleanup.strip_prefix_pattern), '');
+            if (cleanup.strip_suffix_pattern)
+              c = c.replace(new RegExp(cleanup.strip_suffix_pattern), '');
+            return c.trim();
+          };
+          const names = [];
+          for (const p of paths) {
+            const items = walk(data, p);
+            if (!Array.isArray(items)) continue;
+            for (const item of items) {
+              const raw = fieldsName ? walk(item, fieldsName) : null;
+              if (!raw || typeof raw !== 'string') continue;
+              const name = applyCleanup(raw, nameCleanup);
+              if (name) names.push(name);
+            }
+          }
+          return names;
+        },
+        args: [paths, fieldsName, nameCleanup],
+      });
+      return results?.[0]?.result || [];
+    }
+
+    // CSS-selector path
+    const titleSelector = pattern.card_selector
+      ? `${pattern.card_selector} ${pattern.selector}`
+      : pattern.selector;
+    if (!titleSelector) return [];
+    const nameCleanup = pattern.name_cleanup || null;
     const results = await chrome.scripting.executeScript({
       target: { tabId },
-      func: () => document.documentElement.dataset.bgmWishlistCount,
+      func: (sel, nameCleanup) => {
+        const applyCleanup = (name, cleanup) => {
+          if (!cleanup || typeof name !== 'string') return name;
+          let c = name;
+          if (cleanup.strip_prefix_pattern)
+            c = c.replace(new RegExp(cleanup.strip_prefix_pattern), '');
+          if (cleanup.strip_suffix_pattern)
+            c = c.replace(new RegExp(cleanup.strip_suffix_pattern), '');
+          return c.trim();
+        };
+        return Array.from(document.querySelectorAll(sel))
+          .map((el) => applyCleanup(el.textContent.trim(), nameCleanup))
+          .filter(Boolean);
+      },
+      args: [titleSelector, nameCleanup],
     });
-    const count = parseInt(results?.[0]?.result, 10);
+    return results?.[0]?.result || [];
+  } catch (_e) {
+    return [];
+  }
+}
+
+// Show how many wishlist games appear on the current shop page.
+// Works for both CSS-selector and next_data sites.
+async function loadPopupWishlistMatches(tabId, pattern) {
+  try {
+    const [wlRes, pageNames] = await Promise.all([
+      new Promise((resolve) => chrome.runtime.sendMessage({ action: 'getWishlist' }, resolve)),
+      extractPageNames(tabId, pattern),
+    ]);
+
+    const wishlist = wlRes && wlRes.wishlist;
+    if (!wishlist || wishlist.length === 0 || !pageNames || pageNames.length === 0) return;
+
+    const wishlistNorms = new Set(wishlist.map((item) => normalizeName(item.title)));
+    const matchCount = pageNames.filter((name) => wishlistNorms.has(normalizeName(name))).length;
+    if (matchCount < 1) return;
+
     const el = document.getElementById('shop-wishlist-count');
-    if (!el || isNaN(count) || count < 1) return;
-    const key = count === 1 ? 'popupShopWishlistSingular' : 'popupShopWishlistPlural';
-    el.textContent = chrome.i18n.getMessage(key, [String(count)]);
+    if (!el) return;
+    const key = matchCount === 1 ? 'popupShopWishlistSingular' : 'popupShopWishlistPlural';
+    el.textContent = chrome.i18n.getMessage(key, [String(matchCount)]);
     el.style.display = '';
   } catch (_e) {
-    // content script not yet active or wrong origin — silently skip
+    // silently skip — wishlist unavailable or tab not injectable
   }
 }
 

@@ -38,7 +38,6 @@
   }));
 
   const applyCleanup = buildCleanupFn(pattern.name_cleanup);
-  let bgmWishlistCount = 0;
 
   function scanAndBadge() {
     // Build the selector: when a card_selector is present use the inner title
@@ -60,7 +59,6 @@
       if (!match) continue;
 
       el.dataset.bgmBadgeDone = '1';
-      bgmWishlistCount++;
 
       const badge = document.createElement('a');
       badge.className = 'bgm-wishlist-badge';
@@ -71,9 +69,6 @@
 
       el.insertAdjacentElement('afterend', badge);
     }
-
-    // Expose count for the extension popup to read
-    document.documentElement.dataset.bgmWishlistCount = String(bgmWishlistCount);
   }
 
   scanAndBadge();
@@ -98,13 +93,4 @@ function buildCleanupFn(cleanup) {
     if (suffixRe) cleaned = cleaned.replace(suffixRe, '');
     return cleaned.trim();
   };
-}
-
-function normalizeName(name) {
-  return name
-    .toLowerCase()
-    .replace(/[''`]/g, '')
-    .replace(/[^\w\s]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
 }

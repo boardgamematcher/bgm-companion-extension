@@ -7,10 +7,7 @@ const {
   cleanName,
 } = require('../src/content/content-script.js');
 
-// Mirrors normalizeName in wishlist-badge.js — used for full-chain assertions.
-function normalizeName(name) {
-  return name.toLowerCase().replace(/[''`]/g, '').replace(/[^\w\s]/g, ' ').replace(/\s+/g, ' ').trim();
-}
+const { normalizeName } = require('../src/lib/normalize.js');
 
 // Helper to install a __NEXT_DATA__ payload into the jsdom document.
 function setNextData(payload) {
