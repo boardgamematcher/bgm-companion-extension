@@ -1,6 +1,7 @@
 // Shared game-title normalization for wishlist matching.
 // Used by wishlist-badge.js (content script) and popup.js.
 function normalizeName(name) {
+  if (typeof name !== 'string') return '';
   return name
     .toLowerCase()
     .replace(/[''`]/g, '')

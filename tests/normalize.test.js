@@ -22,16 +22,18 @@ describe('normalizeName', () => {
     expect(normalizeName('   ')).toBe('');
   });
 
-  test('matches are symmetric', () => {
-    const a = normalizeName('Ticket to Ride: Europe');
-    const b = normalizeName('Ticket to Ride: Europe');
-    expect(a).toBe(b);
+  test('returns empty string for non-string input', () => {
+    expect(normalizeName(null)).toBe('');
+    expect(normalizeName(undefined)).toBe('');
+    expect(normalizeName(42)).toBe('');
   });
 
-  test('handles wishlist-page-name match scenario', () => {
-    // Wishlist title vs page title with minor punctuation difference
-    const wishlist = normalizeName('Spirit Island');
-    const page = normalizeName('Spirit Island');
-    expect(wishlist).toBe(page);
+  test('wishlist title matches page title after minor punctuation differences', () => {
+    // Wishlist: "Catan" vs page: "Catan." (trailing dot)
+    expect(normalizeName('Catan')).toBe(normalizeName('Catan.'));
+    // Colon vs no colon
+    expect(normalizeName('Ticket to Ride Europe')).toBe(
+      normalizeName('Ticket to Ride: Europe')
+    );
   });
 });

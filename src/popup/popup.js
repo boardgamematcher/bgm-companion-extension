@@ -643,8 +643,9 @@ function updateStatsDisplay(stats) {
   }
 }
 
-// Extract raw game title strings from the active tab.
-// Works for both CSS-selector and next_data profiles.
+// Extract cleaned game title strings from the active tab.
+// Works for both CSS-selector and next_data profiles, applying name_cleanup
+// so that titles match against BGM wishlist entries.
 async function extractPageNames(tabId, pattern) {
   try {
     if (pattern.data_source === 'next_data') {
@@ -652,9 +653,10 @@ async function extractPageNames(tabId, pattern) {
       if (!cfg || !cfg.items_path) return [];
       const paths = Array.isArray(cfg.items_path) ? cfg.items_path : [cfg.items_path];
       const fieldsName = (cfg.fields && cfg.fields.name) || null;
+      const nameCleanup = cfg.name_cleanup || null;
       const results = await chrome.scripting.executeScript({
         target: { tabId },
-        func: (paths, fieldsName) => {
+        func: (paths, fieldsName, nameCleanup) => {
           const script = document.getElementById('__NEXT_DATA__');
           if (!script) return [];
           let data;
@@ -679,18 +681,29 @@ async function extractPageNames(tabId, pattern) {
             }
             return obj;
           };
+          const applyCleanup = (name, cleanup) => {
+            if (!cleanup || typeof name !== 'string') return name;
+            let c = name;
+            if (cleanup.strip_prefix_pattern)
+              c = c.replace(new RegExp(cleanup.strip_prefix_pattern), '');
+            if (cleanup.strip_suffix_pattern)
+              c = c.replace(new RegExp(cleanup.strip_suffix_pattern), '');
+            return c.trim();
+          };
           const names = [];
           for (const p of paths) {
             const items = walk(data, p);
             if (!Array.isArray(items)) continue;
             for (const item of items) {
               const raw = fieldsName ? walk(item, fieldsName) : null;
-              if (raw && typeof raw === 'string') names.push(raw);
+              if (!raw || typeof raw !== 'string') continue;
+              const name = applyCleanup(raw, nameCleanup);
+              if (name) names.push(name);
             }
           }
           return names;
         },
-        args: [paths, fieldsName],
+        args: [paths, fieldsName, nameCleanup],
       });
       return results?.[0]?.result || [];
     }
@@ -700,13 +713,24 @@ async function extractPageNames(tabId, pattern) {
       ? `${pattern.card_selector} ${pattern.selector}`
       : pattern.selector;
     if (!titleSelector) return [];
+    const nameCleanup = pattern.name_cleanup || null;
     const results = await chrome.scripting.executeScript({
       target: { tabId },
-      func: (sel) =>
-        Array.from(document.querySelectorAll(sel))
-          .map((el) => el.textContent.trim())
-          .filter(Boolean),
-      args: [titleSelector],
+      func: (sel, nameCleanup) => {
+        const applyCleanup = (name, cleanup) => {
+          if (!cleanup || typeof name !== 'string') return name;
+          let c = name;
+          if (cleanup.strip_prefix_pattern)
+            c = c.replace(new RegExp(cleanup.strip_prefix_pattern), '');
+          if (cleanup.strip_suffix_pattern)
+            c = c.replace(new RegExp(cleanup.strip_suffix_pattern), '');
+          return c.trim();
+        };
+        return Array.from(document.querySelectorAll(sel))
+          .map((el) => applyCleanup(el.textContent.trim(), nameCleanup))
+          .filter(Boolean);
+      },
+      args: [titleSelector, nameCleanup],
     });
     return results?.[0]?.result || [];
   } catch (_e) {
