@@ -854,5 +854,56 @@
   "popupCollViewAll": { "message": "View collection →", "description": "Footer link on the collection tab." },
   "popupBulkExtractButton": { "message": "Extract all pages", "description": "Button to start a bulk paginated extraction." },
   "popupBulkTitle": { "message": "Extracting all pages", "description": "Title shown on the bulk progress overlay." },
-  "popupBulkCancel": { "message": "Cancel & keep results", "description": "Button to cancel a bulk extraction and keep what was found so far." }
+  "popupBulkCancel": { "message": "Cancel & keep results", "description": "Button to cancel a bulk extraction and keep what was found so far." },
+
+  "popupTabletopiaCtx": {
+    "message": "Tabletopia",
+    "description": "Context pill label on the Tabletopia import panel."
+  },
+  "popupTabletopiaLead": {
+    "message": "Import your play history to track stats and earn BGM badges",
+    "description": "Lead text on the Tabletopia import panel."
+  },
+  "popupTabletopiaButton": {
+    "message": "Import Tabletopia Plays",
+    "description": "Button on the Tabletopia import panel."
+  },
+  "importTabletopiaFetching": {
+    "message": "Fetching all plays from Tabletopia… please wait",
+    "description": "Status shown immediately after clicking Import Tabletopia Plays."
+  },
+
+  "popupLudopediaCtx": {
+    "message": "Ludopedia",
+    "description": "Context pill label on the Ludopedia import panel."
+  },
+  "popupLudopediaLead": {
+    "message": "Import your play history to track stats and earn BGM badges",
+    "description": "Lead text on the Ludopedia import panel."
+  },
+  "popupLudopediaButton": {
+    "message": "Import Ludopedia Plays",
+    "description": "Button on the Ludopedia import panel."
+  },
+  "importLudopediaFetching": {
+    "message": "Fetching all plays from Ludopedia… please wait",
+    "description": "Status shown immediately after clicking Import Ludopedia Plays."
+  },
+
+  "popupSpielByWebCtx": {
+    "message": "SpielByWeb",
+    "description": "Context pill label on the SpielByWeb import panel."
+  },
+  "popupSpielByWebLead": {
+    "message": "Import your play history to track stats and earn BGM badges",
+    "description": "Lead text on the SpielByWeb import panel."
+  },
+  "popupSpielByWebButton": {
+    "message": "Import SpielByWeb Plays",
+    "description": "Button on the SpielByWeb import panel."
+  },
+  "importSpielByWebFetching": {
+    "message": "Scanning finished games on this page… please wait",
+    "description": "Status shown immediately after clicking Import SpielByWeb Plays."
+  }
 }
