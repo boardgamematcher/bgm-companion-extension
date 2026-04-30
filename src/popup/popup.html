@@ -86,6 +86,24 @@
           </div>
         </div>
 
+        <!-- Bulk progress card — overlays tab panes during paginated crawl -->
+        <div id="card-bulk-progress" style="display: none">
+          <div class="bulk-header">
+            <span class="bulk-spinner">⟳</span>
+            <span class="bulk-title" data-i18n="popupBulkTitle"></span>
+          </div>
+          <div class="bulk-bar-wrap">
+            <div class="bulk-bar" id="bulk-bar"></div>
+          </div>
+          <p class="bulk-status" id="bulk-status"></p>
+          <button
+            class="btn-outline btn-sm"
+            id="bulk-cancel-btn"
+            data-i18n="popupBulkCancel"
+            style="margin-top: 14px"
+          ></button>
+        </div>
+
         <!-- Success card — overlays tab panes after extract -->
         <div id="card-success" style="display: none">
           <div class="ctx-pill shop-ctx">
@@ -147,6 +165,13 @@
               <button class="btn-primary" id="extract-btn" disabled data-i18n="popupExtractButton">
                 Extract &amp; review
               </button>
+              <button
+                class="btn-outline"
+                id="bulk-extract-btn"
+                disabled
+                data-i18n="popupBulkExtractButton"
+                style="margin-top: 6px"
+              ></button>
               <p class="card-sub" id="shop-wishlist-count" style="display: none"></p>
               <p class="card-sub" id="shop-last-extraction" style="display: none"></p>
             </div>
