@@ -7,6 +7,8 @@ const {
   cleanName,
 } = require('../src/content/content-script.js');
 
+const { normalizeName } = require('../src/lib/normalize.js');
+
 // Helper to install a __NEXT_DATA__ payload into the jsdom document.
 function setNextData(payload) {
   document.body.innerHTML = '';
@@ -86,6 +88,16 @@ describe('cleanName', () => {
 
   test('returns input unchanged when no cleanup config', () => {
     expect(cleanName('Catan', null)).toBe('Catan');
+  });
+
+  test('strips trailing language code suffix — Fantasywelt (BGM-917)', () => {
+    const cleanup = { strip_suffix_pattern: '\\s*\\([A-Z]{2,3}\\)\\s*$' };
+    expect(cleanName('Catan (DE)', cleanup)).toBe('Catan');
+    expect(cleanName('Catan (EN)', cleanup)).toBe('Catan');
+    expect(cleanName('Pandemic (FR)', cleanup)).toBe('Pandemic');
+    expect(cleanName('Catan', cleanup)).toBe('Catan');
+    // Full matching chain: DOM title cleaned+normalized matches wishlist entry
+    expect(normalizeName(cleanName('Catan (DE)', cleanup))).toBe(normalizeName('Catan'));
   });
 
   test('strips German/Italian/Spanish piece descriptors', () => {

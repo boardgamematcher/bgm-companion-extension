@@ -37,6 +37,8 @@
     norm: normalizeName(item.title),
   }));
 
+  const applyCleanup = buildCleanupFn(pattern.name_cleanup);
+
   function scanAndBadge() {
     // Build the selector: when a card_selector is present use the inner title
     // selector so we match the per-card element, not random page text.
@@ -52,7 +54,7 @@
       const text = el.textContent.trim();
       if (!text) continue;
 
-      const pageNorm = normalizeName(text);
+      const pageNorm = normalizeName(applyCleanup(text));
       const match = normalized.find((item) => pageNorm === item.norm);
       if (!match) continue;
 
@@ -79,3 +81,16 @@
   });
   observer.observe(document.body, { childList: true, subtree: true });
 })();
+
+function buildCleanupFn(cleanup) {
+  if (!cleanup) return (name) => name;
+  const prefixRe = cleanup.strip_prefix_pattern ? new RegExp(cleanup.strip_prefix_pattern) : null;
+  const suffixRe = cleanup.strip_suffix_pattern ? new RegExp(cleanup.strip_suffix_pattern) : null;
+  return (name) => {
+    if (typeof name !== 'string') return name;
+    let cleaned = name;
+    if (prefixRe) cleaned = cleaned.replace(prefixRe, '');
+    if (suffixRe) cleaned = cleaned.replace(suffixRe, '');
+    return cleaned.trim();
+  };
+}
