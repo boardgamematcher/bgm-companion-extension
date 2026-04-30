@@ -14,6 +14,9 @@ let _reviewDomain = null;
 // State for the success card
 let _successTimer = null;
 
+// State for bulk paginated extraction
+let _bulkCancelRequested = false;
+
 // Tab ID of the active shop page (set in checkSiteSupport)
 let _activeTabId = null;
 
@@ -40,6 +43,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Setup event listeners
 function setupEventListeners() {
   document.getElementById('extract-btn').addEventListener('click', handleExtract);
+  document.getElementById('bulk-extract-btn').addEventListener('click', handleBulkExtract);
+  document.getElementById('bulk-cancel-btn').addEventListener('click', () => {
+    _bulkCancelRequested = true;
+  });
   document.getElementById('settings-btn').addEventListener('click', handleSettings);
   document.getElementById('theme-toggle-btn').addEventListener('click', toggleTheme);
   document.getElementById('login-btn').addEventListener('click', handleLogin);
@@ -124,6 +131,10 @@ function applyCardLayout() {
     document.getElementById('extract-ctx-pill').style.display = '';
     const btn = document.getElementById('extract-btn');
     btn.disabled = false;
+    const bulkBtn = document.getElementById('bulk-extract-btn');
+    const hasPagination = currentPattern?.data_source !== 'next_data';
+    bulkBtn.style.display = hasPagination ? '' : 'none';
+    bulkBtn.disabled = !hasPagination;
     if (bnExtract) bnExtract.classList.add('compatible');
     switchTab('extract');
   } else if (siteContext === 'bga' || siteContext === 'yucata' || siteContext === 'bgg') {
@@ -534,6 +545,131 @@ async function showReviewPanel(games) {
 
 function hideReviewPanel() {
   document.getElementById('card-review').style.display = 'none';
+  document.getElementById('tab-panes').style.display = '';
+}
+
+// ── Bulk (paginated) extraction ──
+
+async function handleBulkExtract() {
+  if (!currentPattern || !_activeTabId) return;
+  _bulkCancelRequested = false;
+
+  const [initialTab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (!initialTab) return;
+
+  const bulkBtn = document.getElementById('bulk-extract-btn');
+  bulkBtn.disabled = true;
+
+  const maxPages = currentPattern.pagination?.max_pages ?? 10;
+  const allGames = [];
+  const seenNames = new Set();
+  let page = 1;
+
+  showBulkProgress(page, maxPages, `Page ${page}…`);
+
+  try {
+    while (page <= maxPages && !_bulkCancelRequested) {
+      try {
+        await injectContentScript(_activeTabId);
+      } catch (_e) {
+        break;
+      }
+
+      const response = await sendExtractMessage(_activeTabId, currentPattern);
+      if (response.error || !response.success) break;
+
+      for (const g of response.games || []) {
+        const key = normalizeName(g.name);
+        if (!seenNames.has(key)) {
+          seenNames.add(key);
+          allGames.push(g);
+        }
+      }
+
+      showBulkProgress(
+        page,
+        maxPages,
+        `Page ${page} — ${allGames.length} game${allGames.length === 1 ? '' : 's'} found`
+      );
+
+      if (_bulkCancelRequested) break;
+
+      const nextUrl = await findNextPageUrlInTab(_activeTabId, currentPattern);
+      if (!nextUrl) break;
+
+      page++;
+      if (page > maxPages) break;
+
+      const loadPromise = waitForTabLoad(_activeTabId);
+      await chrome.tabs.update(_activeTabId, { url: nextUrl });
+      await loadPromise;
+
+      showBulkProgress(page, maxPages, `Page ${page}…`);
+    }
+  } catch (err) {
+    console.error('Bulk extract error:', err);
+  }
+
+  bulkBtn.disabled = false;
+  hideBulkProgress();
+
+  if (allGames.length === 0) {
+    showMessage('No games found across pages', 'error');
+    return;
+  }
+
+  _reviewTab = initialTab;
+  _reviewGames = allGames;
+  _reviewDomain = currentDomain;
+  await showReviewPanel(allGames);
+}
+
+async function findNextPageUrlInTab(tabId, pattern) {
+  const selector = pattern.pagination?.next_selector ?? 'a[rel="next"], link[rel="next"]';
+  try {
+    const results = await chrome.scripting.executeScript({
+      target: { tabId },
+      func: (sel) => {
+        const el = document.querySelector(sel);
+        return el ? el.href || el.getAttribute('href') || null : null;
+      },
+      args: [selector],
+    });
+    return results?.[0]?.result || null;
+  } catch (_e) {
+    return null;
+  }
+}
+
+function waitForTabLoad(tabId) {
+  return new Promise((resolve) => {
+    const timeout = setTimeout(() => {
+      chrome.tabs.onUpdated.removeListener(listener);
+      resolve();
+    }, 15000);
+    function listener(updatedTabId, changeInfo) {
+      if (updatedTabId === tabId && changeInfo.status === 'complete') {
+        clearTimeout(timeout);
+        chrome.tabs.onUpdated.removeListener(listener);
+        resolve();
+      }
+    }
+    chrome.tabs.onUpdated.addListener(listener);
+  });
+}
+
+function showBulkProgress(page, maxPages, statusText) {
+  document.getElementById('tab-panes').style.display = 'none';
+  document.getElementById('card-review').style.display = 'none';
+  document.getElementById('card-success').style.display = 'none';
+  document.getElementById('card-bulk-progress').style.display = '';
+  const pct = maxPages > 0 ? Math.round(((page - 1) / maxPages) * 100) : 0;
+  document.getElementById('bulk-bar').style.width = pct + '%';
+  document.getElementById('bulk-status').textContent = statusText;
+}
+
+function hideBulkProgress() {
+  document.getElementById('card-bulk-progress').style.display = 'none';
   document.getElementById('tab-panes').style.display = '';
 }
 

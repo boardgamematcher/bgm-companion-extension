@@ -643,4 +643,8 @@
   "popupCollTypeWantToPlay": { "message": "Quiero jugar", "description": "Collection type: want to play." },
   "popupCollTypeWantToLearn": { "message": "Quiero aprender", "description": "Collection type: want to learn." },
   "popupCollTypeCanTeach": { "message": "Puedo enseñar", "description": "Collection type: can teach." },
-  "popupCollViewAll": { "message": "Ver colección →", "description": "Footer link on the collection tab." }}
+  "popupCollViewAll": { "message": "Ver colección →", "description": "Footer link on the collection tab." },
+  "popupBulkExtractButton": { "message": "Extraer todas las páginas", "description": "Button to start a bulk paginated extraction." },
+  "popupBulkTitle": { "message": "Extrayendo todas las páginas", "description": "Title shown on the bulk progress overlay." },
+  "popupBulkCancel": { "message": "Cancelar y conservar resultados", "description": "Button to cancel a bulk extraction and keep what was found so far." }
+}
