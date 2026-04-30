@@ -86,20 +86,29 @@ function setupEventListeners() {
 
   document.getElementById('bn-extract').addEventListener('click', () => switchTab('extract'));
   document.getElementById('bn-collection').addEventListener('click', () => switchTab('collection'));
-  document.getElementById('bn-friends').addEventListener('click', () => {
-    chrome.tabs.create({ url: `${BGM_BASE_URL}/play/players` });
-  });
+  document.getElementById('bn-dashboard').addEventListener('click', () => switchTab('dashboard'));
   document.getElementById('bn-more').addEventListener('click', () => switchTab('more'));
 
   const settingsMoreBtn = document.getElementById('settings-more-btn');
   if (settingsMoreBtn) settingsMoreBtn.addEventListener('click', handleSettings);
 
-  const playersLink = document.getElementById('players-link');
-  if (playersLink)
-    playersLink.addEventListener('click', (e) => {
+  document.getElementById('dash-signin-btn').addEventListener('click', handleLogin);
+  document.getElementById('dash-signup-link').addEventListener('click', handleSignup);
+
+  for (const id of [
+    'dash-messages',
+    'dash-matches',
+    'dash-notifs',
+    'dash-link-home',
+    'dash-link-collections',
+    'dash-link-wishlist',
+  ]) {
+    document.getElementById(id).addEventListener('click', (e) => {
       e.preventDefault();
-      chrome.tabs.create({ url: `${BGM_BASE_URL}/play/players` });
+      const url = e.currentTarget.dataset.href;
+      if (url) chrome.tabs.create({ url });
     });
+  }
 }
 
 function handleAvatarClick(e) {
@@ -220,6 +229,7 @@ function setLoggedIn(user) {
   setupWishlist(user);
   loadBgaStats(user);
   loadMsgBanner();
+  loadDashboard(user);
 }
 
 function setLoggedOut() {
@@ -227,6 +237,8 @@ function setLoggedOut() {
   document.getElementById('msg-banner').style.display = 'none';
   const bgaTeaserRow = document.getElementById('bgaTeaserRow');
   if (bgaTeaserRow) bgaTeaserRow.style.display = '';
+  document.getElementById('dash-logged-out').style.display = '';
+  document.getElementById('dash-logged-in').style.display = 'none';
 }
 
 function handleLogin() {
@@ -1212,6 +1224,98 @@ async function loadMsgBanner() {
     chrome.tabs.create({ url: `${BGM_BASE_URL}/messages` });
   };
   banner.style.display = '';
+}
+
+// ── Dashboard ──
+
+function setDashHref(id, url) {
+  const el = document.getElementById(id);
+  if (el) el.dataset.href = url;
+}
+
+async function loadDashboard(user) {
+  document.getElementById('dash-logged-out').style.display = 'none';
+  document.getElementById('dash-logged-in').style.display = '';
+
+  if (user.username) {
+    const u = encodeURIComponent(user.username);
+    setDashHref('dash-link-home', `${BGM_BASE_URL}/`);
+    setDashHref('dash-link-collections', `${BGM_BASE_URL}/collections/${u}`);
+    setDashHref('dash-link-wishlist', `${BGM_BASE_URL}/collections/${u}?type=wishlist`);
+  }
+
+  setDashHref('dash-messages', `${BGM_BASE_URL}/messages`);
+  setDashHref('dash-matches', `${BGM_BASE_URL}/play/players`);
+  setDashHref('dash-notifs', `${BGM_BASE_URL}/notifications`);
+
+  // Messages — from service-worker cache
+  const { unreadMessages } = await chrome.storage.local.get('unreadMessages');
+  if (unreadMessages && unreadMessages.count > 0) {
+    const { count, senders } = unreadMessages;
+    const badge = document.getElementById('dash-messages-badge');
+    badge.textContent = String(count);
+    badge.style.display = '';
+    const names = senders && senders.length > 0 ? senders.slice(0, 2).join(', ') : '';
+    document.getElementById('dash-messages-sub').textContent = names
+      ? chrome.i18n.getMessage('dashMsgFrom', [names])
+      : chrome.i18n.getMessage(count === 1 ? 'dashMsgUnread' : 'dashMsgUnreadPlural', [
+          String(count),
+        ]);
+  } else {
+    document.getElementById('dash-messages-sub').textContent =
+      chrome.i18n.getMessage('dashMsgNone');
+  }
+
+  loadDashMatches();
+  loadDashNotifications();
+}
+
+async function loadDashMatches() {
+  try {
+    const res = await fetch(`${BGM_BASE_URL}/api/matches/new`, { credentials: 'include' });
+    if (!res.ok) return;
+    const data = await res.json();
+    const matches = data.matches || [];
+    const sub = document.getElementById('dash-matches-sub');
+    if (matches.length > 0) {
+      const badge = document.getElementById('dash-matches-badge');
+      badge.textContent = String(matches.length);
+      badge.style.display = '';
+      const names = matches
+        .slice(0, 2)
+        .map((m) => m.username)
+        .join(', ');
+      sub.textContent = `${names}${matches.length > 2 ? ` +${matches.length - 2}` : ''}`;
+    } else {
+      sub.textContent = chrome.i18n.getMessage('dashMatchesNone');
+    }
+  } catch (_e) {
+    document.getElementById('dash-matches-sub').textContent =
+      chrome.i18n.getMessage('dashMatchesFallback');
+  }
+}
+
+async function loadDashNotifications() {
+  try {
+    const res = await fetch(`${BGM_BASE_URL}/api/notifications/count`, { credentials: 'include' });
+    if (!res.ok) return;
+    const text = (await res.text()).trim();
+    const count = parseInt(text, 10) || 0;
+    const sub = document.getElementById('dash-notifs-sub');
+    if (count > 0) {
+      const badge = document.getElementById('dash-notifs-badge');
+      badge.textContent = String(count);
+      badge.style.display = '';
+      sub.textContent = chrome.i18n.getMessage(
+        count === 1 ? 'dashNotifsUnread' : 'dashNotifsUnreadPlural',
+        [String(count)]
+      );
+    } else {
+      sub.textContent = chrome.i18n.getMessage('dashNotifsNone');
+    }
+  } catch (_e) {
+    document.getElementById('dash-notifs-sub').textContent = '';
+  }
 }
 
 // ── BGG Collection Sync ──

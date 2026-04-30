@@ -5,7 +5,6 @@
   "extDescription": {
     "message": "Il tuo compagno di giochi da tavolo: estrai giochi dai negozi, registra le partite, sincronizza le collezioni — tutto connesso a BoardGameMatcher.com"
   },
-
   "popupHeaderTitle": {
     "message": "BoardGameMatcher"
   },
@@ -21,10 +20,12 @@
   "popupAvatarUserTooltip": {
     "message": "$name$ — visualizza il tuo profilo BGM",
     "placeholders": {
-      "name": {"content": "$1", "example": "Julien"}
+      "name": {
+        "content": "$1",
+        "example": "Julien"
+      }
     }
   },
-
   "popupExtractTitle": {
     "message": "Giochi da tavolo in questa pagina"
   },
@@ -34,30 +35,60 @@
   "popupExtractCount": {
     "message": "Estrai $count$ giochi",
     "placeholders": {
-      "count": {"content": "$1", "example": "73"}
+      "count": {
+        "content": "$1",
+        "example": "73"
+      }
     }
   },
-  "popupReviewTitle": {"message": "Controlla i giochi trovati"},
-  "popupReviewLoading": {"message": "Caricamento…"},
-  "popupReviewSelectNew": {"message": "Solo nuovi"},
-  "popupReviewSelectAll": {"message": "Tutti"},
-  "popupReviewDeselectAll": {"message": "Nessuno"},
-  "popupReviewCancel": {"message": "Annulla"},
-  "popupReviewConfirm": {"message": "Estrai selezionati"},
+  "popupReviewTitle": {
+    "message": "Controlla i giochi trovati"
+  },
+  "popupReviewLoading": {
+    "message": "Caricamento…"
+  },
+  "popupReviewSelectNew": {
+    "message": "Solo nuovi"
+  },
+  "popupReviewSelectAll": {
+    "message": "Tutti"
+  },
+  "popupReviewDeselectAll": {
+    "message": "Nessuno"
+  },
+  "popupReviewCancel": {
+    "message": "Annulla"
+  },
+  "popupReviewConfirm": {
+    "message": "Estrai selezionati"
+  },
   "popupReviewCount": {
     "message": "$count$ selezionato/i",
-    "placeholders": {"count": {"content": "$1", "example": "5"}}
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
   },
-  "popupReviewStatusNew": {"message": "nuovo"},
-  "popupReviewStatusDuplicate": {"message": "nella tua collezione"},
-  "popupReviewStatusUnrecognised": {"message": "?"},
+  "popupReviewStatusNew": {
+    "message": "nuovo"
+  },
+  "popupReviewStatusDuplicate": {
+    "message": "nella tua collezione"
+  },
+  "popupReviewStatusUnrecognised": {
+    "message": "?"
+  },
   "popupSiteDetected": {
     "message": "$site$ rilevato",
     "placeholders": {
-      "site": {"content": "$1", "example": "Veepee Catalog"}
+      "site": {
+        "content": "$1",
+        "example": "Veepee Catalog"
+      }
     }
   },
-
   "popupUnsupportedTitle": {
     "message": "Nessun gioco rilevato in questa pagina"
   },
@@ -70,10 +101,12 @@
   "popupUnsupportedDomain": {
     "message": "$domain$ non è ancora un sito supportato.",
     "placeholders": {
-      "domain": {"content": "$1", "example": "example.com"}
+      "domain": {
+        "content": "$1",
+        "example": "example.com"
+      }
     }
   },
-
   "popupStatsTitle": {
     "message": "Ultima estrazione"
   },
@@ -83,11 +116,16 @@
   "popupStatsLast": {
     "message": "Ultima: $count$ giochi da $domain$",
     "placeholders": {
-      "count": {"content": "$1", "example": "73"},
-      "domain": {"content": "$2", "example": "veepee.fr"}
+      "count": {
+        "content": "$1",
+        "example": "73"
+      },
+      "domain": {
+        "content": "$2",
+        "example": "veepee.fr"
+      }
     }
   },
-
   "popupWishlistTitle": {
     "message": "Aggiungi un gioco alla lista dei desideri"
   },
@@ -103,7 +141,10 @@
   "popupWishlistCountPlural": {
     "message": "$count$ giochi nella lista dei desideri",
     "placeholders": {
-      "count": {"content": "$1", "example": "12"}
+      "count": {
+        "content": "$1",
+        "example": "12"
+      }
     }
   },
   "popupWishlistAdd": {
@@ -121,7 +162,6 @@
   "popupWishlistSearchError": {
     "message": "Impossibile cercare al momento."
   },
-
   "popupLoginTitle": {
     "message": "Trai il massimo dai tuoi giochi"
   },
@@ -134,7 +174,6 @@
   "popupLoginSignup": {
     "message": "Crea un account gratuito →"
   },
-
   "popupTeaserTitle": {
     "message": "Un account BGM gratuito sblocca"
   },
@@ -153,7 +192,6 @@
   "popupTeaserPlayers": {
     "message": "Trova giocatori che possiedono giochi che vuoi giocare"
   },
-
   "popupYucataTitle": {
     "message": "Importazione Yucata"
   },
@@ -163,7 +201,6 @@
   "popupYucataButton": {
     "message": "Importa partite Yucata"
   },
-
   "popupBgaTitle": {
     "message": "Importazione Board Game Arena"
   },
@@ -173,18 +210,26 @@
   "popupBgaButton": {
     "message": "Importa partite BGA"
   },
-
   "popupBgaStats": {
     "message": "$count$ partite · $rate$% di vittorie",
     "placeholders": {
-      "count": {"content": "$1", "example": "42"},
-      "rate": {"content": "$2", "example": "68"}
+      "count": {
+        "content": "$1",
+        "example": "42"
+      },
+      "rate": {
+        "content": "$2",
+        "example": "68"
+      }
     }
   },
   "popupBgaStatsNoRate": {
     "message": "$count$ partite",
     "placeholders": {
-      "count": {"content": "$1", "example": "3"}
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
     }
   },
   "popupBgaPlaysLink": {
@@ -193,14 +238,12 @@
   "popupBgaTeaserCta": {
     "message": "Accedi per tenere traccia delle statistiche"
   },
-
   "popupBannerLoggedIn": {
     "message": "Apri BoardGameMatcher.com"
   },
   "popupBannerLoggedOut": {
     "message": "Scopri BoardGameMatcher.com"
   },
-
   "importYucataFetching": {
     "message": "Recupero di tutte le partite Yucata… attendere prego"
   },
@@ -210,44 +253,64 @@
   "importSendingProgress": {
     "message": "Invio partite a BGM… $current$/$total$",
     "placeholders": {
-      "current": {"content": "$1", "example": "200"},
-      "total": {"content": "$2", "example": "1500"}
+      "current": {
+        "content": "$1",
+        "example": "200"
+      },
+      "total": {
+        "content": "$2",
+        "example": "1500"
+      }
     }
   },
   "importSuccess": {
     "message": "✓ $count$ partite importate!",
     "placeholders": {
-      "count": {"content": "$1", "example": "120"}
+      "count": {
+        "content": "$1",
+        "example": "120"
+      }
     }
   },
   "importDuplicatesSkipped": {
     "message": "$count$ duplicati saltati",
     "placeholders": {
-      "count": {"content": "$1", "example": "5"}
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
     }
   },
   "importNotFoundOnBgm": {
     "message": "$count$ non trovati su BGM",
     "placeholders": {
-      "count": {"content": "$1", "example": "3"}
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
     }
   },
   "importErrors": {
     "message": "$count$ errori",
     "placeholders": {
-      "count": {"content": "$1", "example": "1"}
+      "count": {
+        "content": "$1",
+        "example": "1"
+      }
     }
   },
   "importErrorPrefix": {
     "message": "✗ Errore: $message$",
     "placeholders": {
-      "message": {"content": "$1", "example": "Network error"}
+      "message": {
+        "content": "$1",
+        "example": "Network error"
+      }
     }
   },
   "importNoResponse": {
     "message": "Nessuna risposta dallo script di contenuto"
   },
-
   "popupNoPattern": {
     "message": "Nessun pattern disponibile"
   },
@@ -257,10 +320,12 @@
   "popupErrorPrefix": {
     "message": "Errore: $message$",
     "placeholders": {
-      "message": {"content": "$1", "example": "fetch failed"}
+      "message": {
+        "content": "$1",
+        "example": "fetch failed"
+      }
     }
   },
-
   "ctxMenuExtractPage": {
     "message": "Estrai giochi da tavolo da questa pagina"
   },
@@ -270,7 +335,6 @@
   "ctxMenuExtractLink": {
     "message": "Estrai giochi da tavolo da questo link"
   },
-
   "optionsTitle": {
     "message": "Impostazioni BGM Toolbox"
   },
@@ -283,7 +347,6 @@
   "optionsTabHelp": {
     "message": "Aiuto"
   },
-
   "optionsSupportedTitle": {
     "message": "Pattern di siti integrati"
   },
@@ -293,7 +356,6 @@
   "optionsSearchPlaceholder": {
     "message": "Cerca siti…"
   },
-
   "optionsCustomTitle": {
     "message": "Pattern personalizzati"
   },
@@ -336,7 +398,6 @@
   "optionsCardInclude": {
     "message": "Includi:"
   },
-
   "optionsModalAddTitle": {
     "message": "Aggiungi pattern"
   },
@@ -376,7 +437,6 @@
   "optionsFormCancel": {
     "message": "Annulla"
   },
-
   "optionsConfirmDelete": {
     "message": "Sei sicuro di voler eliminare questo pattern?"
   },
@@ -401,16 +461,21 @@
   "optionsImportSuccess": {
     "message": "$count$ pattern importati",
     "placeholders": {
-      "count": {"content": "$1", "example": "3"}
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
     }
   },
   "optionsImportFailed": {
     "message": "Importazione pattern fallita: $error$",
     "placeholders": {
-      "error": {"content": "$1", "example": "Unexpected token"}
+      "error": {
+        "content": "$1",
+        "example": "Unexpected token"
+      }
     }
   },
-
   "optionsHelpTitle": {
     "message": "Aiuto e documentazione"
   },
@@ -476,9 +541,7 @@
   "importBggFetching": {
     "message": "Recupero di tutte le partite da BGG… attendere",
     "description": "Status shown immediately after clicking Import BGG Plays."
-
   },
-
   "popupBggSyncTitle": {
     "message": "Sincronizza collezione BGG"
   },
@@ -491,7 +554,10 @@
   "popupBggSyncAs": {
     "message": "Sincronizzazione come: $username$",
     "placeholders": {
-      "username": {"content": "$1", "example": "jmailing"}
+      "username": {
+        "content": "$1",
+        "example": "jmailing"
+      }
     }
   },
   "popupBggSyncNotYou": {
@@ -506,39 +572,86 @@
   "popupBggSyncSummary": {
     "message": "$owned$ posseduti · $wishlist$ desideri · $ratings$ valutazioni",
     "placeholders": {
-      "owned": {"content": "$1", "example": "42"},
-      "wishlist": {"content": "$2", "example": "15"},
-      "ratings": {"content": "$3", "example": "120"}
+      "owned": {
+        "content": "$1",
+        "example": "42"
+      },
+      "wishlist": {
+        "content": "$2",
+        "example": "15"
+      },
+      "ratings": {
+        "content": "$3",
+        "example": "120"
+      }
     }
   },
-
-  "optionsTabNotifications": {"message": "Notifiche"},
-  "optionsNotifTitle": {"message": "Notifiche"},
-  "optionsNotifSubtitle": {"message": "Scegli quali notifiche del browser BGM Toolbox può inviarti"},
-  "optionsNotifNewsLabel": {"message": "Notizie e annunci"},
-  "optionsNotifNewsDesc": {"message": "Ricevi una notifica quando BoardGameMatcher pubblica un nuovo articolo o annuncio"},
-  "optionsNotifMessagesLabel": {"message": "Messaggi non letti"},
-  "optionsNotifMessagesDesc": {"message": "Mostra badge e banner quando hai messaggi non letti"},
-  "optionsNotifFriendReqLabel": {"message": "Richieste di amicizia"},
-  "optionsNotifFriendReqDesc": {"message": "Ricevi una notifica quando qualcuno ti invia una richiesta di amicizia su BoardGameMatcher"},
-  "notifNewsTitle": {"message": "Novità su BoardGameMatcher"},
-  "notifFriendReqTitle": {"message": "Nuova richiesta di amicizia su BoardGameMatcher"},
+  "optionsTabNotifications": {
+    "message": "Notifiche"
+  },
+  "optionsNotifTitle": {
+    "message": "Notifiche"
+  },
+  "optionsNotifSubtitle": {
+    "message": "Scegli quali notifiche del browser BGM Toolbox può inviarti"
+  },
+  "optionsNotifNewsLabel": {
+    "message": "Notizie e annunci"
+  },
+  "optionsNotifNewsDesc": {
+    "message": "Ricevi una notifica quando BoardGameMatcher pubblica un nuovo articolo o annuncio"
+  },
+  "optionsNotifMessagesLabel": {
+    "message": "Messaggi non letti"
+  },
+  "optionsNotifMessagesDesc": {
+    "message": "Mostra badge e banner quando hai messaggi non letti"
+  },
+  "optionsNotifFriendReqLabel": {
+    "message": "Richieste di amicizia"
+  },
+  "optionsNotifFriendReqDesc": {
+    "message": "Ricevi una notifica quando qualcuno ti invia una richiesta di amicizia su BoardGameMatcher"
+  },
+  "notifNewsTitle": {
+    "message": "Novità su BoardGameMatcher"
+  },
+  "notifFriendReqTitle": {
+    "message": "Nuova richiesta di amicizia su BoardGameMatcher"
+  },
   "notifFriendReqOne": {
     "message": "$name$ vuole essere tuo amico",
-    "placeholders": {"name": {"content": "$1", "example": "meeple_marc"}}
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "meeple_marc"
+      }
+    }
   },
   "notifFriendReqTwo": {
     "message": "$name1$ e $name2$ vogliono essere tuoi amici",
     "placeholders": {
-      "name1": {"content": "$1", "example": "meeple_marc"},
-      "name2": {"content": "$2", "example": "alice"}
+      "name1": {
+        "content": "$1",
+        "example": "meeple_marc"
+      },
+      "name2": {
+        "content": "$2",
+        "example": "alice"
+      }
     }
   },
   "notifFriendReqMany": {
     "message": "$name$ e altri $count$ vogliono essere tuoi amici",
     "placeholders": {
-      "name": {"content": "$1", "example": "meeple_marc"},
-      "count": {"content": "$2", "example": "3"}
+      "name": {
+        "content": "$1",
+        "example": "meeple_marc"
+      },
+      "count": {
+        "content": "$2",
+        "example": "3"
+      }
     }
   },
   "optionsNotifMatchLabel": {
@@ -553,15 +666,27 @@
   "notifMatchOne": {
     "message": "$username$ è un ottimo match — $score$% di compatibilità",
     "placeholders": {
-      "username": {"content": "$1", "example": "meeple_marc"},
-      "score": {"content": "$2", "example": "87"}
+      "username": {
+        "content": "$1",
+        "example": "meeple_marc"
+      },
+      "score": {
+        "content": "$2",
+        "example": "87"
+      }
     }
   },
   "notifMatchMany": {
     "message": "$username$ e altri $count$ sono ottimi match",
     "placeholders": {
-      "username": {"content": "$1", "example": "meeple_marc"},
-      "count": {"content": "$2", "example": "3"}
+      "username": {
+        "content": "$1",
+        "example": "meeple_marc"
+      },
+      "count": {
+        "content": "$2",
+        "example": "3"
+      }
     }
   },
   "optionsNotifSessionInviteLabel": {
@@ -576,37 +701,66 @@
   "notifSessionInviteOne": {
     "message": "$host$ ti invita a \"$title$\"",
     "placeholders": {
-      "host": {"content": "$1", "example": "meeple_marc"},
-      "title": {"content": "$2", "example": "Serata giochi di venerdì"}
+      "host": {
+        "content": "$1",
+        "example": "meeple_marc"
+      },
+      "title": {
+        "content": "$2",
+        "example": "Serata giochi di venerdì"
+      }
     }
   },
   "notifSessionInviteMany": {
     "message": "$host$ e altri $count$ ti hanno invitato a serate di gioco",
     "placeholders": {
-      "host": {"content": "$1", "example": "meeple_marc"},
-      "count": {"content": "$2", "example": "2"}
+      "host": {
+        "content": "$1",
+        "example": "meeple_marc"
+      },
+      "count": {
+        "content": "$2",
+        "example": "2"
+      }
     }
   },
   "msgBannerNewMessageFrom": {
     "message": "Nuovo messaggio da $name$",
-    "placeholders": {"name": {"content": "$1", "example": "meeple_marc"}}
+    "placeholders": {
+      "name": {
+        "content": "$1",
+        "example": "meeple_marc"
+      }
+    }
   },
   "msgBannerNewMessagesFrom": {
     "message": "$count$ nuovi messaggi da $names$",
     "placeholders": {
-      "count": {"content": "$1", "example": "3"},
-      "names": {"content": "$2", "example": "meeple_marc, alice"}
+      "count": {
+        "content": "$1",
+        "example": "3"
+      },
+      "names": {
+        "content": "$2",
+        "example": "meeple_marc, alice"
+      }
     }
   },
-  "msgBannerNewMessage": {"message": "1 nuovo messaggio"},
+  "msgBannerNewMessage": {
+    "message": "1 nuovo messaggio"
+  },
   "msgBannerNewMessages": {
     "message": "$count$ nuovi messaggi",
-    "placeholders": {"count": {"content": "$1", "example": "3"}}
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
   },
   "wishlistBadgeLabel": {
     "message": "✓ Nella tua lista dei desideri"
   },
-
   "ctxMenuSearchGame": {
     "message": "Cerca \"%s\" su BoardGameMatcher"
   },
@@ -616,14 +770,23 @@
   "notifGameFoundBody": {
     "message": "$name$ ($year$)",
     "placeholders": {
-      "name": {"content": "$1", "example": "Wingspan"},
-      "year": {"content": "$2", "example": "2019"}
+      "name": {
+        "content": "$1",
+        "example": "Wingspan"
+      },
+      "year": {
+        "content": "$2",
+        "example": "2019"
+      }
     }
   },
   "notifGameFoundBodyNoYear": {
     "message": "$name$",
     "placeholders": {
-      "name": {"content": "$1", "example": "Wingspan"}
+      "name": {
+        "content": "$1",
+        "example": "Wingspan"
+      }
     }
   },
   "notifGameNotFoundTitle": {
@@ -632,34 +795,196 @@
   "notifGameNotFoundBody": {
     "message": "Nessun risultato per \"$query$\" su BoardGameMatcher",
     "placeholders": {
-      "query": {"content": "$1", "example": "Wingspan"}
+      "query": {
+        "content": "$1",
+        "example": "Wingspan"
+      }
     }
   },
-  "popupCollAddTo": { "message": "Aggiungi a:", "description": "Label before the collection type chips readout." },
-  "popupCollChipsHint": { "message": "tocca per attivare, scelta multipla", "description": "Hint next to collection type chips." },
-  "popupCollTypeOwn": { "message": "Posseduto", "description": "Collection type: own." },
-  "popupCollTypePlayed": { "message": "Giocato", "description": "Collection type: played." },
-  "popupCollTypeWishlist": { "message": "Lista dei desideri", "description": "Collection type: wishlist." },
-  "popupCollTypeWantToPlay": { "message": "Voglio giocare", "description": "Collection type: want to play." },
-  "popupCollTypeWantToLearn": { "message": "Voglio imparare", "description": "Collection type: want to learn." },
-  "popupCollTypeCanTeach": { "message": "Posso insegnare", "description": "Collection type: can teach." },
-  "popupCollViewAll": { "message": "Vedi collezione →", "description": "Footer link on the collection tab." },
-  "popupBulkExtractButton": { "message": "Estrai tutte le pagine", "description": "Button to start a bulk paginated extraction." },
-  "popupBulkTitle": { "message": "Estrazione di tutte le pagine", "description": "Title shown on the bulk progress overlay." },
-  "popupBulkCancel": { "message": "Annulla e mantieni i risultati", "description": "Button to cancel a bulk extraction and keep what was found so far." },
-
-  "popupTabletopiaCtx": { "message": "Tabletopia" },
-  "popupTabletopiaLead": { "message": "Importa la tua cronologia di partite per seguire le statistiche e guadagnare badge BGM" },
-  "popupTabletopiaButton": { "message": "Importa partite Tabletopia" },
-  "importTabletopiaFetching": { "message": "Recupero di tutte le partite da Tabletopia… attendere prego" },
-
-  "popupLudopediaCtx": { "message": "Ludopedia" },
-  "popupLudopediaLead": { "message": "Importa la tua cronologia di partite per seguire le statistiche e guadagnare badge BGM" },
-  "popupLudopediaButton": { "message": "Importa partite Ludopedia" },
-  "importLudopediaFetching": { "message": "Recupero di tutte le partite da Ludopedia… attendere prego" },
-
-  "popupSpielByWebCtx": { "message": "SpielByWeb" },
-  "popupSpielByWebLead": { "message": "Importa la tua cronologia di partite per seguire le statistiche e guadagnare badge BGM" },
-  "popupSpielByWebButton": { "message": "Importa partite SpielByWeb" },
-  "importSpielByWebFetching": { "message": "Scansione delle partite terminate su questa pagina… attendere prego" }
+  "popupCollAddTo": {
+    "message": "Aggiungi a:",
+    "description": "Label before the collection type chips readout."
+  },
+  "popupCollChipsHint": {
+    "message": "tocca per attivare, scelta multipla",
+    "description": "Hint next to collection type chips."
+  },
+  "popupCollTypeOwn": {
+    "message": "Posseduto",
+    "description": "Collection type: own."
+  },
+  "popupCollTypePlayed": {
+    "message": "Giocato",
+    "description": "Collection type: played."
+  },
+  "popupCollTypeWishlist": {
+    "message": "Lista dei desideri",
+    "description": "Collection type: wishlist."
+  },
+  "popupCollTypeWantToPlay": {
+    "message": "Voglio giocare",
+    "description": "Collection type: want to play."
+  },
+  "popupCollTypeWantToLearn": {
+    "message": "Voglio imparare",
+    "description": "Collection type: want to learn."
+  },
+  "popupCollTypeCanTeach": {
+    "message": "Posso insegnare",
+    "description": "Collection type: can teach."
+  },
+  "popupCollViewAll": {
+    "message": "Vedi collezione →",
+    "description": "Footer link on the collection tab."
+  },
+  "popupBulkExtractButton": {
+    "message": "Estrai tutte le pagine",
+    "description": "Button to start a bulk paginated extraction."
+  },
+  "popupBulkTitle": {
+    "message": "Estrazione di tutte le pagine",
+    "description": "Title shown on the bulk progress overlay."
+  },
+  "popupBulkCancel": {
+    "message": "Annulla e mantieni i risultati",
+    "description": "Button to cancel a bulk extraction and keep what was found so far."
+  },
+  "popupTabletopiaCtx": {
+    "message": "Tabletopia"
+  },
+  "popupTabletopiaLead": {
+    "message": "Importa la tua cronologia di partite per seguire le statistiche e guadagnare badge BGM"
+  },
+  "popupTabletopiaButton": {
+    "message": "Importa partite Tabletopia"
+  },
+  "importTabletopiaFetching": {
+    "message": "Recupero di tutte le partite da Tabletopia… attendere prego"
+  },
+  "popupLudopediaCtx": {
+    "message": "Ludopedia"
+  },
+  "popupLudopediaLead": {
+    "message": "Importa la tua cronologia di partite per seguire le statistiche e guadagnare badge BGM"
+  },
+  "popupLudopediaButton": {
+    "message": "Importa partite Ludopedia"
+  },
+  "importLudopediaFetching": {
+    "message": "Recupero di tutte le partite da Ludopedia… attendere prego"
+  },
+  "popupSpielByWebCtx": {
+    "message": "SpielByWeb"
+  },
+  "popupSpielByWebLead": {
+    "message": "Importa la tua cronologia di partite per seguire le statistiche e guadagnare badge BGM"
+  },
+  "popupSpielByWebButton": {
+    "message": "Importa partite SpielByWeb"
+  },
+  "importSpielByWebFetching": {
+    "message": "Scansione delle partite terminate su questa pagina… attendere prego"
+  },
+  "bnDashboard": {
+    "message": "Dashboard",
+    "description": "Bottom nav label for the dashboard tab."
+  },
+  "dashSigninLead": {
+    "message": "Accedi per vedere i tuoi messaggi, le corrispondenze e le notifiche.",
+    "description": "Lead text on the dashboard tab when logged out."
+  },
+  "dashRowMessages": {
+    "message": "Messaggi",
+    "description": "Dashboard row title for messages."
+  },
+  "dashRowMatches": {
+    "message": "Corrispondenze",
+    "description": "Dashboard row title for player matches."
+  },
+  "dashRowNotifications": {
+    "message": "Notifiche",
+    "description": "Dashboard row title for notifications."
+  },
+  "dashQuickLinks": {
+    "message": "Link rapidi",
+    "description": "Label above the quick-link buttons on the dashboard tab."
+  },
+  "dashLinkHome": {
+    "message": "🏠 Home",
+    "description": "Quick link to BGM homepage."
+  },
+  "dashLinkCollections": {
+    "message": "📚 Collezioni",
+    "description": "Quick link to user's collections page."
+  },
+  "dashLinkWishlist": {
+    "message": "⭐ Lista dei desideri",
+    "description": "Quick link to user's wishlist."
+  },
+  "dashMsgNone": {
+    "message": "Nessun messaggio non letto",
+    "description": "Dashboard messages row when there are no unread messages."
+  },
+  "dashMsgFrom": {
+    "message": "Da: $names$",
+    "description": "Dashboard messages sub-text listing senders.",
+    "placeholders": {
+      "names": {
+        "content": "$1",
+        "example": "Alice, Bob"
+      }
+    }
+  },
+  "dashMsgUnread": {
+    "message": "$count$ messaggio non letto",
+    "description": "Dashboard messages sub-text — singular.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "1"
+      }
+    }
+  },
+  "dashMsgUnreadPlural": {
+    "message": "$count$ messaggi non letti",
+    "description": "Dashboard messages sub-text — plural.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "dashMatchesNone": {
+    "message": "Nessun giocatore compatibile ancora",
+    "description": "Dashboard matches row when there are no new matches."
+  },
+  "dashMatchesFallback": {
+    "message": "Giocatori che corrispondono alla tua lista dei desideri",
+    "description": "Dashboard matches row fallback when the API call fails."
+  },
+  "dashNotifsNone": {
+    "message": "Nessuna nuova notifica",
+    "description": "Dashboard notifications row when there are none."
+  },
+  "dashNotifsUnread": {
+    "message": "$count$ notifica non letta",
+    "description": "Dashboard notifications sub-text — singular.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "1"
+      }
+    }
+  },
+  "dashNotifsUnreadPlural": {
+    "message": "$count$ notifiche non lette",
+    "description": "Dashboard notifications sub-text — plural.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  }
 }
