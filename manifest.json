@@ -20,7 +20,8 @@
     "https://en.boardgamearena.com/*",
     "https://tabletopia.com/*",
     "https://www.spielbyweb.de/*",
-    "https://ludopedia.com.br/*"
+    "https://ludopedia.com.br/*",
+    "https://www.ludopedia.com.br/*"
   ],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; style-src 'self' 'unsafe-inline'"
@@ -224,7 +225,8 @@
     },
     {
       "matches": [
-        "https://ludopedia.com.br/*"
+        "https://ludopedia.com.br/*",
+        "https://www.ludopedia.com.br/*"
       ],
       "js": [
         "src/content/ludopedia-scraper.js",

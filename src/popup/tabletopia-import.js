@@ -13,7 +13,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 const tabletopiaImportBtn = document.getElementById('tabletopiaImportBtn');
 const tabletopiaStatus = document.getElementById('tabletopiaStatus');
 
-function setStatus(text, variant) {
+function setTabletopiaStatus(text, variant) {
   if (!tabletopiaStatus) return;
   tabletopiaStatus.textContent = text;
   tabletopiaStatus.classList.remove('is-error', 'is-success');
@@ -22,7 +22,7 @@ function setStatus(text, variant) {
 
 chrome.runtime.onMessage.addListener((message) => {
   if (message.action === 'playsImportProgress' && tabletopiaStatus) {
-    setStatus(
+    setTabletopiaStatus(
       chrome.i18n.getMessage('importSendingProgress', [
         String(message.current),
         String(message.total),
@@ -34,7 +34,7 @@ chrome.runtime.onMessage.addListener((message) => {
 if (tabletopiaImportBtn) {
   tabletopiaImportBtn.addEventListener('click', () => {
     tabletopiaImportBtn.disabled = true;
-    setStatus(chrome.i18n.getMessage('importTabletopiaFetching'));
+    setTabletopiaStatus(chrome.i18n.getMessage('importTabletopiaFetching'));
 
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       chrome.tabs.sendMessage(tabs[0].id, { action: 'import_tabletopia_plays' }, (response) => {
@@ -43,7 +43,7 @@ if (tabletopiaImportBtn) {
         if (chrome.runtime.lastError || !response) {
           const msg =
             chrome.runtime.lastError?.message || chrome.i18n.getMessage('importNoResponse');
-          setStatus(chrome.i18n.getMessage('importErrorPrefix', [msg]), 'is-error');
+          setTabletopiaStatus(chrome.i18n.getMessage('importErrorPrefix', [msg]), 'is-error');
           return;
         }
 
@@ -52,9 +52,12 @@ if (tabletopiaImportBtn) {
           const parts = [chrome.i18n.getMessage('importSuccess', [String(posted)])];
           if (skipped > 0)
             parts.push(chrome.i18n.getMessage('importNotFoundOnBgm', [String(skipped)]));
-          setStatus(parts.join(' · '), 'is-success');
+          setTabletopiaStatus(parts.join(' · '), 'is-success');
         } else {
-          setStatus(chrome.i18n.getMessage('importErrorPrefix', [response.error]), 'is-error');
+          setTabletopiaStatus(
+            chrome.i18n.getMessage('importErrorPrefix', [response.error]),
+            'is-error'
+          );
         }
       });
     });
