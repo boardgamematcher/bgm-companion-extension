@@ -82,7 +82,9 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   }
 
   if (info.menuItemId === 'bgm-search-game' && info.selectionText) {
-    searchGame(info.selectionText.trim());
+    chrome.tabs.create({
+      url: BGM_BASE_URL + '/games?q=' + encodeURIComponent(info.selectionText.trim()),
+    });
     return;
   }
 
@@ -635,36 +637,4 @@ async function syncBggCollection(bggUsername) {
   }
 
   return response.json();
-}
-
-async function searchGame(query) {
-  try {
-    const res = await fetch(`${BGM_BASE_URL}/api/games/search?q=${encodeURIComponent(query)}`, {
-      credentials: 'include',
-    });
-    if (!res.ok) return;
-    const data = await res.json();
-    const games = data.games || [];
-    if (games.length === 0) {
-      chrome.notifications.create('bgm-game-not-found', {
-        type: 'basic',
-        iconUrl: '/icons/icon128.png',
-        title: chrome.i18n.getMessage('notifGameNotFoundTitle'),
-        message: chrome.i18n.getMessage('notifGameNotFoundBody', [query]),
-      });
-      return;
-    }
-    const game = games[0];
-    const message = game.year_published
-      ? chrome.i18n.getMessage('notifGameFoundBody', [game.name, String(game.year_published)])
-      : chrome.i18n.getMessage('notifGameFoundBodyNoYear', [game.name]);
-    chrome.notifications.create(`bgm-game-${game.slug}`, {
-      type: 'basic',
-      iconUrl: '/icons/icon128.png',
-      title: chrome.i18n.getMessage('notifGameFoundTitle'),
-      message,
-    });
-  } catch (_e) {
-    // Network failure — silently skip
-  }
 }
