@@ -73,7 +73,7 @@ body {
   font-size: 13px;
   color: var(--text-primary);
   background: var(--bg-base);
-  width: 360px;
+  width: 440px;
   min-height: 200px;
 }
 
@@ -538,15 +538,15 @@ body {
 
 /* ── Neutral card — wishlist ── */
 .wl-input-row {
-  margin-bottom: 2px;
+  margin-bottom: 16px;
 }
 
 .wl-input-row input {
   width: 100%;
-  padding: 9px 12px;
+  padding: 11px 14px;
   border: 1px solid var(--border-hover);
   border-radius: var(--radius);
-  font-size: 12px;
+  font-size: 13px;
   background: var(--bg-elevated);
   color: var(--text-primary);
   font-family: inherit;
@@ -566,9 +566,9 @@ body {
 /* ── Collection type chips ── */
 .col-chips-row {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin: 8px 0 5px;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
 }
 
 .col-chips-label {
@@ -576,39 +576,34 @@ body {
   font-weight: 700;
   color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
 }
 
 .col-chips-readout {
+  font-size: 10px;
   color: var(--amber);
   font-weight: 700;
-  text-transform: none;
-  letter-spacing: 0;
-  margin-left: 4px;
-}
-
-.col-chips-hint {
-  font-size: 9.5px;
-  color: var(--text-muted);
-  text-transform: none;
   letter-spacing: 0;
 }
 
 .col-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
-  margin-bottom: 10px;
+  gap: 6px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
 }
 
 .col-chip {
-  padding: 4px 9px;
+  padding: 5px 11px;
   border-radius: var(--radius-pill);
   background: var(--bg-elevated);
   border: 1px solid var(--border);
   color: var(--text-muted);
-  font-size: 10.5px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 600;
   font-family: inherit;
   cursor: pointer;
   white-space: nowrap;
@@ -629,8 +624,7 @@ body {
 .wl-results {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  margin-top: 4px;
+  gap: 6px;
 }
 
 .wl-results:empty {
@@ -750,11 +744,86 @@ body {
 .wl-error {
   font-size: 11px;
   color: var(--red);
-  padding: 6px 2px 0;
+  padding: 8px 2px 0;
+}
+
+.wl-empty {
+  font-size: 11px;
+  color: var(--text-muted);
+  padding: 8px 2px 0;
+}
+
+.wl-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 2px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.wl-loading::before {
+  content: '';
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--border-hover);
+  border-top-color: var(--amber);
+  border-radius: 50%;
+  animation: wl-spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes wl-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.wl-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 8px 0 4px;
+}
+
+.wl-page-btn {
+  background: none;
+  border: 1px solid var(--border-hover);
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  font-size: 13px;
+  width: 28px;
+  height: 26px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  font-family: inherit;
+}
+
+.wl-page-btn:hover:not(:disabled) {
+  border-color: var(--amber);
+  color: var(--amber);
+}
+
+.wl-page-btn:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.wl-page-info {
+  font-size: 11px;
+  color: var(--text-muted);
+  min-width: 60px;
+  text-align: center;
 }
 
 .wl-footer {
-  margin-top: 10px;
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -886,6 +955,7 @@ body {
 
 .tab-pane.active {
   display: block;
+  min-height: 300px;
 }
 
 /* ── Extract tab — idle animation ── */
