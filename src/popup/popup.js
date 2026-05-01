@@ -1,5 +1,10 @@
 // BGM Toolbox — Popup controller
 const BGM_BASE_URL = 'https://boardgamematcher.com';
+
+function bgmLink(path, campaign) {
+  const sep = path.includes('?') ? '&' : '?';
+  return `${BGM_BASE_URL}${path}${sep}utm_source=extension&utm_medium=popup&utm_campaign=${campaign}`;
+}
 let currentDomain = null;
 let currentPattern = null;
 let currentUser = null;
@@ -34,6 +39,7 @@ let selectedTypes = ['wishlist'];
 // Initialize popup
 document.addEventListener('DOMContentLoaded', async () => {
   loadTheme();
+  setupWishlistPagination();
   await checkAuth();
   await checkSiteSupport();
   await loadStats();
@@ -220,7 +226,7 @@ function setLoggedIn(user) {
   ]);
   avatar.style.display = '';
   if (user.username) {
-    avatar.dataset.profileUrl = `${BGM_BASE_URL}/users/${encodeURIComponent(user.username)}`;
+    avatar.dataset.profileUrl = bgmLink(`/users/${encodeURIComponent(user.username)}`, 'profile');
   } else {
     delete avatar.dataset.profileUrl;
   }
@@ -242,12 +248,12 @@ function setLoggedOut() {
 }
 
 function handleLogin() {
-  chrome.tabs.create({ url: BGM_BASE_URL + '/auth/login' });
+  chrome.tabs.create({ url: bgmLink('/auth/login', 'auth-login') });
 }
 
 function handleSignup(e) {
   e.preventDefault();
-  chrome.tabs.create({ url: BGM_BASE_URL + '/auth/register' });
+  chrome.tabs.create({ url: bgmLink('/auth/register', 'auth-signup') });
 }
 
 // ── Theme ──
@@ -417,7 +423,10 @@ async function countGames(tabId, pattern) {
 function setupBottomNav(user) {
   const link = document.getElementById('wishlist-link');
   if (link && user.username) {
-    link.href = `${BGM_BASE_URL}/collections/${encodeURIComponent(user.username)}`;
+    link.href = bgmLink(
+      `/collections/${encodeURIComponent(user.username)}`,
+      'extract-shop-collection'
+    );
   }
 }
 
@@ -445,7 +454,9 @@ function sendExtractMessage(tabId, pattern) {
 }
 
 function openFallbackExtraction(url) {
-  chrome.tabs.create({ url: BGM_BASE_URL + '/extract?url=' + encodeURIComponent(url) });
+  chrome.tabs.create({
+    url: bgmLink(`/extract?url=${encodeURIComponent(url)}`, 'extract-fallback'),
+  });
   window.close();
 }
 
@@ -750,7 +761,9 @@ function showSuccessState(count, domain, jobId) {
     String(count),
   ]);
   const link = document.getElementById('success-link');
-  link.href = jobId ? `${BGM_BASE_URL}/extract?job=${jobId}` : `${BGM_BASE_URL}/extract`;
+  link.href = jobId
+    ? bgmLink(`/extract?job=${jobId}`, 'extract-result')
+    : bgmLink('/extract', 'extract-result');
 
   if (_successTimer) clearTimeout(_successTimer);
   _successTimer = setTimeout(hideSuccessState, 8000);
@@ -931,14 +944,17 @@ function handleSettings() {
 
 const WISHLIST_DEBOUNCE_MS = 250;
 const WISHLIST_MIN_QUERY = 2;
+const WISHLIST_PAGE_SIZE = 4;
 let wishlistSearchTimer = null;
 let wishlistSearchAbort = null;
 let wishlistCount = null;
+let wishlistAllResults = [];
+let wishlistPage = 0;
 
 function setupWishlist(user) {
   const link = document.getElementById('wishlist-link');
   if (user.username) {
-    link.href = `${BGM_BASE_URL}/collections/${encodeURIComponent(user.username)}`;
+    link.href = bgmLink(`/collections/${encodeURIComponent(user.username)}`, 'collection-view-all');
   }
 
   chrome.storage.local.get('selectedCollectionTypes', (data) => {
@@ -1031,8 +1047,11 @@ function handleWishlistInput(event) {
   }
   if (query.length < WISHLIST_MIN_QUERY) {
     clearWishlistResults();
+    document.getElementById('wl-loading').style.display = 'none';
     return;
   }
+  document.getElementById('wl-loading').style.display = '';
+  document.getElementById('wishlist-results').textContent = '';
   wishlistSearchTimer = setTimeout(() => searchWishlistGames(query), WISHLIST_DEBOUNCE_MS);
 }
 
@@ -1043,6 +1062,11 @@ async function searchWishlistGames(query) {
       `${BGM_BASE_URL}/api/games/search?q=${encodeURIComponent(query)}`,
       { credentials: 'include', signal: wishlistSearchAbort.signal }
     );
+    document.getElementById('wl-loading').style.display = 'none';
+    if (response.status === 404) {
+      renderWishlistResults([]);
+      return;
+    }
     if (!response.ok) {
       renderWishlistError(chrome.i18n.getMessage('popupWishlistSearchError'));
       return;
@@ -1050,6 +1074,7 @@ async function searchWishlistGames(query) {
     const data = await response.json();
     renderWishlistResults(data.games || []);
   } catch (error) {
+    document.getElementById('wl-loading').style.display = 'none';
     if (error.name === 'AbortError') return;
     console.warn('Wishlist search failed:', error);
     renderWishlistError(chrome.i18n.getMessage('popupWishlistSearchError'));
@@ -1057,10 +1082,17 @@ async function searchWishlistGames(query) {
 }
 
 function clearWishlistResults() {
+  wishlistAllResults = [];
+  wishlistPage = 0;
   document.getElementById('wishlist-results').textContent = '';
+  document.getElementById('wl-loading').style.display = 'none';
+  document.getElementById('wl-pagination').style.display = 'none';
 }
 
 function renderWishlistError(text) {
+  wishlistAllResults = [];
+  wishlistPage = 0;
+  document.getElementById('wl-pagination').style.display = 'none';
   const container = document.getElementById('wishlist-results');
   container.textContent = '';
   const err = document.createElement('div');
@@ -1070,18 +1102,57 @@ function renderWishlistError(text) {
 }
 
 function renderWishlistResults(games) {
+  wishlistAllResults = games;
+  wishlistPage = 0;
+  renderWishlistPage();
+}
+
+function renderWishlistPage() {
   const container = document.getElementById('wishlist-results');
+  const pagination = document.getElementById('wl-pagination');
   container.textContent = '';
-  if (!games.length) {
+
+  if (!wishlistAllResults.length) {
     const empty = document.createElement('div');
-    empty.className = 'wl-error';
+    empty.className = 'wl-empty';
     empty.textContent = chrome.i18n.getMessage('popupWishlistNoGames');
     container.appendChild(empty);
+    pagination.style.display = 'none';
     return;
   }
-  for (const game of games) {
+
+  const totalPages = Math.ceil(wishlistAllResults.length / WISHLIST_PAGE_SIZE);
+  const start = wishlistPage * WISHLIST_PAGE_SIZE;
+  const slice = wishlistAllResults.slice(start, start + WISHLIST_PAGE_SIZE);
+
+  for (const game of slice) {
     container.appendChild(buildWishlistRow(game));
   }
+
+  if (totalPages > 1) {
+    pagination.style.display = '';
+    document.getElementById('wl-page-info').textContent = `${wishlistPage + 1} / ${totalPages}`;
+    document.getElementById('wl-prev').disabled = wishlistPage === 0;
+    document.getElementById('wl-next').disabled = wishlistPage >= totalPages - 1;
+  } else {
+    pagination.style.display = 'none';
+  }
+}
+
+function setupWishlistPagination() {
+  document.getElementById('wl-prev').addEventListener('click', () => {
+    if (wishlistPage > 0) {
+      wishlistPage--;
+      renderWishlistPage();
+    }
+  });
+  document.getElementById('wl-next').addEventListener('click', () => {
+    const totalPages = Math.ceil(wishlistAllResults.length / WISHLIST_PAGE_SIZE);
+    if (wishlistPage < totalPages - 1) {
+      wishlistPage++;
+      renderWishlistPage();
+    }
+  });
 }
 
 function buildWishlistRow(game) {
@@ -1096,7 +1167,7 @@ function buildWishlistRow(game) {
     const path = game.slug
       ? `/boardgames/${encodeURIComponent(game.slug)}`
       : `/search?q=${encodeURIComponent(game.name)}`;
-    chrome.tabs.create({ url: BGM_BASE_URL + path });
+    chrome.tabs.create({ url: bgmLink(path, 'search-result') });
   });
 
   const thumb = document.createElement('img');
@@ -1176,7 +1247,7 @@ async function loadBgaStats(user) {
   if (!user) return;
   const playsLink = document.getElementById('bgaPlaysLink');
   if (playsLink && user.username) {
-    playsLink.href = `${BGM_BASE_URL}/users/${encodeURIComponent(user.username)}`;
+    playsLink.href = bgmLink(`/users/${encodeURIComponent(user.username)}`, 'bga-plays-history');
   }
   try {
     const res = await fetch(`${BGM_BASE_URL}/api/plays/summary`, { credentials: 'include' });
@@ -1218,10 +1289,10 @@ async function loadMsgBanner() {
         : chrome.i18n.getMessage('msgBannerNewMessages', [String(count)]);
   }
   document.getElementById('msg-banner-text').textContent = label;
-  banner.href = `${BGM_BASE_URL}/messages`;
+  banner.href = bgmLink('/messages', 'msg-banner');
   banner.onclick = (e) => {
     e.preventDefault();
-    chrome.tabs.create({ url: `${BGM_BASE_URL}/messages` });
+    chrome.tabs.create({ url: bgmLink('/messages', 'msg-banner') });
   };
   banner.style.display = '';
 }
@@ -1239,14 +1310,14 @@ async function loadDashboard(user) {
 
   if (user.username) {
     const u = encodeURIComponent(user.username);
-    setDashHref('dash-link-home', `${BGM_BASE_URL}/`);
-    setDashHref('dash-link-collections', `${BGM_BASE_URL}/collections/${u}`);
-    setDashHref('dash-link-wishlist', `${BGM_BASE_URL}/collections/${u}?type=wishlist`);
+    setDashHref('dash-link-home', bgmLink('/', 'dash-home'));
+    setDashHref('dash-link-collections', bgmLink(`/collections/${u}`, 'dash-collections'));
+    setDashHref('dash-link-wishlist', bgmLink(`/collections/${u}?type=wishlist`, 'dash-wishlist'));
   }
 
-  setDashHref('dash-messages', `${BGM_BASE_URL}/messages`);
-  setDashHref('dash-matches', `${BGM_BASE_URL}/play/players`);
-  setDashHref('dash-notifs', `${BGM_BASE_URL}/notifications`);
+  setDashHref('dash-messages', bgmLink('/messages', 'dash-messages'));
+  setDashHref('dash-matches', bgmLink('/play/players', 'dash-matches'));
+  setDashHref('dash-notifs', bgmLink('/notifications', 'dash-notifs'));
 
   // Messages — from service-worker cache
   const { unreadMessages } = await chrome.storage.local.get('unreadMessages');
