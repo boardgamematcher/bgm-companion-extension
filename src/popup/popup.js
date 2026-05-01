@@ -21,6 +21,7 @@ let currentUser = null;
 let bggUsername = null;
 let siteContext = 'neutral'; // 'shop' | 'bga' | 'yucata' | 'bgg' | 'bgg-game' | 'neutral'
 let bggGameName = null;
+let bggGameAutoSelect = false; // true on BGG game pages — auto-jump to detail card on first search result
 
 // State held across the extraction review panel
 let _reviewTab = null;
@@ -55,6 +56,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   await checkSiteSupport();
   await loadStats();
   setupEventListeners();
+  // On BGG game pages, applyCardLayout() pre-fills the input before the listener
+  // is attached — re-fire the event now that the handler is live.
+  if (siteContext === 'bgg-game' && bggGameName) {
+    const input = document.getElementById('wishlist-input');
+    if (input?.value) input.dispatchEvent(new Event('input'));
+  }
 });
 
 // Setup event listeners
@@ -172,6 +179,7 @@ function applyCardLayout() {
     if (bnExtract) bnExtract.classList.add('compatible');
     switchTab('extract');
   } else if (siteContext === 'bgg-game') {
+    bggGameAutoSelect = true;
     switchTab('games');
   } else if (
     siteContext === 'bga' ||
@@ -1216,6 +1224,13 @@ function renderWishlistError(text) {
 function renderWishlistResults(games) {
   wishlistAllResults = games;
   wishlistPage = 0;
+  if (bggGameAutoSelect && games.length > 0) {
+    bggGameAutoSelect = false;
+    wishlistPageGames = games.slice(0, WISHLIST_PAGE_SIZE);
+    wishlistHighlightIndex = 0;
+    renderGameDetail(games[0]);
+    return;
+  }
   renderWishlistPage();
 }
 
