@@ -925,18 +925,6 @@
     "message": "Extract again",
     "description": "Button on the success card to go back and extract from the same shop again."
   },
-  "bnProfile": {
-    "message": "Profile",
-    "description": "Bottom nav label for the profile link."
-  },
-  "bnPlayers": {
-    "message": "Players",
-    "description": "Bottom nav label for the find-players link."
-  },
-  "bnWishlist": {
-    "message": "Wishlist",
-    "description": "Bottom nav label for the wishlist link."
-  },
   "popupBgaCtx": {
     "message": "Board Game Arena",
     "description": "Context pill label shown at the top of the BGA import panel."

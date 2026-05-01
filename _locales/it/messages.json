@@ -990,5 +990,89 @@
         "example": "5"
       }
     }
+  },
+  "popupBgaCtx": {
+    "message": "Board Game Arena"
+  },
+  "popupBgaLead": {
+    "message": "Importa la tua cronologia di partite per seguire le statistiche e guadagnare badge BGM"
+  },
+  "popupBggCtx": {
+    "message": "BoardGameGeek"
+  },
+  "popupBggLead": {
+    "message": "Importa la tua cronologia partite BGG per seguire le statistiche e guadagnare badge BGM"
+  },
+  "popupExtractAgain": {
+    "message": "Estrai di nuovo"
+  },
+  "popupFeatureBgaDesc": {
+    "message": "Importa la tua cronologia di partite"
+  },
+  "popupFeatureBgaTitle": {
+    "message": "Su Board Game Arena o Yucata"
+  },
+  "popupFeatureBggDesc": {
+    "message": "Sincronizza i tuoi giochi posseduti"
+  },
+  "popupFeatureBggTitle": {
+    "message": "Su BoardGameGeek"
+  },
+  "popupFeatureBullet1": {
+    "message": "Vedi cosa possiedi mentre navighi nei negozi"
+  },
+  "popupFeatureBullet2": {
+    "message": "Importa le partite da BGA & Yucata"
+  },
+  "popupFeatureBullet3": {
+    "message": "Sincronizza la tua collezione BGG"
+  },
+  "popupFeatureBullet4": {
+    "message": "Crea una lista dei desideri, trova giocatori"
+  },
+  "popupFeatureShopDesc": {
+    "message": "Posseduto vs. nuovo · link alle pagine dei giochi BGM"
+  },
+  "popupFeatureShopTitle": {
+    "message": "In un negozio di giochi"
+  },
+  "popupLoginTagline": {
+    "message": "Il tuo assistente per i giochi da tavolo"
+  },
+  "popupShopLead": {
+    "message": "Scopri quali giochi in questa pagina sono nuovi per la tua collezione"
+  },
+  "popupShopSigninLead": {
+    "message": "Accedi per confrontarli con la tua collezione"
+  },
+  "popupShopWishlistPlural": {
+    "message": "$count$ giochi dalla tua lista dei desideri in questa pagina",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "popupShopWishlistSingular": {
+    "message": "1 gioco dalla tua lista dei desideri in questa pagina"
+  },
+  "popupSuccessLink": {
+    "message": "Vedi risultati su BGM →"
+  },
+  "popupSuccessMsg": {
+    "message": "$count$ giochi aggiunti a BGM",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "12"
+      }
+    }
+  },
+  "popupYucataCtx": {
+    "message": "Yucata"
+  },
+  "popupYucataLead": {
+    "message": "Importa la tua cronologia di partite per seguire le statistiche e guadagnare badge BGM"
   }
 }
