@@ -885,6 +885,10 @@
   "importSpielByWebFetching": {
     "message": "Abgeschlossene Spiele auf dieser Seite werden gescannt … bitte warten"
   },
+  "bnGames": {
+    "message": "Spiele",
+    "description": "Bottom nav label for the games/collection tab."
+  },
   "bnDashboard": {
     "message": "Dashboard",
     "description": "Bottom nav label for the dashboard tab."

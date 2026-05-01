@@ -885,6 +885,10 @@
   "importSpielByWebFetching": {
     "message": "Scansione delle partite terminate su questa pagina… attendere prego"
   },
+  "bnGames": {
+    "message": "Giochi",
+    "description": "Bottom nav label for the games/collection tab."
+  },
   "bnDashboard": {
     "message": "Dashboard",
     "description": "Bottom nav label for the dashboard tab."
