@@ -61,6 +61,7 @@ function setupEventListeners() {
   document.getElementById('shop-signin-btn').addEventListener('click', handleLogin);
   document.getElementById('shop-signup-link').addEventListener('click', handleSignup);
   document.getElementById('wishlist-input').addEventListener('input', handleWishlistInput);
+  document.getElementById('wishlist-input').addEventListener('keydown', handleWishlistKeydown);
   document.getElementById('user-avatar').addEventListener('click', handleAvatarClick);
   document.getElementById('bggSyncBtn').addEventListener('click', handleBggSync);
   document.getElementById('bggSyncClear').addEventListener('click', handleBggSyncClear);
@@ -975,6 +976,8 @@ let wishlistSearchAbort = null;
 let wishlistCount = null;
 let wishlistAllResults = [];
 let wishlistPage = 0;
+let wishlistHighlightIndex = -1;
+let wishlistPageGames = [];
 
 function setupWishlist(user) {
   const link = document.getElementById('wishlist-link');
@@ -1081,6 +1084,46 @@ function handleWishlistInput(event) {
   wishlistSearchTimer = setTimeout(() => searchWishlistGames(query), WISHLIST_DEBOUNCE_MS);
 }
 
+function handleWishlistKeydown(e) {
+  const card = document.getElementById('gd-card');
+
+  // Card is open: Escape returns to results, everything else goes through
+  if (card.style.display !== 'none') {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      hideGameDetail();
+    }
+    return;
+  }
+
+  const rows = [...document.querySelectorAll('#wishlist-results .wl-result')];
+  if (!rows.length) return;
+
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    setWishlistHighlight(Math.min(wishlistHighlightIndex + 1, rows.length - 1), rows);
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    setWishlistHighlight(Math.max(wishlistHighlightIndex - 1, 0), rows);
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    const idx = wishlistHighlightIndex >= 0 ? wishlistHighlightIndex : 0;
+    const game = wishlistPageGames[idx];
+    if (game) renderGameDetail(game);
+  } else if (e.key === 'Escape') {
+    e.preventDefault();
+    document.getElementById('wishlist-input').value = '';
+    clearWishlistResults();
+  }
+}
+
+function setWishlistHighlight(index, rows) {
+  rows.forEach((r) => r.classList.remove('wl-result--highlighted'));
+  wishlistHighlightIndex = index;
+  rows[index].classList.add('wl-result--highlighted');
+  rows[index].scrollIntoView({ block: 'nearest' });
+}
+
 async function searchWishlistGames(query) {
   wishlistSearchAbort = new AbortController();
   try {
@@ -1150,6 +1193,8 @@ function renderWishlistPage() {
   const totalPages = Math.ceil(wishlistAllResults.length / WISHLIST_PAGE_SIZE);
   const start = wishlistPage * WISHLIST_PAGE_SIZE;
   const slice = wishlistAllResults.slice(start, start + WISHLIST_PAGE_SIZE);
+  wishlistPageGames = slice;
+  wishlistHighlightIndex = -1;
 
   for (const game of slice) {
     container.appendChild(buildWishlistRow(game));
@@ -1257,7 +1302,7 @@ async function renderGameDetail(game) {
   // Rating — show score badge if available, otherwise invite user to rate
   const ratingWrap = document.getElementById('gd-rating');
   const noRatingWrap = document.getElementById('gd-no-rating');
-  const gameUrl = bgmLink(`/boardgames/${encodeURIComponent(game.slug)}`, 'game-detail-card');
+  const gameUrl = bgmLink(`/game/${encodeURIComponent(game.slug)}`, 'game-detail-card');
   if (game.bayes_average) {
     document.getElementById('gd-rating-val').textContent = String(game.bayes_average);
     ratingWrap.style.display = '';
