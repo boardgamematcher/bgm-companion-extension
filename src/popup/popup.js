@@ -1,9 +1,19 @@
 // BGM Toolbox — Popup controller
 const BGM_BASE_URL = 'https://boardgamematcher.com';
 
+// Localized URL path segments per language — mirrors i18n_constants.py on the web
+const GAME_PATH_SEGMENTS = { en: 'game', fr: 'jeu', de: 'spiel', es: 'juego', it: 'gioco' };
+
 function bgmLink(path, campaign) {
   const sep = path.includes('?') ? '&' : '?';
   return `${BGM_BASE_URL}${path}${sep}utm_source=extension&utm_medium=popup&utm_campaign=${campaign}`;
+}
+
+function gameDetailUrl(slug, campaign) {
+  const lang = chrome.i18n.getUILanguage().split('-')[0];
+  const segment = GAME_PATH_SEGMENTS[lang] || 'game';
+  const prefix = lang !== 'en' ? `/${lang}` : '';
+  return bgmLink(`${prefix}/${segment}/${encodeURIComponent(slug)}`, campaign);
 }
 let currentDomain = null;
 let currentPattern = null;
@@ -1302,7 +1312,7 @@ async function renderGameDetail(game) {
   // Rating — show score badge if available, otherwise invite user to rate
   const ratingWrap = document.getElementById('gd-rating');
   const noRatingWrap = document.getElementById('gd-no-rating');
-  const gameUrl = bgmLink(`/game/${encodeURIComponent(game.slug)}`, 'game-detail-card');
+  const gameUrl = gameDetailUrl(game.slug, 'game-detail-card');
   if (game.bayes_average) {
     document.getElementById('gd-rating-val').textContent = String(game.bayes_average);
     ratingWrap.style.display = '';
