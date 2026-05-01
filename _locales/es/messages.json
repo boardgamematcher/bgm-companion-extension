@@ -990,5 +990,89 @@
         "example": "5"
       }
     }
+  },
+  "popupBgaCtx": {
+    "message": "Board Game Arena"
+  },
+  "popupBgaLead": {
+    "message": "Importa tu historial de partidas para seguir estadísticas y ganar insignias BGM"
+  },
+  "popupBggCtx": {
+    "message": "BoardGameGeek"
+  },
+  "popupBggLead": {
+    "message": "Importa tu historial de partidas de BGG para seguir estadísticas y ganar insignias BGM"
+  },
+  "popupExtractAgain": {
+    "message": "Extraer de nuevo"
+  },
+  "popupFeatureBgaDesc": {
+    "message": "Importa tu historial de partidas"
+  },
+  "popupFeatureBgaTitle": {
+    "message": "En Board Game Arena o Yucata"
+  },
+  "popupFeatureBggDesc": {
+    "message": "Sincroniza tus juegos en propiedad"
+  },
+  "popupFeatureBggTitle": {
+    "message": "En BoardGameGeek"
+  },
+  "popupFeatureBullet1": {
+    "message": "Ve lo que tienes mientras navegas por tiendas"
+  },
+  "popupFeatureBullet2": {
+    "message": "Importa partidas desde BGA & Yucata"
+  },
+  "popupFeatureBullet3": {
+    "message": "Sincroniza tu colección de BGG"
+  },
+  "popupFeatureBullet4": {
+    "message": "Crea una lista de deseos, encuentra jugadores"
+  },
+  "popupFeatureShopDesc": {
+    "message": "Tengo vs. nuevo · enlaces a páginas de juegos BGM"
+  },
+  "popupFeatureShopTitle": {
+    "message": "En una tienda de juegos"
+  },
+  "popupLoginTagline": {
+    "message": "Tu asistente de juegos de mesa"
+  },
+  "popupShopLead": {
+    "message": "Ve qué juegos de esta página son nuevos en tu colección"
+  },
+  "popupShopSigninLead": {
+    "message": "Inicia sesión para compararlos con tu colección"
+  },
+  "popupShopWishlistPlural": {
+    "message": "$count$ juegos de tu lista de deseos en esta página",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "popupShopWishlistSingular": {
+    "message": "1 juego de tu lista de deseos en esta página"
+  },
+  "popupSuccessLink": {
+    "message": "Ver resultados en BGM →"
+  },
+  "popupSuccessMsg": {
+    "message": "$count$ juegos añadidos a BGM",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "12"
+      }
+    }
+  },
+  "popupYucataCtx": {
+    "message": "Yucata"
+  },
+  "popupYucataLead": {
+    "message": "Importa tu historial de partidas para seguir estadísticas y ganar insignias BGM"
   }
 }
