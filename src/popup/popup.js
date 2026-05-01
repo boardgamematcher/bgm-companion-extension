@@ -114,6 +114,8 @@ function setupEventListeners() {
 
   document.getElementById('dash-signin-btn').addEventListener('click', handleLogin);
   document.getElementById('dash-signup-link').addEventListener('click', handleSignup);
+  document.getElementById('wl-strip-signin').addEventListener('click', handleLogin);
+  document.getElementById('wl-strip-signup').addEventListener('click', handleSignup);
 
   for (const id of [
     'dash-messages',
@@ -200,10 +202,22 @@ function applyCardLayout() {
     if (siteContext === 'shop') {
       cardShop.style.display = '';
     } else {
-      cardLogin.style.display = '';
+      cardNeutral.style.display = '';
+      document.getElementById('col-chips-row').style.display = 'none';
+      document.getElementById('col-chips').style.display = 'none';
+      document.getElementById('wl-footer').style.display = 'none';
+      document.getElementById('wl-login-strip').style.display = '';
+      if (siteContext === 'bgg-game' && bggGameName) {
+        const input = document.getElementById('wishlist-input');
+        if (input) {
+          input.value = bggGameName;
+          input.dispatchEvent(new Event('input'));
+        }
+      }
     }
   } else {
     cardNeutral.style.display = '';
+    document.getElementById('wl-login-strip').style.display = 'none';
     if (siteContext === 'shop' && _activeTabId && currentPattern) {
       loadPopupWishlistMatches(_activeTabId, currentPattern);
     }
@@ -1314,7 +1328,7 @@ function navigateGameDetail(delta) {
 function hideGameDetail() {
   document.getElementById('gd-card').style.display = 'none';
   document.getElementById('wl-search-view').style.display = '';
-  document.getElementById('wl-footer').style.display = '';
+  if (currentUser) document.getElementById('wl-footer').style.display = '';
 }
 
 async function renderGameDetail(game) {
@@ -1383,9 +1397,15 @@ async function renderGameDetail(game) {
   input.focus();
   input.select();
 
-  // Collection pills — fetch user's current status for this game
+  // Collection pills — only for logged-in users
   const pillsContainer = document.getElementById('gd-pills');
   pillsContainer.textContent = '';
+
+  if (!currentUser) {
+    pillsContainer.style.display = 'none';
+    return;
+  }
+  pillsContainer.style.display = '';
 
   let activeTypes = new Set();
   try {
