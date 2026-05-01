@@ -56,6 +56,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   await checkSiteSupport();
   await loadStats();
   setupEventListeners();
+  // On BGG game pages, applyCardLayout() pre-fills the input before the listener
+  // is attached — re-fire the event now that the handler is live.
+  if (siteContext === 'bgg-game' && bggGameName) {
+    const input = document.getElementById('wishlist-input');
+    if (input?.value) input.dispatchEvent(new Event('input'));
+  }
 });
 
 // Setup event listeners
