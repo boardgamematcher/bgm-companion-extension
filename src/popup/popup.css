@@ -846,6 +846,46 @@ body {
   color: var(--amber-bright);
 }
 
+.wl-login-strip {
+  margin-top: 10px;
+  padding: 7px 10px;
+  background: rgba(237, 149, 0, 0.1);
+  border: 1px solid rgba(237, 149, 0, 0.28);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.wl-strip-signin {
+  background: var(--amber);
+  color: var(--amber-on-btn);
+  border: none;
+  border-radius: calc(var(--radius) - 2px);
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  flex-shrink: 0;
+  transition: background var(--transition-fast);
+}
+
+.wl-strip-signin:hover {
+  background: var(--amber-bright);
+}
+
+.wl-strip-signup {
+  font-size: 11px;
+  color: var(--amber);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.wl-strip-signup:hover {
+  color: var(--amber-bright);
+}
+
 /* ── Login card ── */
 .login-tagline {
   font-size: 15px;
