@@ -92,7 +92,7 @@ function setupEventListeners() {
   });
 
   document.getElementById('bn-extract').addEventListener('click', () => switchTab('extract'));
-  document.getElementById('bn-games').addEventListener('click', () => switchTab('collection'));
+  document.getElementById('bn-games').addEventListener('click', () => switchTab('games'));
   document.getElementById('bn-dashboard').addEventListener('click', () => switchTab('dashboard'));
   document.getElementById('bn-more').addEventListener('click', () => switchTab('more'));
 
@@ -154,7 +154,7 @@ function applyCardLayout() {
     if (bnExtract) bnExtract.classList.add('compatible');
     switchTab('extract');
   } else if (siteContext === 'bgg-game') {
-    switchTab('collection');
+    switchTab('games');
   } else if (siteContext === 'bga' || siteContext === 'yucata' || siteContext === 'bgg') {
     // Platform panels are managed by the import scripts; just activate the tab
     if (bnExtract) bnExtract.classList.add('compatible');
