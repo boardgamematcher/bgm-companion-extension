@@ -21,6 +21,7 @@ let currentUser = null;
 let bggUsername = null;
 let siteContext = 'neutral'; // 'shop' | 'bga' | 'yucata' | 'bgg' | 'bgg-game' | 'neutral'
 let bggGameName = null;
+let bggGameAutoSelect = false; // true on BGG game pages — auto-jump to detail card on first search result
 
 // State held across the extraction review panel
 let _reviewTab = null;
@@ -172,6 +173,7 @@ function applyCardLayout() {
     if (bnExtract) bnExtract.classList.add('compatible');
     switchTab('extract');
   } else if (siteContext === 'bgg-game') {
+    bggGameAutoSelect = true;
     switchTab('games');
   } else if (
     siteContext === 'bga' ||
@@ -1216,6 +1218,13 @@ function renderWishlistError(text) {
 function renderWishlistResults(games) {
   wishlistAllResults = games;
   wishlistPage = 0;
+  if (bggGameAutoSelect && games.length > 0) {
+    bggGameAutoSelect = false;
+    wishlistPageGames = games.slice(0, WISHLIST_PAGE_SIZE);
+    wishlistHighlightIndex = 0;
+    renderGameDetail(games[0]);
+    return;
+  }
   renderWishlistPage();
 }
 
