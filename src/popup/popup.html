@@ -131,212 +131,253 @@
         <div id="tab-panes">
           <!-- ══ EXTRACT TAB ══ -->
           <div id="tab-extract" class="tab-pane active">
-            <!-- Idle: not on a supported page -->
-            <div id="extract-idle" class="extract-idle">
-              <div class="extract-anim">
-                <div class="extract-anim-track">
-                  <div class="extract-anim-card">
-                    <span style="font-size: 13px">🛒</span>
-                    <span style="font-size: 11px; color: var(--text-secondary)">Shop page</span>
-                  </div>
-                  <span class="extract-anim-arrow">→</span>
-                  <div style="display: flex; flex-direction: column; gap: 3px">
-                    <div class="extract-anim-bar"></div>
-                    <div class="extract-anim-bar" style="width: 56px; animation-delay: 0.2s"></div>
-                    <div class="extract-anim-bar" style="width: 68px; animation-delay: 0.4s"></div>
-                  </div>
-                  <span class="extract-anim-arrow">→</span>
-                  <span class="extract-anim-bgm">BGM</span>
+            <div class="ext-strips">
+              <!-- Strip 1: Shop scanner -->
+              <div class="ext-strip" id="strip-shop">
+                <div class="ext-strip-icon">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <circle cx="9" cy="21" r="1" />
+                    <circle cx="20" cy="21" r="1" />
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                  </svg>
                 </div>
+                <div class="ext-strip-body">
+                  <div class="ext-strip-title">Shop scanner</div>
+                  <div class="ext-strip-sub" id="strip-shop-sub">
+                    Visit a supported shop to activate
+                  </div>
+                </div>
+                <button
+                  class="ext-strip-action"
+                  id="extract-btn"
+                  disabled
+                  data-i18n="popupExtractButton"
+                >
+                  Extract
+                </button>
               </div>
-              <p class="extract-idle-text">
-                <strong>Browsing a shop? BGM spots the games.</strong><br />
-                Open a supported shop page and this tab activates automatically — extract the whole
-                listing into your collection in one click.
-              </p>
-            </div>
-
-            <!-- Active: shop page detected -->
-            <div id="extract-active" style="display: none">
-              <div id="extract-ctx-pill" class="ctx-pill shop-ctx" style="display: none">
-                <span class="dot"></span>
-                <span id="ctx-shop-name"></span>
+              <!-- hidden IDs needed by JS -->
+              <span id="ctx-shop-name" style="display: none"></span>
+              <div id="extract-ctx-pill" style="display: none">
+                <span class="dot"></span><span></span>
               </div>
-              <button class="btn-primary" id="extract-btn" disabled data-i18n="popupExtractButton">
-                Extract &amp; review
-              </button>
               <button
                 class="btn-outline"
                 id="bulk-extract-btn"
                 disabled
                 data-i18n="popupBulkExtractButton"
-                style="margin-top: 6px"
+                style="display: none; margin-top: 4px"
               ></button>
               <p class="card-sub" id="shop-wishlist-count" style="display: none"></p>
               <p class="card-sub" id="shop-last-extraction" style="display: none"></p>
-            </div>
 
-            <!-- BGA Import Panel -->
-            <div id="bgaPanel" style="display: none">
-              <div class="ctx-pill play-ctx">
-                <span class="dot"></span>
-                <span data-i18n="popupBgaCtx">Board Game Arena</span>
+              <!-- Strip 2: Play history -->
+              <div class="ext-strip" id="strip-play">
+                <div class="ext-strip-icon">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <rect x="2" y="3" width="20" height="14" rx="2" />
+                    <line x1="8" y1="21" x2="16" y2="21" />
+                    <line x1="12" y1="17" x2="12" y2="21" />
+                  </svg>
+                </div>
+                <div class="ext-strip-body">
+                  <div class="ext-strip-title">Play history</div>
+                  <div class="ext-strip-sub">
+                    BGA · BGG · Yucata · Tabletopia · Ludopedia · SpielByWeb
+                  </div>
+                </div>
               </div>
-              <p class="card-lead" data-i18n="popupBgaLead">
-                Import your play history to track stats and earn BGM badges
-              </p>
-              <div class="bga-stats-row" id="bgaStatsRow" style="display: none">
-                <span id="bgaStatText" class="bga-stat-text"></span>
-                <a
-                  id="bgaPlaysLink"
-                  class="feature-link"
-                  href="#"
-                  target="_blank"
-                  rel="noopener"
-                  data-i18n="popupBgaPlaysLink"
-                  >View your play history &rarr;</a
+              <!-- Platform panels (shown/hidden by import scripts) -->
+              <div id="bgaPanel" style="display: none" class="ext-platform-panel">
+                <div class="ctx-pill play-ctx">
+                  <span class="dot"></span><span data-i18n="popupBgaCtx">Board Game Arena</span>
+                </div>
+                <p class="card-lead" data-i18n="popupBgaLead">
+                  Import your play history to track stats and earn BGM badges
+                </p>
+                <div class="bga-stats-row" id="bgaStatsRow" style="display: none">
+                  <span id="bgaStatText" class="bga-stat-text"></span>
+                  <a
+                    id="bgaPlaysLink"
+                    class="feature-link"
+                    href="#"
+                    target="_blank"
+                    rel="noopener"
+                    data-i18n="popupBgaPlaysLink"
+                    >View your play history &rarr;</a
+                  >
+                </div>
+                <div class="bga-teaser-row" id="bgaTeaserRow" style="display: none">
+                  <span class="bga-teaser-blurred">42 plays &middot; 68% win rate</span>
+                  <a
+                    id="bgaTeaserSignin"
+                    class="feature-link"
+                    href="#"
+                    data-i18n="popupBgaTeaserCta"
+                    >Sign in to track your stats</a
+                  >
+                </div>
+                <button id="bgaImportBtn" class="btn-primary" data-i18n="popupBgaButton">
+                  Import BGA Plays
+                </button>
+                <div id="bgaStatus" class="import-status"></div>
+              </div>
+              <div id="yucataPanel" style="display: none" class="ext-platform-panel">
+                <div class="ctx-pill play-ctx">
+                  <span class="dot"></span><span data-i18n="popupYucataCtx">Yucata</span>
+                </div>
+                <p class="card-lead" data-i18n="popupYucataLead">
+                  Import your play history to track stats and earn BGM badges
+                </p>
+                <button id="yucataImportBtn" class="btn-primary" data-i18n="popupYucataButton">
+                  Import Yucata Plays
+                </button>
+                <div id="yucataStatus" class="import-status"></div>
+              </div>
+              <div id="bggPanel" style="display: none" class="ext-platform-panel">
+                <div class="ctx-pill play-ctx">
+                  <span class="dot"></span><span data-i18n="popupBggCtx">BoardGameGeek</span>
+                </div>
+                <p class="card-lead" data-i18n="popupBggLead">
+                  Import your BGG play history to track stats and earn BGM badges
+                </p>
+                <button id="bggImportBtn" class="btn-primary" data-i18n="popupBggButton">
+                  Import BGG Plays
+                </button>
+                <div id="bggStatus" class="import-status"></div>
+              </div>
+              <div id="tabletopiaPanel" style="display: none" class="ext-platform-panel">
+                <div class="ctx-pill play-ctx">
+                  <span class="dot"></span><span data-i18n="popupTabletopiaCtx">Tabletopia</span>
+                </div>
+                <p class="card-lead" data-i18n="popupTabletopiaLead">
+                  Import your play history to track stats and earn BGM badges
+                </p>
+                <button
+                  id="tabletopiaImportBtn"
+                  class="btn-primary"
+                  data-i18n="popupTabletopiaButton"
                 >
+                  Import Tabletopia Plays
+                </button>
+                <div id="tabletopiaStatus" class="import-status"></div>
               </div>
-              <div class="bga-teaser-row" id="bgaTeaserRow" style="display: none">
-                <span class="bga-teaser-blurred">42 plays &middot; 68% win rate</span>
-                <a id="bgaTeaserSignin" class="feature-link" href="#" data-i18n="popupBgaTeaserCta"
-                  >Sign in to track your stats</a
+              <div id="ludopediaPanel" style="display: none" class="ext-platform-panel">
+                <div class="ctx-pill play-ctx">
+                  <span class="dot"></span><span data-i18n="popupLudopediaCtx">Ludopedia</span>
+                </div>
+                <p class="card-lead" data-i18n="popupLudopediaLead">
+                  Import your play history to track stats and earn BGM badges
+                </p>
+                <button
+                  id="ludopediaImportBtn"
+                  class="btn-primary"
+                  data-i18n="popupLudopediaButton"
                 >
+                  Import Ludopedia Plays
+                </button>
+                <div id="ludopediaStatus" class="import-status"></div>
               </div>
-              <button
-                id="bgaImportBtn"
-                class="btn-primary"
-                data-i18n="popupBgaButton"
-                style="margin-top: 12px"
-              >
-                Import BGA Plays
-              </button>
-              <div id="bgaStatus" class="import-status"></div>
-            </div>
-
-            <!-- Yucata Import Panel -->
-            <div id="yucataPanel" style="display: none">
-              <div class="ctx-pill play-ctx">
-                <span class="dot"></span>
-                <span data-i18n="popupYucataCtx">Yucata</span>
-              </div>
-              <p class="card-lead" data-i18n="popupYucataLead">
-                Import your play history to track stats and earn BGM badges
-              </p>
-              <button
-                id="yucataImportBtn"
-                class="btn-primary"
-                data-i18n="popupYucataButton"
-                style="margin-top: 12px"
-              >
-                Import Yucata Plays
-              </button>
-              <div id="yucataStatus" class="import-status"></div>
-            </div>
-
-            <!-- BGG Plays Import Panel -->
-            <div id="bggPanel" style="display: none">
-              <div class="ctx-pill play-ctx">
-                <span class="dot"></span>
-                <span data-i18n="popupBggCtx">BoardGameGeek</span>
-              </div>
-              <p class="card-lead" data-i18n="popupBggLead">
-                Import your BGG play history to track stats and earn BGM badges
-              </p>
-              <button
-                id="bggImportBtn"
-                class="btn-primary"
-                data-i18n="popupBggButton"
-                style="margin-top: 12px"
-              >
-                Import BGG Plays
-              </button>
-              <div id="bggStatus" class="import-status"></div>
-            </div>
-
-            <!-- Tabletopia Import Panel -->
-            <div id="tabletopiaPanel" style="display: none">
-              <div class="ctx-pill play-ctx">
-                <span class="dot"></span>
-                <span data-i18n="popupTabletopiaCtx">Tabletopia</span>
-              </div>
-              <p class="card-lead" data-i18n="popupTabletopiaLead">
-                Import your play history to track stats and earn BGM badges
-              </p>
-              <button
-                id="tabletopiaImportBtn"
-                class="btn-primary"
-                data-i18n="popupTabletopiaButton"
-                style="margin-top: 12px"
-              >
-                Import Tabletopia Plays
-              </button>
-              <div id="tabletopiaStatus" class="import-status"></div>
-            </div>
-
-            <!-- Ludopedia Import Panel -->
-            <div id="ludopediaPanel" style="display: none">
-              <div class="ctx-pill play-ctx">
-                <span class="dot"></span>
-                <span data-i18n="popupLudopediaCtx">Ludopedia</span>
-              </div>
-              <p class="card-lead" data-i18n="popupLudopediaLead">
-                Import your play history to track stats and earn BGM badges
-              </p>
-              <button
-                id="ludopediaImportBtn"
-                class="btn-primary"
-                data-i18n="popupLudopediaButton"
-                style="margin-top: 12px"
-              >
-                Import Ludopedia Plays
-              </button>
-              <div id="ludopediaStatus" class="import-status"></div>
-            </div>
-
-            <!-- SpielByWeb Import Panel -->
-            <div id="spielbywebPanel" style="display: none">
-              <div class="ctx-pill play-ctx">
-                <span class="dot"></span>
-                <span data-i18n="popupSpielByWebCtx">SpielByWeb</span>
-              </div>
-              <p class="card-lead" data-i18n="popupSpielByWebLead">
-                Import your play history to track stats and earn BGM badges
-              </p>
-              <button
-                id="spielbywebImportBtn"
-                class="btn-primary"
-                data-i18n="popupSpielByWebButton"
-                style="margin-top: 12px"
-              >
-                Import SpielByWeb Plays
-              </button>
-              <div id="spielbywebStatus" class="import-status"></div>
-            </div>
-
-            <!-- BGG Collection Sync -->
-            <div id="bggSyncPanel" style="display: none">
-              <div class="sync-divider"></div>
-              <p class="section-label" data-i18n="popupBggSyncTitle">Sync BGG Collection</p>
-              <p class="card-body-text" data-i18n="popupBggSyncBody">
-                Import your owned games, wishlist and ratings from BoardGameGeek.
-              </p>
-              <p class="bgg-sync-user-row" id="bggSyncAsRow" style="display: none">
-                <span id="bggSyncAsText"></span
-                ><a href="#" id="bggSyncClear" class="bgg-sync-clear" data-i18n="popupBggSyncNotYou"
-                  >not you?</a
+              <div id="spielbywebPanel" style="display: none" class="ext-platform-panel">
+                <div class="ctx-pill play-ctx">
+                  <span class="dot"></span><span data-i18n="popupSpielByWebCtx">SpielByWeb</span>
+                </div>
+                <p class="card-lead" data-i18n="popupSpielByWebLead">
+                  Import your play history to track stats and earn BGM badges
+                </p>
+                <button
+                  id="spielbywebImportBtn"
+                  class="btn-primary"
+                  data-i18n="popupSpielByWebButton"
                 >
-              </p>
-              <button
-                id="bggSyncBtn"
-                class="btn-primary"
-                data-i18n="popupBggSyncButton"
-                disabled
-                style="margin-top: 10px"
+                  Import SpielByWeb Plays
+                </button>
+                <div id="spielbywebStatus" class="import-status"></div>
+              </div>
+
+              <!-- Strip 3: BGG Collection sync -->
+              <div class="ext-strip" id="strip-bgg">
+                <div class="ext-strip-icon">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                  </svg>
+                </div>
+                <div class="ext-strip-body">
+                  <div class="ext-strip-title">BGG Collection sync</div>
+                  <div class="ext-strip-sub">
+                    Import owned, wishlist and ratings from BoardGameGeek
+                  </div>
+                </div>
+              </div>
+              <div id="bggSyncPanel" style="display: none" class="ext-platform-panel">
+                <p class="section-label" data-i18n="popupBggSyncTitle">Sync BGG Collection</p>
+                <p class="card-body-text" data-i18n="popupBggSyncBody">
+                  Import your owned games, wishlist and ratings from BoardGameGeek.
+                </p>
+                <p class="bgg-sync-user-row" id="bggSyncAsRow" style="display: none">
+                  <span id="bggSyncAsText"></span
+                  ><a
+                    href="#"
+                    id="bggSyncClear"
+                    class="bgg-sync-clear"
+                    data-i18n="popupBggSyncNotYou"
+                    >not you?</a
+                  >
+                </p>
+                <button id="bggSyncBtn" class="btn-primary" data-i18n="popupBggSyncButton" disabled>
+                  Import Collection
+                </button>
+                <div id="bggSyncStatus" class="import-status"></div>
+              </div>
+            </div>
+            <!-- /.ext-strips -->
+
+            <div class="ext-footer">
+              <a
+                href="https://github.com/BoardGameMatcher/toolbox-extension/issues/new?template=site-request.md"
+                target="_blank"
+                rel="noopener"
+                class="ext-footer-link"
+                >Missing a site? Request it &rarr;</a
               >
-                Import Collection
-              </button>
-              <div id="bggSyncStatus" class="import-status"></div>
+              <a
+                href="https://github.com/BoardGameMatcher/toolbox-extension/issues/new"
+                target="_blank"
+                rel="noopener"
+                class="ext-footer-link"
+                >Found an issue? Report it &rarr;</a
+              >
             </div>
           </div>
           <!-- /tab-extract -->
@@ -386,11 +427,10 @@
                   autocomplete="off"
                 />
               </div>
-              <div class="col-chips-row" id="col-chips-row">
-                <span class="col-chips-label" data-i18n="popupCollAddTo">Add to:</span>
-                <span class="col-chips-readout" id="col-chips-readout"></span>
+              <div class="col-chips-section" id="col-chips-row">
+                <div class="col-chips-section-label" data-i18n="popupCollSaveAs">Save as</div>
+                <div class="col-chips" id="col-chips"></div>
               </div>
-              <div class="col-chips" id="col-chips"></div>
               <div class="wl-loading" id="wl-loading" style="display: none">Searching…</div>
 
               <!-- Search results list -->
@@ -462,7 +502,21 @@
             <div id="dash-logged-in" style="display: none">
               <div class="dash-rows">
                 <a class="dash-row" id="dash-messages" href="#">
-                  <span class="dash-row-icon">💬</span>
+                  <span class="dash-row-icon">
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                  </span>
                   <div class="dash-row-body">
                     <span class="dash-row-title" data-i18n="dashRowMessages"></span>
                     <span class="dash-row-sub" id="dash-messages-sub"></span>
@@ -471,7 +525,24 @@
                   <span class="dash-row-arrow">›</span>
                 </a>
                 <a class="dash-row" id="dash-matches" href="#">
-                  <span class="dash-row-icon">🤝</span>
+                  <span class="dash-row-icon">
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                      <circle cx="9" cy="7" r="4" />
+                      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                  </span>
                   <div class="dash-row-body">
                     <span class="dash-row-title" data-i18n="dashRowMatches"></span>
                     <span class="dash-row-sub" id="dash-matches-sub"></span>
@@ -480,7 +551,22 @@
                   <span class="dash-row-arrow">›</span>
                 </a>
                 <a class="dash-row" id="dash-notifs" href="#">
-                  <span class="dash-row-icon">🔔</span>
+                  <span class="dash-row-icon">
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                    </svg>
+                  </span>
                   <div class="dash-row-body">
                     <span class="dash-row-title" data-i18n="dashRowNotifications"></span>
                     <span class="dash-row-sub" id="dash-notifs-sub"></span>
@@ -511,16 +597,104 @@
 
           <!-- ══ MORE TAB ══ -->
           <div id="tab-more" class="tab-pane">
-            <div class="more-list">
-              <button class="more-item" id="settings-more-btn">
-                <span class="more-icon">⚙️</span>
-                <div class="more-info">
-                  <div class="more-title">Settings</div>
-                  <div class="more-sub">Language, preferences</div>
-                </div>
-                <span class="more-chevron">›</span>
-              </button>
+            <div class="more-section">
+              <div class="more-section-label" data-i18n="moreSectionApp">App</div>
+              <div class="more-section-list">
+                <button class="more-item" id="settings-more-btn">
+                  <span class="more-icon-svg">
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <circle cx="12" cy="12" r="3" />
+                      <path
+                        d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+                      />
+                    </svg>
+                  </span>
+                  <div class="more-info">
+                    <div class="more-title" data-i18n="moreSettings">Settings</div>
+                    <div class="more-sub" data-i18n="moreSettingsSub">Language, preferences</div>
+                  </div>
+                  <span class="more-chevron">›</span>
+                </button>
+              </div>
             </div>
+            <div class="more-section">
+              <div class="more-section-label" data-i18n="moreSectionAbout">About</div>
+              <div class="more-section-list">
+                <a
+                  class="more-item"
+                  id="more-feedback-btn"
+                  href="https://github.com/BoardGameMatcher/toolbox-extension/issues/new"
+                  target="_blank"
+                  rel="noopener"
+                  style="text-decoration: none; color: inherit"
+                >
+                  <span class="more-icon-svg">
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                  </span>
+                  <div class="more-info">
+                    <div class="more-title" data-i18n="moreFeedback">Send feedback</div>
+                    <div class="more-sub" data-i18n="moreFeedbackSub">
+                      Report a bug or request a feature
+                    </div>
+                  </div>
+                  <span class="more-chevron">›</span>
+                </a>
+                <a
+                  class="more-item"
+                  id="more-rate-btn"
+                  href="https://chrome.google.com/webstore/detail/bgm-toolbox"
+                  target="_blank"
+                  rel="noopener"
+                  style="text-decoration: none; color: inherit"
+                >
+                  <span class="more-icon-svg">
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <polygon
+                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                      />
+                    </svg>
+                  </span>
+                  <div class="more-info">
+                    <div class="more-title" data-i18n="moreRate">Rate this extension</div>
+                    <div class="more-sub" data-i18n="moreRateSub">5 stars help a lot ⭐</div>
+                  </div>
+                  <span class="more-chevron">›</span>
+                </a>
+              </div>
+            </div>
+            <div class="more-version">BGM Toolbox v0.6.1</div>
           </div>
           <!-- /tab-more -->
         </div>
