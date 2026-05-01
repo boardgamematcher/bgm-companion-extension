@@ -9,7 +9,8 @@ let currentDomain = null;
 let currentPattern = null;
 let currentUser = null;
 let bggUsername = null;
-let siteContext = 'neutral'; // 'shop' | 'bga' | 'yucata' | 'bgg' | 'neutral'
+let siteContext = 'neutral'; // 'shop' | 'bga' | 'yucata' | 'bgg' | 'bgg-game' | 'neutral'
+let bggGameName = null;
 
 // State held across the extraction review panel
 let _reviewTab = null;
@@ -91,7 +92,7 @@ function setupEventListeners() {
   });
 
   document.getElementById('bn-extract').addEventListener('click', () => switchTab('extract'));
-  document.getElementById('bn-collection').addEventListener('click', () => switchTab('collection'));
+  document.getElementById('bn-games').addEventListener('click', () => switchTab('games'));
   document.getElementById('bn-dashboard').addEventListener('click', () => switchTab('dashboard'));
   document.getElementById('bn-more').addEventListener('click', () => switchTab('more'));
 
@@ -152,6 +153,8 @@ function applyCardLayout() {
     bulkBtn.disabled = !hasPagination;
     if (bnExtract) bnExtract.classList.add('compatible');
     switchTab('extract');
+  } else if (siteContext === 'bgg-game') {
+    switchTab('games');
   } else if (siteContext === 'bga' || siteContext === 'yucata' || siteContext === 'bgg') {
     // Platform panels are managed by the import scripts; just activate the tab
     if (bnExtract) bnExtract.classList.add('compatible');
@@ -179,6 +182,13 @@ function applyCardLayout() {
     cardNeutral.style.display = '';
     if (siteContext === 'shop' && _activeTabId && currentPattern) {
       loadPopupWishlistMatches(_activeTabId, currentPattern);
+    }
+    if (siteContext === 'bgg-game' && bggGameName) {
+      const input = document.getElementById('wishlist-input');
+      if (input) {
+        input.value = bggGameName;
+        input.dispatchEvent(new Event('input'));
+      }
     }
   }
 }
@@ -307,7 +317,22 @@ async function checkSiteSupport() {
       return;
     }
     if (url.hostname.includes('boardgamegeek.com')) {
-      siteContext = 'bgg';
+      const gameMatch = url.pathname.match(/^\/boardgame\/\d+\/([^/]+)/);
+      if (gameMatch) {
+        siteContext = 'bgg-game';
+        try {
+          const results = await chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            func: () => document.title,
+          });
+          const rawTitle = results?.[0]?.result || '';
+          bggGameName = rawTitle.replace(/\s*\|.*$/, '').trim() || gameMatch[1].replace(/-/g, ' ');
+        } catch (_e) {
+          bggGameName = gameMatch[1].replace(/-/g, ' ');
+        }
+      } else {
+        siteContext = 'bgg';
+      }
       applyCardLayout();
       return;
     }
