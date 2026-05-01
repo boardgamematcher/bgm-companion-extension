@@ -95,6 +95,8 @@ function setupEventListeners() {
     updateReviewCount();
   });
 
+  document.getElementById('gd-prev').addEventListener('click', () => navigateGameDetail(-1));
+  document.getElementById('gd-next').addEventListener('click', () => navigateGameDetail(1));
   document.getElementById('success-extract-again').addEventListener('click', hideSuccessState);
   document.getElementById('success-link').addEventListener('click', (e) => {
     e.preventDefault();
@@ -1108,11 +1110,17 @@ function handleWishlistInput(event) {
 function handleWishlistKeydown(e) {
   const card = document.getElementById('gd-card');
 
-  // Card is open: Escape returns to results, everything else goes through
+  // Card is open: Escape closes, arrow keys navigate prev/next
   if (card.style.display !== 'none') {
     if (e.key === 'Escape') {
       e.preventDefault();
       hideGameDetail();
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      navigateGameDetail(-1);
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      navigateGameDetail(1);
     }
     return;
   }
@@ -1292,6 +1300,17 @@ function buildWishlistRow(game) {
   return row;
 }
 
+function navigateGameDetail(delta) {
+  const total = wishlistPageGames.length;
+  if (total === 0) return;
+  const newIdx = Math.max(0, Math.min(total - 1, wishlistHighlightIndex + delta));
+  if (newIdx === wishlistHighlightIndex) return;
+  const rows = [...document.querySelectorAll('#wishlist-results .wl-result')];
+  setWishlistHighlight(newIdx, rows);
+  const game = wishlistPageGames[newIdx];
+  if (game) renderGameDetail(game);
+}
+
 function hideGameDetail() {
   document.getElementById('gd-card').style.display = 'none';
   document.getElementById('wl-search-view').style.display = '';
@@ -1304,6 +1323,18 @@ async function renderGameDetail(game) {
 
   const card = document.getElementById('gd-card');
   card.style.display = '';
+
+  // Nav arrows
+  const total = wishlistPageGames.length;
+  const idx = wishlistHighlightIndex >= 0 ? wishlistHighlightIndex : 0;
+  const nav = document.getElementById('gd-nav');
+  if (nav) nav.style.display = total > 1 ? '' : 'none';
+  const navPos = document.getElementById('gd-nav-pos');
+  if (navPos) navPos.textContent = `${idx + 1} / ${total}`;
+  const prevBtn = document.getElementById('gd-prev');
+  if (prevBtn) prevBtn.disabled = idx <= 0;
+  const nextBtn = document.getElementById('gd-next');
+  if (nextBtn) nextBtn.disabled = idx >= total - 1;
 
   // Cover image
   const cover = document.getElementById('gd-cover');
