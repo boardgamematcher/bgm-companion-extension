@@ -653,11 +653,13 @@ body {
   transition: background var(--transition-fast);
 }
 
-.wl-game-link:hover {
+.wl-game-link:hover,
+.wl-result--highlighted .wl-game-link {
   background: var(--bg-hover);
 }
 
-.wl-game-link:hover .wl-name {
+.wl-game-link:hover .wl-name,
+.wl-result--highlighted .wl-name {
   color: var(--amber);
 }
 
