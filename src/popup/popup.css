@@ -1356,18 +1356,8 @@ body {
 }
 
 /* ── Game detail card (gd-*) ── */
-.gd-back {
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  font-size: 11px;
-  font-weight: 600;
-  padding: 0 0 10px;
-  cursor: pointer;
-  transition: color var(--transition-fast);
-}
-.gd-back:hover {
-  color: var(--text-primary);
+#gd-card {
+  padding-top: 4px;
 }
 
 .gd-cover-row {
@@ -1425,6 +1415,30 @@ body {
 .gd-rating-label {
   font-size: 10px;
   color: var(--text-muted);
+}
+
+.gd-no-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.gd-stars {
+  color: var(--text-muted);
+  font-size: 13px;
+  letter-spacing: 1px;
+}
+
+.gd-rate-link {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--amber);
+  text-decoration: none;
+}
+
+.gd-rate-link:hover {
+  text-decoration: underline;
 }
 
 .gd-pills {

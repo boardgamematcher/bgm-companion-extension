@@ -61,7 +61,6 @@ function setupEventListeners() {
   document.getElementById('shop-signin-btn').addEventListener('click', handleLogin);
   document.getElementById('shop-signup-link').addEventListener('click', handleSignup);
   document.getElementById('wishlist-input').addEventListener('input', handleWishlistInput);
-  document.getElementById('gd-back').addEventListener('click', hideGameDetail);
   document.getElementById('user-avatar').addEventListener('click', handleAvatarClick);
   document.getElementById('bggSyncBtn').addEventListener('click', handleBggSync);
   document.getElementById('bggSyncClear').addEventListener('click', handleBggSyncClear);
@@ -1065,6 +1064,7 @@ function renderWishlistCount() {
 }
 
 function handleWishlistInput(event) {
+  if (document.getElementById('gd-card').style.display !== 'none') hideGameDetail();
   const query = event.target.value.trim();
   clearTimeout(wishlistSearchTimer);
   if (wishlistSearchAbort) {
@@ -1229,15 +1229,11 @@ function buildWishlistRow(game) {
 function hideGameDetail() {
   document.getElementById('gd-card').style.display = 'none';
   document.getElementById('wl-search-view').style.display = '';
-  document.getElementById('col-chips-row').style.display = '';
-  document.getElementById('col-chips').style.display = '';
   document.getElementById('wl-footer').style.display = '';
 }
 
 async function renderGameDetail(game) {
   document.getElementById('wl-search-view').style.display = 'none';
-  document.getElementById('col-chips-row').style.display = 'none';
-  document.getElementById('col-chips').style.display = 'none';
   document.getElementById('wl-footer').style.display = 'none';
 
   const card = document.getElementById('gd-card');
@@ -1258,25 +1254,37 @@ async function renderGameDetail(game) {
     ? String(game.year_published)
     : '';
 
-  // Rating
+  // Rating — show score badge if available, otherwise invite user to rate
   const ratingWrap = document.getElementById('gd-rating');
+  const noRatingWrap = document.getElementById('gd-no-rating');
+  const gameUrl = bgmLink(`/boardgames/${encodeURIComponent(game.slug)}`, 'game-detail-card');
   if (game.bayes_average) {
     document.getElementById('gd-rating-val').textContent = String(game.bayes_average);
     ratingWrap.style.display = '';
+    noRatingWrap.style.display = 'none';
   } else {
     ratingWrap.style.display = 'none';
+    const rateLink = document.getElementById('gd-rate-link');
+    rateLink.href = gameUrl;
+    rateLink.onclick = (e) => {
+      e.preventDefault();
+      chrome.tabs.create({ url: gameUrl });
+    };
+    noRatingWrap.style.display = '';
   }
 
-  // CTA
+  // CTA — always link directly to the game detail page via slug
   const cta = document.getElementById('gd-cta');
-  const path = game.slug
-    ? `/boardgames/${encodeURIComponent(game.slug)}`
-    : `/search?q=${encodeURIComponent(game.name)}`;
-  cta.href = bgmLink(path, 'game-detail-card');
+  cta.href = gameUrl;
   cta.onclick = (e) => {
     e.preventDefault();
-    chrome.tabs.create({ url: cta.href });
+    chrome.tabs.create({ url: gameUrl });
   };
+
+  // Focus + select the search input so typing immediately starts a new search
+  const input = document.getElementById('wishlist-input');
+  input.focus();
+  input.select();
 
   // Collection pills — fetch user's current status for this game
   const pillsContainer = document.getElementById('gd-pills');
