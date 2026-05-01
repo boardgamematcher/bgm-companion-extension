@@ -413,18 +413,73 @@
           </div>
           <!-- /tab-collection -->
 
-          <!-- ══ PLAYERS TAB ══ -->
-          <div id="tab-friends" class="tab-pane">
-            <p class="card-lead" style="margin-top: 4px">
-              Find players who share your games, wishlist, or play style.
-            </p>
-            <a
-              class="btn-primary"
-              id="players-link"
-              href="#"
-              style="margin-top: 8px; display: block; text-align: center; text-decoration: none"
-              >Find players on BGM →</a
-            >
+          <!-- ══ DASHBOARD TAB ══ -->
+          <div id="tab-dashboard" class="tab-pane">
+            <!-- Logged out -->
+            <div id="dash-logged-out" style="display: none">
+              <p class="card-lead" style="margin-top: 4px" data-i18n="dashSigninLead"></p>
+              <button
+                class="btn-primary"
+                id="dash-signin-btn"
+                data-i18n="popupLoginButton"
+              ></button>
+              <a
+                class="card-sublink"
+                id="dash-signup-link"
+                href="#"
+                data-i18n="popupLoginSignup"
+              ></a>
+            </div>
+
+            <!-- Logged in -->
+            <div id="dash-logged-in" style="display: none">
+              <div class="dash-rows">
+                <a class="dash-row" id="dash-messages" href="#">
+                  <span class="dash-row-icon">💬</span>
+                  <div class="dash-row-body">
+                    <span class="dash-row-title" data-i18n="dashRowMessages"></span>
+                    <span class="dash-row-sub" id="dash-messages-sub"></span>
+                  </div>
+                  <span class="dash-badge" id="dash-messages-badge" style="display: none"></span>
+                  <span class="dash-row-arrow">›</span>
+                </a>
+                <a class="dash-row" id="dash-matches" href="#">
+                  <span class="dash-row-icon">🤝</span>
+                  <div class="dash-row-body">
+                    <span class="dash-row-title" data-i18n="dashRowMatches"></span>
+                    <span class="dash-row-sub" id="dash-matches-sub"></span>
+                  </div>
+                  <span class="dash-badge" id="dash-matches-badge" style="display: none"></span>
+                  <span class="dash-row-arrow">›</span>
+                </a>
+                <a class="dash-row" id="dash-notifs" href="#">
+                  <span class="dash-row-icon">🔔</span>
+                  <div class="dash-row-body">
+                    <span class="dash-row-title" data-i18n="dashRowNotifications"></span>
+                    <span class="dash-row-sub" id="dash-notifs-sub"></span>
+                  </div>
+                  <span class="dash-badge" id="dash-notifs-badge" style="display: none"></span>
+                  <span class="dash-row-arrow">›</span>
+                </a>
+              </div>
+
+              <div class="dash-links-label" data-i18n="dashQuickLinks"></div>
+              <div class="dash-links">
+                <a class="dash-link" id="dash-link-home" href="#" data-i18n="dashLinkHome"></a>
+                <a
+                  class="dash-link"
+                  id="dash-link-collections"
+                  href="#"
+                  data-i18n="dashLinkCollections"
+                ></a>
+                <a
+                  class="dash-link"
+                  id="dash-link-wishlist"
+                  href="#"
+                  data-i18n="dashLinkWishlist"
+                ></a>
+              </div>
+            </div>
           </div>
 
           <!-- ══ MORE TAB ══ -->
@@ -456,9 +511,9 @@
           <span class="bn-icon">📚</span>
           <span data-i18n="bnCollection">Collection</span>
         </button>
-        <button class="bn-item" id="bn-friends">
-          <span class="bn-icon">👥</span>
-          <span data-i18n="bnPlayers">Players</span>
+        <button class="bn-item" id="bn-dashboard">
+          <span class="bn-icon">🏠</span>
+          <span data-i18n="bnDashboard">Dashboard</span>
         </button>
         <button class="bn-item" id="bn-more">
           <span class="bn-icon">⚙️</span>
