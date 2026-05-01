@@ -1354,3 +1354,127 @@ body {
   border-color: var(--amber);
   color: var(--amber);
 }
+
+/* ── Game detail card (gd-*) ── */
+.gd-back {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 0 0 10px;
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+.gd-back:hover {
+  color: var(--text-primary);
+}
+
+.gd-cover-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.gd-cover {
+  width: 96px;
+  height: 96px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  background: var(--bg-elevated);
+  flex-shrink: 0;
+}
+
+.gd-meta {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.gd-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.gd-year {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.gd-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 2px;
+}
+
+.gd-rating-val {
+  background: var(--amber);
+  color: var(--amber-on-btn);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: var(--radius-pill);
+  line-height: 1;
+}
+
+.gd-rating-label {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.gd-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.gd-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  user-select: none;
+}
+.gd-pill:hover {
+  border-color: var(--border-hover);
+  color: var(--text-primary);
+}
+.gd-pill.active {
+  border-color: var(--amber);
+  background: var(--amber-glow);
+  color: var(--amber);
+}
+.gd-pill:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.gd-cta {
+  display: block;
+  text-align: center;
+  padding: 9px 0;
+  background: var(--amber);
+  color: var(--amber-on-btn);
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition: background var(--transition-fast);
+}
+.gd-cta:hover {
+  background: var(--amber-bright);
+}

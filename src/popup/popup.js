@@ -61,6 +61,7 @@ function setupEventListeners() {
   document.getElementById('shop-signin-btn').addEventListener('click', handleLogin);
   document.getElementById('shop-signup-link').addEventListener('click', handleSignup);
   document.getElementById('wishlist-input').addEventListener('input', handleWishlistInput);
+  document.getElementById('gd-back').addEventListener('click', hideGameDetail);
   document.getElementById('user-avatar').addEventListener('click', handleAvatarClick);
   document.getElementById('bggSyncBtn').addEventListener('click', handleBggSync);
   document.getElementById('bggSyncClear').addEventListener('click', handleBggSyncClear);
@@ -1189,10 +1190,7 @@ function buildWishlistRow(game) {
   link.href = '#';
   link.addEventListener('click', (e) => {
     e.preventDefault();
-    const path = game.slug
-      ? `/boardgames/${encodeURIComponent(game.slug)}`
-      : `/search?q=${encodeURIComponent(game.name)}`;
-    chrome.tabs.create({ url: bgmLink(path, 'search-result') });
+    renderGameDetail(game);
   });
 
   const thumb = document.createElement('img');
@@ -1226,6 +1224,105 @@ function buildWishlistRow(game) {
 
   row.append(link, zone);
   return row;
+}
+
+function hideGameDetail() {
+  document.getElementById('gd-card').style.display = 'none';
+  document.getElementById('wl-search-view').style.display = '';
+  document.getElementById('col-chips-row').style.display = '';
+  document.getElementById('col-chips').style.display = '';
+  document.getElementById('wl-footer').style.display = '';
+}
+
+async function renderGameDetail(game) {
+  document.getElementById('wl-search-view').style.display = 'none';
+  document.getElementById('col-chips-row').style.display = 'none';
+  document.getElementById('col-chips').style.display = 'none';
+  document.getElementById('wl-footer').style.display = 'none';
+
+  const card = document.getElementById('gd-card');
+  card.style.display = '';
+
+  // Cover image
+  const cover = document.getElementById('gd-cover');
+  if (game.image_url_large || game.image_url) {
+    cover.src = game.image_url_large || game.image_url;
+    cover.style.display = '';
+  } else {
+    cover.style.display = 'none';
+  }
+
+  // Name + year
+  document.getElementById('gd-name').textContent = game.name;
+  document.getElementById('gd-year').textContent = game.year_published
+    ? String(game.year_published)
+    : '';
+
+  // Rating
+  const ratingWrap = document.getElementById('gd-rating');
+  if (game.bayes_average) {
+    document.getElementById('gd-rating-val').textContent = String(game.bayes_average);
+    ratingWrap.style.display = '';
+  } else {
+    ratingWrap.style.display = 'none';
+  }
+
+  // CTA
+  const cta = document.getElementById('gd-cta');
+  const path = game.slug
+    ? `/boardgames/${encodeURIComponent(game.slug)}`
+    : `/search?q=${encodeURIComponent(game.name)}`;
+  cta.href = bgmLink(path, 'game-detail-card');
+  cta.onclick = (e) => {
+    e.preventDefault();
+    chrome.tabs.create({ url: cta.href });
+  };
+
+  // Collection pills — fetch user's current status for this game
+  const pillsContainer = document.getElementById('gd-pills');
+  pillsContainer.textContent = '';
+
+  let activeTypes = new Set();
+  try {
+    const res = await fetch(`${BGM_BASE_URL}/api/collections/${encodeURIComponent(game.id)}`, {
+      credentials: 'include',
+    });
+    if (res.ok) {
+      const data = await res.json();
+      activeTypes = new Set(data.collection_types || []);
+    }
+  } catch (_e) {
+    // no-op — pills start unchecked
+  }
+
+  for (const ct of COLLECTION_TYPES) {
+    const pill = document.createElement('button');
+    pill.type = 'button';
+    pill.className = 'gd-pill' + (activeTypes.has(ct.key) ? ' active' : '');
+    pill.textContent = `${ct.emoji} ${chrome.i18n.getMessage(ct.i18nKey) || ct.key}`;
+    pill.addEventListener('click', async () => {
+      pill.disabled = true;
+      const isActive = pill.classList.contains('active');
+      const method = isActive ? 'DELETE' : 'POST';
+      try {
+        const r = await fetch(
+          `${BGM_BASE_URL}/api/collections/${encodeURIComponent(game.id)}/${ct.key}`,
+          {
+            method,
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: '{}',
+          }
+        );
+        if (r.ok) pill.classList.toggle('active');
+      } catch (_e) {
+        // no-op
+      } finally {
+        pill.disabled = false;
+      }
+    });
+    pillsContainer.appendChild(pill);
+  }
 }
 
 async function addToCollection(game, btn) {
