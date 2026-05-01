@@ -386,18 +386,44 @@
                   autocomplete="off"
                 />
               </div>
-              <div class="col-chips-row">
+              <div class="col-chips-row" id="col-chips-row">
                 <span class="col-chips-label" data-i18n="popupCollAddTo">Add to:</span>
                 <span class="col-chips-readout" id="col-chips-readout"></span>
               </div>
               <div class="col-chips" id="col-chips"></div>
               <div class="wl-loading" id="wl-loading" style="display: none">Searching…</div>
-              <div class="wl-results" id="wishlist-results"></div>
-              <div class="wl-pagination" id="wl-pagination" style="display: none">
-                <button class="wl-page-btn" id="wl-prev">&#8592;</button>
-                <span class="wl-page-info" id="wl-page-info"></span>
-                <button class="wl-page-btn" id="wl-next">&#8594;</button>
+
+              <!-- Search results list -->
+              <div id="wl-search-view">
+                <div class="wl-results" id="wishlist-results"></div>
+                <div class="wl-pagination" id="wl-pagination" style="display: none">
+                  <button class="wl-page-btn" id="wl-prev">&#8592;</button>
+                  <span class="wl-page-info" id="wl-page-info"></span>
+                  <button class="wl-page-btn" id="wl-next">&#8594;</button>
+                </div>
               </div>
+
+              <!-- Game detail card (shown after selection) -->
+              <div id="gd-card" style="display: none">
+                <div class="gd-cover-row">
+                  <img class="gd-cover" id="gd-cover" src="" alt="" />
+                  <div class="gd-meta">
+                    <div class="gd-name" id="gd-name"></div>
+                    <div class="gd-year" id="gd-year"></div>
+                    <div class="gd-rating" id="gd-rating" style="display: none">
+                      <span class="gd-rating-val" id="gd-rating-val"></span>
+                      <span class="gd-rating-label">BGM score</span>
+                    </div>
+                    <div class="gd-no-rating" id="gd-no-rating" style="display: none">
+                      <span class="gd-stars">☆☆☆☆☆</span>
+                      <a class="gd-rate-link" id="gd-rate-link" href="#">Rate on BGM →</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="gd-pills" id="gd-pills"></div>
+                <a class="gd-cta" id="gd-cta" href="#">View on BoardGameMatcher →</a>
+              </div>
+
               <div class="wl-footer" id="wl-footer">
                 <span class="wl-count" id="wishlist-count"></span>
                 <a
