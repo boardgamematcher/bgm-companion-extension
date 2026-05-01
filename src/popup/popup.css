@@ -1155,9 +1155,12 @@ body {
 }
 
 .bn-icon {
-  font-size: 16px;
-  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+  width: 18px;
+  height: 18px;
 }
 
 .bn-dot {
