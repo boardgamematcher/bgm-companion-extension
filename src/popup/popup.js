@@ -95,6 +95,8 @@ function setupEventListeners() {
     updateReviewCount();
   });
 
+  document.getElementById('gd-prev').addEventListener('click', () => navigateGameDetail(-1));
+  document.getElementById('gd-next').addEventListener('click', () => navigateGameDetail(1));
   document.getElementById('success-extract-again').addEventListener('click', hideSuccessState);
   document.getElementById('success-link').addEventListener('click', (e) => {
     e.preventDefault();
@@ -149,13 +151,16 @@ function applyCardLayout() {
   const bnExtract = document.getElementById('bn-extract');
   if (bnExtract) bnExtract.classList.remove('compatible');
 
-  // Reset extract tab sub-sections
-  document.getElementById('extract-idle').style.display = 'none';
-  document.getElementById('extract-active').style.display = 'none';
+  // Reset extract strips
+  ['strip-shop', 'strip-play', 'strip-bgg'].forEach((id) => {
+    document.getElementById(id)?.classList.remove('active');
+  });
 
   if (siteContext === 'shop') {
-    document.getElementById('extract-active').style.display = '';
-    document.getElementById('extract-ctx-pill').style.display = '';
+    document.getElementById('strip-shop')?.classList.add('active');
+    const sub = document.getElementById('strip-shop-sub');
+    const shopName = document.getElementById('ctx-shop-name')?.textContent;
+    if (sub && shopName) sub.textContent = shopName;
     const btn = document.getElementById('extract-btn');
     btn.disabled = false;
     const bulkBtn = document.getElementById('bulk-extract-btn');
@@ -166,13 +171,21 @@ function applyCardLayout() {
     switchTab('extract');
   } else if (siteContext === 'bgg-game') {
     switchTab('games');
-  } else if (siteContext === 'bga' || siteContext === 'yucata' || siteContext === 'bgg') {
-    // Platform panels are managed by the import scripts; just activate the tab
+  } else if (
+    siteContext === 'bga' ||
+    siteContext === 'yucata' ||
+    siteContext === 'bgg' ||
+    siteContext === 'tabletopia' ||
+    siteContext === 'ludopedia' ||
+    siteContext === 'spielbyweb'
+  ) {
+    document.getElementById('strip-play')?.classList.add('active');
     if (bnExtract) bnExtract.classList.add('compatible');
     switchTab('extract');
-    if (siteContext === 'bgg' && currentUser) showBggSyncPanel(currentUser);
-  } else {
-    document.getElementById('extract-idle').style.display = '';
+    if (siteContext === 'bgg') {
+      document.getElementById('strip-bgg')?.classList.add('active');
+      if (currentUser) showBggSyncPanel(currentUser);
+    }
   }
 
   // Collection tab: show the right card based on auth state
@@ -1097,11 +1110,17 @@ function handleWishlistInput(event) {
 function handleWishlistKeydown(e) {
   const card = document.getElementById('gd-card');
 
-  // Card is open: Escape returns to results, everything else goes through
+  // Card is open: Escape closes, arrow keys navigate prev/next
   if (card.style.display !== 'none') {
     if (e.key === 'Escape') {
       e.preventDefault();
       hideGameDetail();
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      navigateGameDetail(-1);
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      navigateGameDetail(1);
     }
     return;
   }
@@ -1281,6 +1300,17 @@ function buildWishlistRow(game) {
   return row;
 }
 
+function navigateGameDetail(delta) {
+  const total = wishlistPageGames.length;
+  if (total === 0) return;
+  const newIdx = Math.max(0, Math.min(total - 1, wishlistHighlightIndex + delta));
+  if (newIdx === wishlistHighlightIndex) return;
+  const rows = [...document.querySelectorAll('#wishlist-results .wl-result')];
+  setWishlistHighlight(newIdx, rows);
+  const game = wishlistPageGames[newIdx];
+  if (game) renderGameDetail(game);
+}
+
 function hideGameDetail() {
   document.getElementById('gd-card').style.display = 'none';
   document.getElementById('wl-search-view').style.display = '';
@@ -1293,6 +1323,18 @@ async function renderGameDetail(game) {
 
   const card = document.getElementById('gd-card');
   card.style.display = '';
+
+  // Nav arrows
+  const total = wishlistPageGames.length;
+  const idx = wishlistHighlightIndex >= 0 ? wishlistHighlightIndex : 0;
+  const nav = document.getElementById('gd-nav');
+  if (nav) nav.style.display = total > 1 ? '' : 'none';
+  const navPos = document.getElementById('gd-nav-pos');
+  if (navPos) navPos.textContent = `${idx + 1} / ${total}`;
+  const prevBtn = document.getElementById('gd-prev');
+  if (prevBtn) prevBtn.disabled = idx <= 0;
+  const nextBtn = document.getElementById('gd-next');
+  if (nextBtn) nextBtn.disabled = idx >= total - 1;
 
   // Cover image
   const cover = document.getElementById('gd-cover');
@@ -1511,6 +1553,7 @@ async function loadDashboard(user) {
     const badge = document.getElementById('dash-messages-badge');
     badge.textContent = String(count);
     badge.style.display = '';
+    document.getElementById('dash-messages').classList.add('has-badge');
     const names = senders && senders.length > 0 ? senders.slice(0, 2).join(', ') : '';
     document.getElementById('dash-messages-sub').textContent = names
       ? chrome.i18n.getMessage('dashMsgFrom', [names])
@@ -1537,6 +1580,7 @@ async function loadDashMatches() {
       const badge = document.getElementById('dash-matches-badge');
       badge.textContent = String(matches.length);
       badge.style.display = '';
+      document.getElementById('dash-matches').classList.add('has-badge');
       const names = matches
         .slice(0, 2)
         .map((m) => m.username)
@@ -1562,6 +1606,7 @@ async function loadDashNotifications() {
       const badge = document.getElementById('dash-notifs-badge');
       badge.textContent = String(count);
       badge.style.display = '';
+      document.getElementById('dash-notifs').classList.add('has-badge');
       sub.textContent = chrome.i18n.getMessage(
         count === 1 ? 'dashNotifsUnread' : 'dashNotifsUnreadPlural',
         [String(count)]
