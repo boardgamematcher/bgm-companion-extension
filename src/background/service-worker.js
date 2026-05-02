@@ -64,6 +64,16 @@ chrome.runtime.onInstalled.addListener(async () => {
     title: 'Search "%s" on BoardGameMatcher',
     contexts: ['selection'],
   });
+  chrome.contextMenus.create({
+    id: 'bgm-extract-url-selection',
+    title: 'Extract Board Games from this URL',
+    contexts: ['selection'],
+  });
+  chrome.contextMenus.create({
+    id: 'bgm-search-game-popup',
+    title: 'Find "%s" in BGM extension',
+    contexts: ['selection'],
+  });
 });
 
 // Handle context menu clicks
@@ -71,7 +81,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   let extractUrl;
 
   if (info.menuItemId === 'bgm-extract-selection' && info.selectionText) {
-    extractUrl = BGM_BASE_URL + '/extract?url=' + encodeURIComponent(info.selectionText.trim());
+    extractUrl = BGM_BASE_URL + '/extract?text=' + encodeURIComponent(info.selectionText.trim());
   } else if (info.menuItemId === 'bgm-extract-link' && info.linkUrl) {
     extractUrl = BGM_BASE_URL + '/extract?url=' + encodeURIComponent(info.linkUrl);
   } else if (info.menuItemId === 'bgm-extract-page') {
@@ -83,7 +93,26 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 
   if (info.menuItemId === 'bgm-search-game' && info.selectionText) {
     chrome.tabs.create({
-      url: BGM_BASE_URL + '/games?q=' + encodeURIComponent(info.selectionText.trim()),
+      url: BGM_BASE_URL + '/search?q=' + encodeURIComponent(info.selectionText.trim()),
+    });
+    return;
+  }
+
+  if (info.menuItemId === 'bgm-extract-url-selection' && info.selectionText) {
+    const trimmed = info.selectionText.trim();
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+      chrome.tabs.create({ url: BGM_BASE_URL + '/extract?url=' + encodeURIComponent(trimmed) });
+    }
+    return;
+  }
+
+  if (info.menuItemId === 'bgm-search-game-popup' && info.selectionText) {
+    const query = info.selectionText.trim();
+    chrome.storage.session.set({ pendingPopupSearch: query }).then(() => {
+      chrome.action.openPopup().catch(() => {
+        // openPopup() not available in this browser/version — fall back to website search
+        chrome.tabs.create({ url: BGM_BASE_URL + '/search?q=' + encodeURIComponent(query) });
+      });
     });
     return;
   }
