@@ -179,7 +179,7 @@ function ratingFillPercent(rating) {
             <span class="bgm-stars-empty">★★★★★</span>
             <span class="bgm-stars-fill" style="width:${ratingFillPercent(game.bayes_average)}%">★★★★★</span>
           </div>
-          <span class="bgm-rating-value">${game.bayes_average.toFixed(1)}</span>
+          <span class="bgm-rating-value">${(game.bayes_average / 2).toFixed(1)}<span class="bgm-rating-denom">/5</span></span>
         </div>
         <span class="bgm-rating-label">${escapeHtml(ratingTier(game.bayes_average))}</span>
        </div>`

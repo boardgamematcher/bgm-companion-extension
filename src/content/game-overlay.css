@@ -157,6 +157,13 @@
   font-variant-numeric: tabular-nums !important;
 }
 
+.bgm-rating-denom {
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  color: #7b8d9e !important;
+  margin-left: 1px !important;
+}
+
 .bgm-rating-label {
   font-size: 11px !important;
   font-weight: 600 !important;
