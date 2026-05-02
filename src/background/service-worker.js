@@ -73,15 +73,18 @@ chrome.runtime.onInstalled.addListener(async () => {
 });
 
 // Show URL-extract item only when the selection is an actual URL.
-// onShown fires on every right-click; bail early for non-selection contexts.
-// refresh() must be called synchronously inside this listener.
-chrome.contextMenus.onShown.addListener((info) => {
-  if (!info.contexts.includes('selection')) return;
-  const t = (info.selectionText ?? '').trim();
-  const isUrl = t.startsWith('http://') || t.startsWith('https://');
-  chrome.contextMenus.update('bgm-extract-url-selection', { visible: isUrl });
-  chrome.contextMenus.refresh();
-});
+// onShown / refresh() are Firefox-only — guard so Chromium SW doesn't crash.
+// On Chromium the URL-extract item simply stays hidden (visible: false), and
+// the click handler ignores non-URL selections defensively.
+if (chrome.contextMenus.onShown && chrome.contextMenus.refresh) {
+  chrome.contextMenus.onShown.addListener((info) => {
+    if (!info.contexts.includes('selection')) return;
+    const t = (info.selectionText ?? '').trim();
+    const isUrl = t.startsWith('http://') || t.startsWith('https://');
+    chrome.contextMenus.update('bgm-extract-url-selection', { visible: isUrl });
+    chrome.contextMenus.refresh();
+  });
+}
 
 // Handle context menu clicks
 chrome.contextMenus.onClicked.addListener((info, tab) => {
