@@ -93,16 +93,24 @@
 
   // ── Resolve game via service worker ──────────────────────────────────────
 
+  console.debug('[BGM overlay] resolving game for title:', title);
+
   let gameData;
   try {
-    const res = await chrome.runtime.sendMessage({ action: 'resolveGameOverlay', title });
+    const sendPromise = chrome.runtime.sendMessage({ action: 'resolveGameOverlay', title });
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('timeout')), 10000)
+    );
+    const res = await Promise.race([sendPromise, timeoutPromise]);
+    console.debug('[BGM overlay] SW response:', res);
     if (!res || res.error || !res.game) {
-      overlay.remove();
+      showOverlayError(overlay, res?.error || 'no_game');
       return;
     }
     gameData = res;
-  } catch (_) {
-    overlay.remove();
+  } catch (e) {
+    console.warn('[BGM overlay] SW call failed:', e.message);
+    showOverlayError(overlay, e.message);
     return;
   }
 
@@ -177,6 +185,12 @@
     });
   });
 })();
+
+function showOverlayError(overlay, code) {
+  const loadingEl = overlay.querySelector('.bgm-overlay-loading');
+  if (!loadingEl) return;
+  loadingEl.outerHTML = `<div class="bgm-overlay-error">${escapeHtml(code)}</div>`;
+}
 
 function escapeHtml(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
