@@ -1,6 +1,41 @@
 // BGM Game Overlay — BGM-976
 // Injects a personal game status card on supported retailer product detail pages.
 
+const BGM_BASE_URL = 'https://boardgamematcher.com';
+const GAME_PATH_SEGMENTS = { en: 'game', fr: 'jeu', de: 'spiel', es: 'juego', it: 'gioco' };
+
+function localizedGameUrl(slug) {
+  const lang = (chrome.i18n.getUILanguage() || 'en').split('-')[0];
+  const segment = GAME_PATH_SEGMENTS[lang] || 'game';
+  const prefix = lang !== 'en' ? `/${lang}` : '';
+  return (
+    `${BGM_BASE_URL}${prefix}/${segment}/${encodeURIComponent(slug)}` +
+    `?utm_source=extension&utm_medium=overlay&utm_campaign=retailer-overlay`
+  );
+}
+
+// Map BGG bayes_average (≈4.5–8.5 in practice) to Steam-style sentiment + 5 stars.
+function ratingTier(rating) {
+  if (rating >= 8.0) return 'Outstanding';
+  if (rating >= 7.5) return 'Excellent';
+  if (rating >= 7.0) return 'Very good';
+  if (rating >= 6.5) return 'Good';
+  if (rating >= 6.0) return 'Solid';
+  if (rating >= 5.5) return 'Mixed';
+  if (rating >= 5.0) return 'Below average';
+  return 'Poor';
+}
+
+function ratingStars(rating) {
+  // Convert /10 → /5 stars, rounded to nearest half
+  const score = (rating / 10) * 5;
+  const halves = Math.round(score * 2);
+  const full = Math.floor(halves / 2);
+  const half = halves % 2 === 1;
+  const empty = 5 - full - (half ? 1 : 0);
+  return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(empty);
+}
+
 (async function bgmGameOverlay() {
   if (typeof chrome === 'undefined' || !chrome.runtime) return;
 
@@ -143,8 +178,8 @@
 
   const ratingHtml = game.bayes_average
     ? `<div class="bgm-overlay-rating">
-        <span class="bgm-rating-badge">${game.bayes_average}</span>
-        <span class="bgm-rating-label">BGM community rating</span>
+        <span class="bgm-rating-stars">${ratingStars(game.bayes_average)}</span>
+        <span class="bgm-rating-label">${escapeHtml(ratingTier(game.bayes_average))}</span>
        </div>`
     : '';
 
@@ -163,7 +198,7 @@
     </div>
     <div class="bgm-overlay-footer">
       <a class="bgm-overlay-open-link"
-         href="https://boardgamematcher.com/boardgames/${game.slug}"
+         href="${localizedGameUrl(game.slug)}"
          target="_blank" rel="noopener noreferrer">
         Open on BoardGameMatcher →
       </a>
