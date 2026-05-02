@@ -50,11 +50,6 @@ chrome.runtime.onInstalled.addListener(async () => {
     contexts: ['page'],
   });
   chrome.contextMenus.create({
-    id: 'bgm-extract-selection',
-    title: 'Extract Board Games from "%s"',
-    contexts: ['selection'],
-  });
-  chrome.contextMenus.create({
     id: 'bgm-extract-link',
     title: 'Extract Board Games from this link',
     contexts: ['link'],
@@ -68,6 +63,7 @@ chrome.runtime.onInstalled.addListener(async () => {
     id: 'bgm-extract-url-selection',
     title: 'Extract Board Games from this URL',
     contexts: ['selection'],
+    visible: false,
   });
   chrome.contextMenus.create({
     id: 'bgm-search-game-popup',
@@ -76,13 +72,22 @@ chrome.runtime.onInstalled.addListener(async () => {
   });
 });
 
+// Show URL-extract item only when the selection is an actual URL.
+// onShown fires on every right-click; bail early for non-selection contexts.
+// refresh() must be called synchronously inside this listener.
+chrome.contextMenus.onShown.addListener((info) => {
+  if (!info.contexts.includes('selection')) return;
+  const t = (info.selectionText ?? '').trim();
+  const isUrl = t.startsWith('http://') || t.startsWith('https://');
+  chrome.contextMenus.update('bgm-extract-url-selection', { visible: isUrl });
+  chrome.contextMenus.refresh();
+});
+
 // Handle context menu clicks
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   let extractUrl;
 
-  if (info.menuItemId === 'bgm-extract-selection' && info.selectionText) {
-    extractUrl = BGM_BASE_URL + '/extract?text=' + encodeURIComponent(info.selectionText.trim());
-  } else if (info.menuItemId === 'bgm-extract-link' && info.linkUrl) {
+  if (info.menuItemId === 'bgm-extract-link' && info.linkUrl) {
     extractUrl = BGM_BASE_URL + '/extract?url=' + encodeURIComponent(info.linkUrl);
   } else if (info.menuItemId === 'bgm-extract-page') {
     const pageUrl = info.pageUrl || tab?.url;
