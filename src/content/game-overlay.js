@@ -14,7 +14,13 @@
         return /\/fr\/[^/]+\/\d+-[^/]+\.html/.test(location.pathname);
       },
       extractTitle() {
-        // Try structured data first
+        // Philibert renders the clean product name in h1#product_name.
+        // og:title is unusable ("Acheter <name> - Jeu de société - <publisher>")
+        // and JSON-LD isn't always present server-side.
+        const productName = document.querySelector('h1#product_name');
+        if (productName) return productName.textContent.trim();
+
+        // JSON-LD fallback (in case Philibert injects it later)
         for (const el of document.querySelectorAll('script[type="application/ld+json"]')) {
           try {
             const data = JSON.parse(el.textContent);
@@ -28,10 +34,16 @@
             // skip malformed JSON-LD blocks
           }
         }
-        // og:title
+
+        // Last resort: strip the Philibert prefix/suffix from og:title
         const og = document.querySelector('meta[property="og:title"]');
-        if (og?.content) return og.content.trim();
-        // h1 fallback
+        if (og?.content) {
+          return og.content
+            .trim()
+            .replace(/^Acheter\s+/i, '')
+            .replace(/\s+-\s+Jeu de société.*$/i, '')
+            .trim();
+        }
         return document.querySelector('h1')?.textContent?.trim() ?? null;
       },
     },
