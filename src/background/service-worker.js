@@ -73,15 +73,18 @@ chrome.runtime.onInstalled.addListener(async () => {
 });
 
 // Show URL-extract item only when the selection is an actual URL.
-// onShown fires on every right-click; bail early for non-selection contexts.
-// refresh() must be called synchronously inside this listener.
-chrome.contextMenus.onShown.addListener((info) => {
-  if (!info.contexts.includes('selection')) return;
-  const t = (info.selectionText ?? '').trim();
-  const isUrl = t.startsWith('http://') || t.startsWith('https://');
-  chrome.contextMenus.update('bgm-extract-url-selection', { visible: isUrl });
-  chrome.contextMenus.refresh();
-});
+// onShown / refresh() are Firefox-only — guard so Chromium SW doesn't crash.
+// On Chromium the URL-extract item simply stays hidden (visible: false), and
+// the click handler ignores non-URL selections defensively.
+if (chrome.contextMenus.onShown && chrome.contextMenus.refresh) {
+  chrome.contextMenus.onShown.addListener((info) => {
+    if (!info.contexts.includes('selection')) return;
+    const t = (info.selectionText ?? '').trim();
+    const isUrl = t.startsWith('http://') || t.startsWith('https://');
+    chrome.contextMenus.update('bgm-extract-url-selection', { visible: isUrl });
+    chrome.contextMenus.refresh();
+  });
+}
 
 // Handle context menu clicks
 chrome.contextMenus.onClicked.addListener((info, tab) => {
@@ -298,6 +301,30 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'getWishlist') {
     fetchWishlist().then((wishlist) => sendResponse({ wishlist }));
     return true;
+  }
+
+  if (message.action === 'resolveGameOverlay') {
+    resolveGameOverlay(message.title)
+      .then((data) => sendResponse(data))
+      .catch(() => sendResponse({ error: 'resolve_failed' }));
+    return true;
+  }
+
+  if (message.action === 'setCollectionType') {
+    setCollectionType(message.gameId, message.collectionType, message.add)
+      .then(() => sendResponse({ success: true }))
+      .catch(() => sendResponse({ success: false }));
+    return true;
+  }
+
+  // Open a URL in a new tab. Used by the overlay's links so host-page
+  // global click handlers (e.g. Philibert's) can't swallow them.
+  if (message.action === 'openTab' && typeof message.url === 'string') {
+    if (message.url.startsWith('https://') || message.url.startsWith('http://')) {
+      chrome.tabs.create({ url: message.url });
+    }
+    sendResponse({ success: true });
+    return false;
   }
 });
 
@@ -648,6 +675,94 @@ async function fetchWishlist() {
   } catch (_e) {
     return null;
   }
+}
+
+// ── Game overlay (BGM-976) ────────────────────────────────────────────────
+
+const OVERLAY_GAME_CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
+
+function normalizeForMatch(name) {
+  return String(name || '')
+    .toLowerCase()
+    .replace(/[''`]/g, '')
+    .replace(/[^\w\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// Resolve a retailer page title to a BGM game + the user's collection types.
+// Returns { game: {id, name, slug, bayes_average}, collectionTypes: [] } or { error }.
+async function resolveGameOverlay(title) {
+  if (!title || typeof title !== 'string') return { error: 'invalid_title' };
+
+  // Per-tab session cache keyed by normalized title
+  const cacheKey = `bgmOverlayGame:${normalizeForMatch(title)}`;
+  let game;
+  try {
+    const cached = await chrome.storage.session.get(cacheKey);
+    const entry = cached[cacheKey];
+    if (entry && Date.now() - entry.timestamp < OVERLAY_GAME_CACHE_TTL) {
+      game = entry.game;
+    }
+  } catch (_) {
+    // ignore
+  }
+
+  if (!game) {
+    try {
+      const url = `${BGM_BASE_URL}/api/games/search?q=${encodeURIComponent(title)}`;
+      debug('[BGM overlay] fetching', url);
+      const res = await fetch(url, { credentials: 'include' });
+      debug('[BGM overlay] search status', res.status);
+      if (!res.ok) return { error: `search_${res.status}` };
+      const data = await res.json();
+      const games = data.games || [];
+      debug('[BGM overlay] search returned', games.length, 'games');
+      if (games.length === 0) return { error: 'not_found' };
+
+      // Prefer exact normalized match; otherwise fall back to first result
+      const wanted = normalizeForMatch(title);
+      game = games.find((g) => normalizeForMatch(g.name) === wanted) || games[0];
+
+      try {
+        await chrome.storage.session.set({
+          [cacheKey]: { game, timestamp: Date.now() },
+        });
+      } catch (_) {
+        // ignore
+      }
+    } catch (e) {
+      console.warn('[BGM overlay] search failed:', e.message);
+      return { error: 'network: ' + e.message };
+    }
+  }
+
+  // Fetch the user's collection types for this game (requires login)
+  let collectionTypes = [];
+  try {
+    const res = await fetch(`${BGM_BASE_URL}/api/collections/${game.id}`, {
+      credentials: 'include',
+    });
+    if (res.ok) {
+      const data = await res.json();
+      collectionTypes = data.collection_types || [];
+    }
+  } catch (_) {
+    // ignore
+  }
+
+  return { game, collectionTypes };
+}
+
+// Add or remove a collection type for a game.
+async function setCollectionType(gameId, collectionType, add) {
+  const url = `${BGM_BASE_URL}/api/collections/${gameId}/${collectionType}`;
+  const res = await fetch(url, {
+    method: add ? 'POST' : 'DELETE',
+    credentials: 'include',
+    headers: { 'X-BGM-Source': 'toolbox' },
+  });
+  if (!res.ok) throw new Error(`status ${res.status}`);
 }
 
 // Import a BGG collection into BGM
