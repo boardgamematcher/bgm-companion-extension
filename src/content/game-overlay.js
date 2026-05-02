@@ -32,6 +32,20 @@ function ratingFillPercent(rating) {
   return Math.max(0, Math.min(100, Math.round(rating * 10)));
 }
 
+function escapeHtml(str) {
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function escapeAttr(str) {
+  return String(str).replace(/"/g, '&quot;');
+}
+
+function showOverlayError(overlay, code) {
+  const loadingEl = overlay.querySelector('.bgm-overlay-loading');
+  if (!loadingEl) return;
+  loadingEl.outerHTML = `<div class="bgm-overlay-error">${escapeHtml(code)}</div>`;
+}
+
 (async function bgmGameOverlay() {
   if (typeof chrome === 'undefined' || !chrome.runtime) return;
 
@@ -175,7 +189,7 @@ function ratingFillPercent(rating) {
   const ratingHtml = game.bayes_average
     ? `<div class="bgm-overlay-rating">
         <div class="bgm-rating-row">
-          <div class="bgm-rating-stars" aria-label="${game.bayes_average} out of 10">
+          <div class="bgm-rating-stars" aria-label="${(game.bayes_average / 2).toFixed(1)} out of 5">
             <span class="bgm-stars-empty">★★★★★</span>
             <span class="bgm-stars-fill" style="width:${ratingFillPercent(game.bayes_average)}%">★★★★★</span>
           </div>
@@ -253,17 +267,3 @@ function ratingFillPercent(rating) {
     });
   });
 })();
-
-function showOverlayError(overlay, code) {
-  const loadingEl = overlay.querySelector('.bgm-overlay-loading');
-  if (!loadingEl) return;
-  loadingEl.outerHTML = `<div class="bgm-overlay-error">${escapeHtml(code)}</div>`;
-}
-
-function escapeHtml(str) {
-  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
-
-function escapeAttr(str) {
-  return String(str).replace(/"/g, '&quot;');
-}

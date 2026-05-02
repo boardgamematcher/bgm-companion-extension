@@ -711,13 +711,13 @@ async function resolveGameOverlay(title) {
   if (!game) {
     try {
       const url = `${BGM_BASE_URL}/api/games/search?q=${encodeURIComponent(title)}`;
-      console.log('[BGM overlay] fetching', url);
+      debug('[BGM overlay] fetching', url);
       const res = await fetch(url, { credentials: 'include' });
-      console.log('[BGM overlay] search status', res.status);
+      debug('[BGM overlay] search status', res.status);
       if (!res.ok) return { error: `search_${res.status}` };
       const data = await res.json();
       const games = data.games || [];
-      console.log('[BGM overlay] search returned', games.length, 'games');
+      debug('[BGM overlay] search returned', games.length, 'games');
       if (games.length === 0) return { error: 'not_found' };
 
       // Prefer exact normalized match; otherwise fall back to first result
