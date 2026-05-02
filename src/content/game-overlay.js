@@ -26,14 +26,10 @@ function ratingTier(rating) {
   return 'Poor';
 }
 
-function ratingStars(rating) {
-  // Convert /10 → /5 stars, rounded to nearest half
-  const score = (rating / 10) * 5;
-  const halves = Math.round(score * 2);
-  const full = Math.floor(halves / 2);
-  const half = halves % 2 === 1;
-  const empty = 5 - full - (half ? 1 : 0);
-  return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(empty);
+// Returns the percentage (0–100) of 5 stars that should be visually filled
+// for a /10 rating. e.g. 6.9 → 69, 8.0 → 80.
+function ratingFillPercent(rating) {
+  return Math.max(0, Math.min(100, Math.round(rating * 10)));
 }
 
 (async function bgmGameOverlay() {
@@ -178,7 +174,13 @@ function ratingStars(rating) {
 
   const ratingHtml = game.bayes_average
     ? `<div class="bgm-overlay-rating">
-        <span class="bgm-rating-stars">${ratingStars(game.bayes_average)}</span>
+        <div class="bgm-rating-row">
+          <div class="bgm-rating-stars" aria-label="${game.bayes_average} out of 10">
+            <span class="bgm-stars-empty">★★★★★</span>
+            <span class="bgm-stars-fill" style="width:${ratingFillPercent(game.bayes_average)}%">★★★★★</span>
+          </div>
+          <span class="bgm-rating-value">${game.bayes_average.toFixed(1)}</span>
+        </div>
         <span class="bgm-rating-label">${escapeHtml(ratingTier(game.bayes_average))}</span>
        </div>`
     : '';

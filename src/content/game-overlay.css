@@ -111,20 +111,50 @@
   display: flex !important;
   flex-direction: column !important;
   align-items: flex-start !important;
-  gap: 1px !important;
+  gap: 3px !important;
   margin-bottom: 10px !important;
-  padding: 6px 8px !important;
+  padding: 7px 9px !important;
   background: rgba(245, 166, 35, 0.06) !important;
   border-left: 2px solid #f5a623 !important;
   border-radius: 4px !important;
 }
 
+.bgm-rating-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+/* Two-layer star rendering: empty layer underneath, amber-filled layer on top
+   clipped by % width to give precise (sub-half) fill levels. */
 .bgm-rating-stars {
-  font-size: 14px !important;
+  position: relative !important;
+  display: inline-block !important;
+  font-size: 18px !important;
+  letter-spacing: 2px !important;
+  line-height: 1 !important;
+}
+
+.bgm-stars-empty {
+  color: rgba(245, 166, 35, 0.22) !important;
+}
+
+.bgm-stars-fill {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
   color: #f5a623 !important;
-  letter-spacing: 1px !important;
-  line-height: 1.1 !important;
-  text-shadow: 0 0 4px rgba(245, 166, 35, 0.25) !important;
+  text-shadow: 0 0 4px rgba(245, 166, 35, 0.4) !important;
+  pointer-events: none !important;
+}
+
+.bgm-rating-value {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #e1e3e5 !important;
+  font-variant-numeric: tabular-nums !important;
 }
 
 .bgm-rating-label {
