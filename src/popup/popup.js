@@ -62,7 +62,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     const input = document.getElementById('wishlist-input');
     if (input?.value) input.dispatchEvent(new Event('input'));
   }
+  await applyPendingPopupSearch();
 });
+
+async function applyPendingPopupSearch() {
+  const { pendingPopupSearch } = await chrome.storage.session.get('pendingPopupSearch');
+  if (!pendingPopupSearch) return;
+  await chrome.storage.session.remove('pendingPopupSearch');
+  switchTab('games');
+  const input = document.getElementById('wishlist-input');
+  if (input) {
+    input.value = pendingPopupSearch;
+    input.dispatchEvent(new Event('input'));
+  }
+}
 
 // Setup event listeners
 function setupEventListeners() {
