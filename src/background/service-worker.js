@@ -316,6 +316,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       .catch(() => sendResponse({ success: false }));
     return true;
   }
+
+  // Open a URL in a new tab. Used by the overlay's links so host-page
+  // global click handlers (e.g. Philibert's) can't swallow them.
+  if (message.action === 'openTab' && typeof message.url === 'string') {
+    if (message.url.startsWith('https://') || message.url.startsWith('http://')) {
+      chrome.tabs.create({ url: message.url });
+    }
+    sendResponse({ success: true });
+    return false;
+  }
 });
 
 // Update extraction stats

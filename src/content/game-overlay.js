@@ -207,6 +207,25 @@ function ratingFillPercent(rating) {
     </div>
   `;
 
+  // ── Link clicks: bypass host-page click handlers via SW.openTab ──────────
+  // Some retailers (e.g. Philibert) have global delegated click handlers that
+  // swallow or hijack <a> clicks on the page. Capture-phase + stopImmediate +
+  // route through the service worker which has tabs permission.
+  overlay.querySelectorAll('a[href]').forEach((a) => {
+    a.addEventListener(
+      'click',
+      (e) => {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        const url = a.href;
+        chrome.runtime
+          .sendMessage({ action: 'openTab', url })
+          .catch(() => window.open(url, '_blank', 'noopener'));
+      },
+      true
+    );
+  });
+
   // ── Collection pill toggle ────────────────────────────────────────────────
 
   overlay.querySelectorAll('.bgm-collection-pill').forEach((btn) => {
