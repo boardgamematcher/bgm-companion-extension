@@ -21,7 +21,9 @@
     "https://tabletopia.com/*",
     "https://www.spielbyweb.de/*",
     "https://ludopedia.com.br/*",
-    "https://www.ludopedia.com.br/*"
+    "https://www.ludopedia.com.br/*",
+    "https://www.philibertnet.com/*",
+    "https://philibertnet.com/*"
   ],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; style-src 'self' 'unsafe-inline'"
@@ -241,6 +243,18 @@
         "src/content/spielbyweb-scraper.js",
         "src/content/spielbyweb-listener.js"
       ]
+    },
+    {
+      "matches": [
+        "*://*.philibertnet.com/*"
+      ],
+      "js": [
+        "src/content/game-overlay.js"
+      ],
+      "css": [
+        "src/content/game-overlay.css"
+      ],
+      "run_at": "document_idle"
     }
   ],
   "options_page": "src/options/options.html",

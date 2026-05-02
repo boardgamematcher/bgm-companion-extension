@@ -299,6 +299,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     fetchWishlist().then((wishlist) => sendResponse({ wishlist }));
     return true;
   }
+
+  if (message.action === 'resolveGameOverlay') {
+    resolveGameOverlay(message.title)
+      .then((data) => sendResponse(data))
+      .catch(() => sendResponse({ error: 'resolve_failed' }));
+    return true;
+  }
+
+  if (message.action === 'setCollectionType') {
+    setCollectionType(message.gameId, message.collectionType, message.add)
+      .then(() => sendResponse({ success: true }))
+      .catch(() => sendResponse({ success: false }));
+    return true;
+  }
 });
 
 // Update extraction stats
@@ -648,6 +662,90 @@ async function fetchWishlist() {
   } catch (_e) {
     return null;
   }
+}
+
+// ── Game overlay (BGM-976) ────────────────────────────────────────────────
+
+const OVERLAY_GAME_CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
+
+function normalizeForMatch(name) {
+  return String(name || '')
+    .toLowerCase()
+    .replace(/[''`]/g, '')
+    .replace(/[^\w\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// Resolve a retailer page title to a BGM game + the user's collection types.
+// Returns { game: {id, name, slug, bayes_average}, collectionTypes: [] } or { error }.
+async function resolveGameOverlay(title) {
+  if (!title || typeof title !== 'string') return { error: 'invalid_title' };
+
+  // Per-tab session cache keyed by normalized title
+  const cacheKey = `bgmOverlayGame:${normalizeForMatch(title)}`;
+  let game;
+  try {
+    const cached = await chrome.storage.session.get(cacheKey);
+    const entry = cached[cacheKey];
+    if (entry && Date.now() - entry.timestamp < OVERLAY_GAME_CACHE_TTL) {
+      game = entry.game;
+    }
+  } catch (_) {
+    // ignore
+  }
+
+  if (!game) {
+    try {
+      const url = `${BGM_BASE_URL}/api/games/search?q=${encodeURIComponent(title)}`;
+      const res = await fetch(url, { credentials: 'include' });
+      if (!res.ok) return { error: 'search_failed' };
+      const data = await res.json();
+      const games = data.games || [];
+      if (games.length === 0) return { error: 'not_found' };
+
+      // Prefer exact normalized match; otherwise fall back to first result
+      const wanted = normalizeForMatch(title);
+      game = games.find((g) => normalizeForMatch(g.name) === wanted) || games[0];
+
+      try {
+        await chrome.storage.session.set({
+          [cacheKey]: { game, timestamp: Date.now() },
+        });
+      } catch (_) {
+        // ignore
+      }
+    } catch (_) {
+      return { error: 'network' };
+    }
+  }
+
+  // Fetch the user's collection types for this game (requires login)
+  let collectionTypes = [];
+  try {
+    const res = await fetch(`${BGM_BASE_URL}/api/collections/${game.id}`, {
+      credentials: 'include',
+    });
+    if (res.ok) {
+      const data = await res.json();
+      collectionTypes = data.collection_types || [];
+    }
+  } catch (_) {
+    // ignore
+  }
+
+  return { game, collectionTypes };
+}
+
+// Add or remove a collection type for a game.
+async function setCollectionType(gameId, collectionType, add) {
+  const url = `${BGM_BASE_URL}/api/collections/${gameId}/${collectionType}`;
+  const res = await fetch(url, {
+    method: add ? 'POST' : 'DELETE',
+    credentials: 'include',
+    headers: { 'X-BGM-Source': 'toolbox' },
+  });
+  if (!res.ok) throw new Error(`status ${res.status}`);
 }
 
 // Import a BGG collection into BGM
