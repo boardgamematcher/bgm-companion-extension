@@ -9,7 +9,7 @@ Cross-browser extension (Chrome / Firefox / Edge) that connects board game shops
 - **Wishlist** — quick-add games to your BGM wishlist directly from the popup.
 - **Custom patterns** — teach the extension a new shop with a CSS selector or a Next.js `__NEXT_DATA__` path.
 
-Built-in shop coverage includes Veepee (12 ccTLDs), Philibert, Knapix, Amazon, Cultura, Fnac, Esprit Jeu, Ludum, Le Passe-Temps, Okkazeo, Le Pion, Gamers Dream, Ludisphere, Ludifolie, CoolStuffInc, Miniature Market, BoardGameBliss, Zatu Games, GameNerdz, brettspielversand, Milan Spiele, Fantasywelt, Spiele-Offensive, Thalia, Kutami, Spieletaxi.
+Built-in shop coverage spans 51 retail domains across Amazon, Veepee, Coolshop, Philibert, Knapix, Cultura, Fnac, Esprit Jeu, Ludum, Le Passe-Temps, Okkazeo, Le Pion, Gamers Dream, Ludisphere, Ludifolie, CoolStuffInc, Miniature Market, BoardGameBliss, Zatu Games, GameNerdz, brettspielversand, Milan Spiele, Fantasywelt, Spiele-Offensive, Thalia, Kutami, Spieletaxi, Privalia, Bol.com. See [`docs/supported-sites.md`](docs/supported-sites.md) for the full table of sites, every popup/context-menu action, and the BGM endpoints each one hits (with logged-in vs logged-out behavior).
 
 Site patterns are maintained in the public [boardgamematcher/site-profiles](https://github.com/boardgamematcher/site-profiles) repo and update automatically (no extension release needed for new shops).
 
