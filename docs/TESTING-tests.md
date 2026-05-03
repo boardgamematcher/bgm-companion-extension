@@ -4,7 +4,7 @@ Literal list of every Playwright spec, in the wording the test runner uses.
 Companion to `TESTING.md` — see that file for what to run, how the harness
 works, and what's still manual.
 
-> Refresh with `npx playwright test --list` and update by hand. The titles
+> Refresh with `npm run test:e2e -- --list` and update by hand. The titles
 > here are tied to test names; if you rename a test, update this file too.
 
 **Total: 59 tests across 9 specs.**

@@ -47,7 +47,7 @@ What's tested, by feature area. Spec column links to the Playwright file under `
 | Philibert overlay (BGM-976) | Product page renders overlay with rating + active collection pills | `philibert-overlay` |
 | Philibert overlay | Hidden on category pages | `philibert-overlay` |
 
-For the full literal list of every Playwright test (including each of the 33 built-in profile URLs and each play-history platform), see [`docs/TESTING-tests.md`](TESTING-tests.md). Refresh it with `npx playwright test --list`.
+For the full literal list of every Playwright test (including each of the 33 built-in profile URLs and each play-history platform), see [`docs/TESTING-tests.md`](TESTING-tests.md). Refresh it with `npm run test:e2e -- --list`.
 
 Scraper logic for individual sites lives in `tests/` (jest):
 
