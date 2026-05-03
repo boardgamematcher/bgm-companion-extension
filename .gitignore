@@ -18,3 +18,7 @@ node_modules/
 
 # Local Claude Code session state (scheduled tasks, worktrees, settings)
 .claude/
+
+# Local secrets (BGM-789 spike — never commit BGA credentials)
+.env
+.env.local
