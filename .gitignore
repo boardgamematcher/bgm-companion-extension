@@ -22,3 +22,8 @@ node_modules/
 # Local secrets (BGM-789 spike — never commit BGA credentials)
 .env
 .env.local
+
+# Playwright E2E artifacts
+playwright-report/
+test-results/
+tests-e2e/.auth/

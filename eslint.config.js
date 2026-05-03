@@ -28,6 +28,13 @@ export default [
     },
   },
   {
-    ignores: ["node_modules/", "docs/", "tests/"],
+    ignores: [
+      "node_modules/",
+      "docs/",
+      "tests/",
+      "tests-e2e/",
+      "playwright-report/",
+      "test-results/",
+    ],
   },
 ];

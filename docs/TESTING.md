@@ -1,119 +1,69 @@
 # Testing Guide
 
-## Manual Testing Checklist
+The bulk of release QA is automated. Run it locally with:
 
-### Extension Loading
+```bash
+npm test          # jest unit tests (scrapers, normalisers, pattern matcher)
+npm run test:e2e  # Playwright E2E (extension + popup + content scripts)
+```
 
-- [ ] **Chrome**: Load unpacked extension from `chrome://extensions/`
-- [ ] **Firefox**: Load temporary add-on from `about:debugging`
-- [ ] Extension icon appears in toolbar
-- [ ] No console errors on load
+CI runs both on every PR. See `.github/workflows/test.yml`.
 
-### Basic Functionality
+## Manual-only checklist
 
-- [ ] Navigate to knapix.com
-- [ ] Click extension icon
-- [ ] Status shows "Supported Site: Knapix"
-- [ ] Extract button is enabled
-- [ ] Click "Extract Board Games"
-- [ ] Success message shows game count
-- [ ] Games are copied to clipboard (paste to verify)
-- [ ] Last extraction stats update
+A small set of things that genuinely need a human. **Run these before tagging a release.**
 
-### Unsupported Sites
+- [ ] **Firefox smoke load** — `about:debugging` → load the unpacked extension; popup opens, no console errors. Playwright's Firefox + extension story is brittle, so this stays manual.
+- [ ] **Real-account BGA import** — sign in to BoardGameArena, click _Import BGA Plays_, eyeball that recent plays appear on `boardgamematcher.com`. Mocked plays in CI; real auth is human-only.
+- [ ] **Real-account Yucata import** — same as above on yucata.de.
+- [ ] **Real-account BGG collection sync** — _Sync BGG Collection_ pulls owned/wishlist/ratings from a live BGG account.
+- [ ] **Visual polish on a real Amazon / Philibert page** — the wishlist badge and Philibert overlay sit on top of third-party CSS. Confirm no z-index regressions, no layout shift, dismiss button works.
+- [ ] **Chrome Web Store / Firefox Add-ons listing** — icons render correctly, screenshots match the new version.
 
-- [ ] Navigate to unsupported site (e.g., google.com)
-- [ ] Status shows "Site not supported"
-- [ ] Extract button is disabled
+## Automated coverage
 
-### Custom Patterns
+| Manual checklist item | Replaced by |
+|---|---|
+| Extension loads, MV3 SW registers, no console errors | `tests-e2e/extension-load.spec.js` |
+| Supported shop detected on every domain in `patterns/built-in.json` | `tests-e2e/popup-supported-sites.spec.js` |
+| Unsupported page disables the extract button | `tests-e2e/popup-supported-sites.spec.js` |
+| Knapix end-to-end: extract → review → confirm → success | `tests-e2e/popup-knapix-happy-path.spec.js` |
+| Custom patterns: create / edit / delete (with confirm) / export → import roundtrip | `tests-e2e/options-custom-patterns.spec.js` |
+| Wishlist badge renders next to matching products on Amazon and Philibert | `tests-e2e/wishlist-badge.spec.js` |
+| Right-click context menus registered and routed to the right BGM URLs | `tests-e2e/context-menus.spec.js` |
+| Play-history popup wiring (BGA, Yucata, BGG, Tabletopia, Ludopedia, SpielByWeb) | `tests-e2e/popup-play-history.spec.js` |
+| Philibert product overlay (BGM-976) | `tests-e2e/philibert-overlay.spec.js` |
 
-- [ ] Open settings (click "Settings" in popup)
-- [ ] Navigate to "Custom Patterns" tab
-- [ ] Click "Add New Pattern"
-- [ ] Fill in pattern form:
-  - Domain: test.com
-  - Name: Test Site
-  - Selector: h1
-- [ ] Save pattern
-- [ ] Pattern appears in custom list
-- [ ] Edit pattern
-- [ ] Delete pattern (with confirmation)
+Scraper logic for individual sites lives in `tests/` (jest):
 
-### Pattern Import/Export
+- `tests/bga-scraper.test.js`, `tests/plays-api.test.js` — BGA + plays API
+- `tests/yucata-scraper.test.js`, `tests/yucata-mapper.test.js`, `tests/yucata-integration.test.js` — Yucata
+- `tests/pattern-matcher.test.js` — built-in pattern matching
+- `tests/next-data-extraction.test.js` — Veepee/Next.js scraping
+- `tests/normalize.test.js` — name normalisation
 
-- [ ] Add a custom pattern
-- [ ] Click "Export JSON"
-- [ ] JSON file downloads
-- [ ] Delete the custom pattern
-- [ ] Click "Import JSON"
-- [ ] Select exported file
-- [ ] Pattern reappears in list
+## Running individual specs
 
-### Supported Sites Tab
+```bash
+npm run test:e2e -- tests-e2e/popup-knapix-happy-path.spec.js   # one spec
+npm run test:e2e:ui                                              # Playwright UI mode
+PWDEBUG=1 npm run test:e2e -- tests-e2e/wishlist-badge.spec.js  # step through
+```
 
-- [ ] View built-in patterns list
-- [ ] Search for "amazon"
-- [ ] List filters correctly
-- [ ] Clear search
-- [ ] Full list returns
+Failed runs upload a `playwright-report/` artifact in CI; locally, traces and videos land in `test-results/` (gitignored).
 
-### Help Tab
+## How the harness works
 
-- [ ] View help documentation
-- [ ] All sections render correctly
-- [ ] External links work
+The Playwright harness loads the unpacked extension into a fresh Chromium persistent context per test (`tests-e2e/fixtures/extension.js`). For shop-page tests, real third-party domains are intercepted via `context.route()` and served from local fixtures under `tests-e2e/fixtures/shops/` — the URL bar still shows the real domain so manifest content-script matchers and pattern detection behave identically to production.
 
-### Edge Cases
+The popup runs in its own `chrome-extension://` context, so tests open it as a tab and use `addInitScript` to override `chrome.tabs.query` / `chrome.tabs.sendMessage` where needed (`tests-e2e/helpers/routes.js`). Real `chrome.contextMenus.onClicked.dispatch()` lets us simulate context-menu clicks from the service worker without driving the OS menu.
 
-- [ ] Extract from page with no matching elements (should show error)
-- [ ] Extract from page with 100+ games (should work)
-- [ ] Add pattern with invalid CSS selector (should validate)
-- [ ] Navigate between tabs quickly (no errors)
+## Debugging tips
 
-## Test Sites
+**Background SW logs:** `chrome://extensions/` → Inspect views: service worker.
 
-### Knapix.com
-- URL: https://www.knapix.com/2025/11/...
-- Selector: `article h3`
-- Expected: List of board game names from article headings
+**Content-script logs:** open DevTools on the page itself.
 
-### Amazon
-- URL: https://www.amazon.com/s?k=board+games
-- Selector: `[data-component-type='s-search-result'] h2 a span`
-- Expected: Product names (with ads filtered out)
+**Popup logs:** right-click the extension icon → Inspect popup. (Note that the popup closes when DevTools steals focus; pop it out first.)
 
-## Debugging Tips
-
-### Check Console Logs
-- Background: `chrome://extensions/` → Inspect views: service worker
-- Content Script: Open DevTools on webpage
-- Popup: Right-click extension icon → Inspect popup
-
-### Common Issues
-
-**"No board games found"**
-- Check if selector matches elements on page
-- Inspect page HTML structure
-- Verify filters aren't excluding all results
-
-**"Error copying to clipboard"**
-- Check clipboardWrite permission in manifest
-- Verify extension has activeTab permission
-
-**Pattern not working after add**
-- Check background console for reload confirmation
-- Verify pattern saved in storage (DevTools → Application → Storage)
-
-## Performance Testing
-
-- [ ] Extract 1000+ items (should complete in < 2s)
-- [ ] Switch between tabs rapidly (no UI lag)
-- [ ] Load extension with 50+ custom patterns (no startup lag)
-
-## Browser Compatibility
-
-- [ ] All features work in Chrome
-- [ ] All features work in Firefox
-- [ ] Icons display correctly in both browsers
-- [ ] Storage works in both browsers
+**Storage state:** DevTools → Application → Storage → Extension storage.
