@@ -311,6 +311,18 @@
   "importNoResponse": {
     "message": "Aucune réponse du script de contenu"
   },
+  "importBgaNeedsBgm": {
+    "message": "Connectez-vous à BoardGameMatcher pour importer vos parties."
+  },
+  "importBgaSigninBgm": {
+    "message": "Se connecter à BoardGameMatcher"
+  },
+  "importBgaNeedsBga": {
+    "message": "Connectez-vous à BoardGameArena pour importer vos parties."
+  },
+  "importBgaSigninBga": {
+    "message": "Se connecter à BoardGameArena"
+  },
   "popupNoPattern": {
     "message": "Aucun modèle disponible"
   },

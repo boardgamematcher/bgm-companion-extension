@@ -277,6 +277,22 @@
     "message": "No response from content script",
     "description": "Error message when the content script does not respond."
   },
+  "importBgaNeedsBgm": {
+    "message": "Sign in to BoardGameMatcher to import plays.",
+    "description": "Status shown when the user clicks Import BGA Plays without a BGM session."
+  },
+  "importBgaSigninBgm": {
+    "message": "Sign in to BoardGameMatcher",
+    "description": "Label of the CTA button that opens the BGM login page."
+  },
+  "importBgaNeedsBga": {
+    "message": "Sign in to BoardGameArena to import plays.",
+    "description": "Status shown when the user clicks Import BGA Plays without a BGA session."
+  },
+  "importBgaSigninBga": {
+    "message": "Sign in to BoardGameArena",
+    "description": "Label of the CTA button that opens the BGA login page."
+  },
   "popupNoPattern": {
     "message": "No pattern available",
     "description": "Toast shown if Extract is clicked without a detected pattern."

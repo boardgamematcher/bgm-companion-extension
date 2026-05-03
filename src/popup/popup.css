@@ -969,6 +969,12 @@ body {
   text-decoration: underline;
 }
 
+/* ── BGA sign-in CTA ── */
+.bga-signin-cta {
+  margin-top: 8px;
+  text-decoration: none;
+}
+
 /* ── Import status ── */
 .import-status {
   margin-top: 8px;
