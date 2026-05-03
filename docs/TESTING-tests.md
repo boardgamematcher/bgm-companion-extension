@@ -7,7 +7,7 @@ works, and what's still manual.
 > Refresh with `npm run test:e2e -- --list` and update by hand. The titles
 > here are tied to test names; if you rename a test, update this file too.
 
-**Total: 59 tests across 9 specs.**
+**Total: 59 tests across 8 specs.**
 
 ## `tests-e2e/extension-load.spec.js` (1)
 
