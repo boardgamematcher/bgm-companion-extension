@@ -10,7 +10,24 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupTabs();
   setupEventListeners();
   renderCustomPatterns();
+  await handleScrollTo();
 });
+
+async function handleScrollTo() {
+  const { optionsScrollTo } = await chrome.storage.session.get('optionsScrollTo');
+  if (!optionsScrollTo) return;
+  await chrome.storage.session.remove('optionsScrollTo');
+
+  const target = document.getElementById(optionsScrollTo);
+  if (!target) return;
+
+  const tabName = target.closest('.tab-content')?.id?.replace('-tab', '');
+  if (tabName) {
+    const btn = document.querySelector(`.tab-btn[data-tab="${tabName}"]`);
+    if (btn) btn.click();
+  }
+  setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+}
 
 async function loadDevMode() {
   const { bgmDevMode = false } = await chrome.storage.local.get('bgmDevMode');

@@ -136,8 +136,8 @@ function setupEventListeners() {
     .getElementById('more-import-plays-btn')
     ?.addEventListener('click', handleMoreImportPlays);
   document.getElementById('more-bgg-sync-btn')?.addEventListener('click', handleMoreBggSync);
-  document.getElementById('more-custom-patterns-btn')?.addEventListener('click', handleSettings);
-  document.getElementById('more-share-btn')?.addEventListener('click', handleMoreShare);
+  document.getElementById('more-rate-btn')?.addEventListener('click', handleMoreRate);
+  document.getElementById('more-whats-new-btn')?.addEventListener('click', handleMoreWhatsNew);
 
   document.getElementById('dash-signin-btn').addEventListener('click', handleLogin);
   document.getElementById('dash-signup-link').addEventListener('click', handleSignup);
@@ -1075,31 +1075,21 @@ function handleMoreBggSync() {
   setTimeout(() => flashElement('bggSyncPanel'), 50);
 }
 
-async function handleMoreShare() {
-  const shareUrl = bgmLink('/', 'extension-share');
-  const shareText = chrome.i18n.getMessage('moreShareText') || 'Check out BoardGameMatcher';
-  const shareData = { title: 'BoardGameMatcher', text: shareText, url: shareUrl };
+function handleMoreRate() {
+  chrome.tabs.create({ url: rateUrl() });
+}
 
-  if (navigator.share) {
-    try {
-      await navigator.share(shareData);
-      return;
-    } catch (_e) {
-      // user cancelled or share unavailable — fall through to clipboard copy
-    }
-  }
+function rateUrl() {
+  const ua = navigator.userAgent;
+  if (/Firefox/.test(ua)) return 'https://addons.mozilla.org/firefox/addon/bgm-toolbox/';
+  if (/Edg\//.test(ua)) return 'https://microsoftedge.microsoft.com/addons/detail/bgm-toolbox/';
+  return 'https://chromewebstore.google.com/detail/bgm-toolbox/';
+}
 
-  try {
-    await navigator.clipboard.writeText(shareUrl);
-    showMessage(
-      chrome.i18n.getMessage('moreShareCopied') || 'Link copied — share it with a fellow gamer!',
-      'success'
-    );
-  } catch (_e) {
-    chrome.tabs.create({
-      url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`,
-    });
-  }
+function handleMoreWhatsNew() {
+  chrome.tabs.create({
+    url: bgmLink('/news?tag=extension-release', 'extension-whatsnew'),
+  });
 }
 
 // ── Wishlist quick-add ──
@@ -1849,3 +1839,5 @@ async function handleBggSync() {
     status.className = 'import-status is-success';
   });
 }
+
+if (typeof module !== 'undefined') module.exports = { rateUrl };
