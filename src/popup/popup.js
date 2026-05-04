@@ -267,6 +267,7 @@ async function checkAuth() {
     if (response.ok) {
       currentUser = await response.json();
       setLoggedIn(currentUser);
+      syncUiLocaleFromUser(currentUser);
     } else {
       setLoggedOut();
     }
@@ -274,6 +275,17 @@ async function checkAuth() {
     console.warn('Auth check failed:', error);
     setLoggedOut();
   }
+}
+
+// Mirror the user's BGM web profile language into the extension UI (BGM-1016).
+// Logged-out users keep the browser default. Fire-and-forget — translation
+// re-apply happens inside bgmI18n.setLocale.
+function syncUiLocaleFromUser(user) {
+  const lang = user && user.preferred_language;
+  if (!lang || !window.bgmI18n) return;
+  window.bgmI18n.setLocale(lang).catch((err) => {
+    console.warn('Failed to sync UI locale from BGM profile:', err);
+  });
 }
 
 function setLoggedIn(user) {
@@ -321,6 +333,13 @@ function setLoggedOut() {
   if (bgaTeaserRow) bgaTeaserRow.style.display = '';
   document.getElementById('dash-logged-out').style.display = '';
   document.getElementById('dash-logged-in').style.display = 'none';
+
+  // Clear any web-profile locale override so a logged-out user falls back to
+  // the browser default instead of being stranded on the previous user's
+  // language (BGM-1016).
+  if (window.bgmI18n) {
+    window.bgmI18n.setLocale(null).catch(() => {});
+  }
 }
 
 function handleLogin() {
