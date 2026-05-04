@@ -8,8 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadNotifSettings();
   setupTabs();
   setupEventListeners();
-  renderPatterns();
-  await loadNotifSettings();
+  renderCustomPatterns();
 });
 
 // Setup tab switching
@@ -109,11 +108,6 @@ async function loadPatterns() {
   }
 }
 
-// Render all patterns
-function renderPatterns() {
-  renderCustomPatterns();
-}
-
 // Render custom patterns
 function renderCustomPatterns() {
   const list = document.getElementById('custom-list');
@@ -129,13 +123,13 @@ function renderCustomPatterns() {
   list.innerHTML = '';
 
   customPatterns.forEach((pattern, index) => {
-    const card = createPatternCard(pattern, true, index);
+    const card = createPatternCard(pattern, index);
     list.appendChild(card);
   });
 }
 
 // Create pattern card element
-function createPatternCard(pattern, isCustom, index) {
+function createPatternCard(pattern, index) {
   const card = document.createElement('div');
   card.className = 'pattern-card';
 
@@ -151,24 +145,22 @@ function createPatternCard(pattern, isCustom, index) {
 
   header.appendChild(info);
 
-  if (isCustom) {
-    const actions = document.createElement('div');
-    actions.className = 'pattern-actions';
+  const actions = document.createElement('div');
+  actions.className = 'pattern-actions';
 
-    const editBtn = document.createElement('button');
-    editBtn.className = 'icon-btn';
-    editBtn.textContent = chrome.i18n.getMessage('optionsCardEdit');
-    editBtn.addEventListener('click', () => editPattern(index));
+  const editBtn = document.createElement('button');
+  editBtn.className = 'icon-btn';
+  editBtn.textContent = chrome.i18n.getMessage('optionsCardEdit');
+  editBtn.addEventListener('click', () => editPattern(index));
 
-    const deleteBtn = document.createElement('button');
-    deleteBtn.className = 'icon-btn delete';
-    deleteBtn.textContent = chrome.i18n.getMessage('optionsCardDelete');
-    deleteBtn.addEventListener('click', () => deletePattern(index));
+  const deleteBtn = document.createElement('button');
+  deleteBtn.className = 'icon-btn delete';
+  deleteBtn.textContent = chrome.i18n.getMessage('optionsCardDelete');
+  deleteBtn.addEventListener('click', () => deletePattern(index));
 
-    actions.appendChild(editBtn);
-    actions.appendChild(deleteBtn);
-    header.appendChild(actions);
-  }
+  actions.appendChild(editBtn);
+  actions.appendChild(deleteBtn);
+  header.appendChild(actions);
 
   card.appendChild(header);
 
