@@ -12,10 +12,14 @@
     "manifest:update": "node scripts/update-manifest-matches.js",
     "sync-profiles": "cp ../site-profiles/profiles.json patterns/built-in.json",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:capture": "node tests-e2e/scripts/capture-fixtures.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
+    "@playwright/test": "^1.49.0",
     "eslint": "^9.0.0",
     "globals": "^16.0.0",
     "jest": "^29.0.0",
