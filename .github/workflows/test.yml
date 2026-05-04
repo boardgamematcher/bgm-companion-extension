@@ -30,6 +30,9 @@ jobs:
       - name: Unit tests (jest)
         run: npm test
 
+      - name: docs/supported-sites.md is up to date
+        run: npm run docs:sites:check
+
   e2e:
     name: e2e (playwright)
     runs-on: ubuntu-latest

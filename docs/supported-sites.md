@@ -2,7 +2,9 @@
 
 Reference for v0.7.1.
 
-This document lists every external site the extension touches, every action the user can trigger, and every BoardGameMatcher endpoint hit by each action. Hand-maintained — see [BGM-1009](https://linear.app/board-game-matcher/issue/BGM-1009/auto-generate-docssupported-sitesmd-from-manifest-patterns) for the long-term plan to auto-generate it from `manifest.json` + `patterns/built-in.json`.
+This document lists every external site the extension touches, every action the user can trigger, and every BoardGameMatcher endpoint hit by each action.
+
+**Partially auto-generated.** The four mechanical tables — §1.1 sites table, §1.2 retail brands, §2 context-menu actions, §3.6 background polls — are regenerated from `manifest.json`, `src/background/service-worker.js`, and a small editorial map kept in `scripts/gen-supported-sites.mjs`. Run `npm run docs:sites` after touching any of those sources; CI runs `npm run docs:sites:check` to fail when the committed file drifts. Editorial sections (§3.1–3.5, §3.7, §4) and all narrative outside the `<!-- AUTO:* -->` fences are hand-maintained.
 
 ---
 
@@ -10,19 +12,23 @@ This document lists every external site the extension touches, every action the 
 
 For each row: "On-page extraction?" means a content script runs in the user's tab and reads the DOM (or calls the site's own API from the page). "Action in extension" describes what the popup or background actually does.
 
-### 1.1 Play-import platforms
+### 1.1 Play-import platforms & overlays
 
+<!-- AUTO:sites-table START -->
 | Site | Page type | Example URL | On-page extraction? | Action in extension | Mechanism |
 |---|---|---|---|---|---|
+| Yucata | Game History | `https://www.yucata.de/.../GameHistory` | Yes — `src/content/yucata-scraper.js` | Popup → "Import Yucata Plays" | Page-context script needed for DataTable API; mapping via `yucata-mapping.json` |
 | Board Game Arena | Player stats / profile | `https://boardgamearena.com/gamestats?player=123` | Yes — `src/content/bga-scraper.js` | Popup → "Import BGA Plays" → POST plays to BGM | Content script calls BGA's internal AJAX with the page's request token; mapping via `patterns/bga-mapping.json` |
-| Board Game Arena (spike) | Playerstat page | `boardgamearena.com/playerstat` | Prototype only | — | `bga-playerstat-scraper.js` (BGM-789) — **not yet wired in `manifest.json`** |
-| Yucata | Game History | `https://www.yucata.de/.../GameHistory` | Yes — `yucata-scraper.js` + injected `yucata-page-extract.js` | Popup → "Import Yucata Plays" | Page-context script needed for DataTable API; mapping via `yucata-mapping.json` |
-| Tabletopia | Any page when logged in | `https://tabletopia.com/...` | Yes — `tabletopia-scraper.js` | Popup → "Import Tabletopia Matches" | Calls Tabletopia REST `/api/v2/players/current/matches` with pagination |
-| Ludopedia | User history | `https://ludopedia.com.br/usuario/...` | Yes — `ludopedia-scraper.js` | Popup → "Import Ludopedia Plays" | Calls Ludopedia `/api/v1/plays`; BGG IDs already in payload |
-| SpielByWeb | Finished games list | `https://www.spielbyweb.de/GameList.php` | Yes — `spielbyweb-scraper.js` | Popup → "Import SpielByWeb Plays" | DOM table parser, mapping via `spielbyweb-mapping.json` |
-| BoardGameGeek | User plays | `https://boardgamegeek.com/user/<u>/plays` | Yes — `bgg-scraper.js` | Popup → "Import BGG Plays" | Calls BGG XML2 API `/xmlapi2/user/<u>/plays` |
-| BoardGameGeek | User collection | `.../user/<u>/collection` | Yes — same scraper | Popup → "Sync BGG Collection" | XML2 `/xmlapi2/collection/<u>` |
-| BoardGameGeek | Game detail page | `.../boardgame/<id>/<slug>` | UI injection (BGM-937) | Popup auto-targets the game; one-click add to BGM collection | Title detected, popup runs `/api/games/search` then `/api/collections/{id}/{type}` |
+| BoardGameGeek | User plays / collection / game detail | `https://boardgamegeek.com/user/<u>/plays` | Yes — `src/content/bgg-scraper.js` | Popup → "Import BGG Plays" / "Sync BGG Collection"; on game detail pages popup auto-targets the game (one-click add to BGM collection) | Calls BGG XML2 API `/xmlapi2/user/<u>/{plays,collection}`; on `/boardgame/<id>/<slug>` pages the popup runs `/api/games/search` then `/api/collections/{id}/{type}` |
+| Tabletopia | Any page when logged in | `https://tabletopia.com/...` | Yes — `src/content/tabletopia-scraper.js` | Popup → "Import Tabletopia Matches" | Calls Tabletopia REST `/api/v2/players/current/matches` with pagination |
+| Ludopedia | User history | `https://ludopedia.com.br/usuario/...` | Yes — `src/content/ludopedia-scraper.js` | Popup → "Import Ludopedia Plays" | Calls Ludopedia `/api/v1/plays`; BGG IDs already in payload |
+| SpielByWeb | Finished games list | `https://www.spielbyweb.de/GameList.php` | Yes — `src/content/spielbyweb-scraper.js` | Popup → "Import SpielByWeb Plays" | DOM table parser, mapping via `spielbyweb-mapping.json` |
+| Philibert (game-detail overlay) | Product detail | `https://www.philibertnet.com/{lang}/cat/<id>-<slug>.html` | Yes — `src/content/game-overlay.js` | Inline overlay: BGM card, rating, wishlist status; per-user collection pills when logged in | Reads page metadata, resolves via `resolveOverlayGame` background message, posts to `/api/collections/<id>/<type>` |
+<!-- AUTO:sites-table END -->
+
+Notes:
+
+- The `bga-playerstat-scraper.js` prototype (BGM-789) is **not yet wired in `manifest.json`** and intentionally absent from the generated table.
 
 All play imports POST the parsed list to `boardgamematcher.com/api/plays/batch` (overridable via `chrome.storage.local.apiUrl` for dev). Login on BGM is required for the POST to succeed.
 
@@ -34,15 +40,40 @@ All sites in this group share the same flow:
 2. The user opens the popup and clicks **Extract**. The popup runs the right pattern from `patterns/built-in.json`, the public [`site-profiles`](https://github.com/boardgamematcher/site-profiles) repo (refreshed every 6 h), or a user-defined custom pattern (the Custom Patterns tab is hidden by default — flip "Developer mode" in the Help tab to expose it).
 3. Matched titles + prices are previewed via `POST /api/extract/preview`, then on confirm sent to `POST /api/extract/extension`. On any failure the popup falls back to opening `boardgamematcher.com/extract?url=<page>` so the BGM web extractor takes over.
 
-**51 retail domains in v0.7.1**, grouped by brand:
+<!-- AUTO:retail-brands START -->
+**60 retail domains in `manifest.json`**, grouped by brand:
 
-| Brand | ccTLDs / domains in `manifest.json` | Notes |
+| Brand | Domains | Notes |
 |---|---|---|
-| Amazon (16) | .at, .be, .ca, .co.jp, .co.uk, .com, .com.au, .com.br, .com.mx, .de, .es, .fr, .it, .nl, .pl, .se | Search results + Best-Sellers/category pages; sponsored items skipped |
-| Veepee (8) | .at, .be, .de, .es, .fr, .it, .lu, .nl | Reads `__NEXT_DATA__` JSON |
-| Coolshop (10) | .co, .com, .de, .dk, .fi, .is, .nl, .no, .pl, .se | Generic card selector |
-| Philibert (1) | philibertnet.com | **Plus** a special game-detail overlay (`game-overlay.js`, BGM-976) on `/pub/<id>-…html`: shows BGM card, rating, and wishlist status inline on the product page |
-| Single-domain shops (26) | board-game.co.uk (Zatu), boardgamebliss.com, bol.com, brettspielversand.de, coolstuffinc.com, cultura.com, espritjeu.com, fantasywelt.de, fnac.com, gamenerdz.com, gamersdream.shop, knapix.com, kutami.de, le-passe-temps.com, lepion.com, ludifolie.com, ludisphere.fr, ludum.fr, milan-spiele.de, miniaturemarket.com, okkazeo.com, privalia.com, spiele-offensive.de, spieletaxi.de, thalia.de | Each has its own selector entry in `built-in.json` |
+| Amazon (16) | amazon.at, amazon.be, amazon.ca, amazon.co.jp, amazon.co.uk, amazon.com, amazon.com.au, amazon.com.br, amazon.com.mx, amazon.de, amazon.es, amazon.fr, amazon.it, amazon.nl, amazon.pl, amazon.se |  |
+| Coolshop (10) | coolshop.co, coolshop.com, coolshop.de, coolshop.dk, coolshop.fi, coolshop.is, coolshop.nl, coolshop.no, coolshop.pl, coolshop.se | Generic card selector across all 10 ccTLDs |
+| Veepee (9) | privalia.com, veepee.at, veepee.be, veepee.de, veepee.es, veepee.fr, veepee.it, veepee.lu, veepee.nl | Reads `__NEXT_DATA__` JSON; Privalia (`.es`, `.it`) shares the same Veepee back-end and is grouped here |
+| Board Game Bliss (1) | boardgamebliss.com |  |
+| bol.com (1) | bol.com |  |
+| Brettspielversand (1) | brettspielversand.de |  |
+| Coolstuff Inc. (1) | coolstuffinc.com |  |
+| Cultura (1) | cultura.com |  |
+| Esprit Jeu (1) | espritjeu.com |  |
+| Fantasywelt (1) | fantasywelt.de |  |
+| Fnac (1) | fnac.com |  |
+| Game Nerdz (1) | gamenerdz.com |  |
+| Gamer's Dream (1) | gamersdream.shop |  |
+| Knapix (1) | knapix.com |  |
+| Kutami (1) | kutami.de |  |
+| Le Passe-Temps (1) | le-passe-temps.com |  |
+| Le Pion (1) | lepion.com |  |
+| Ludifolie (1) | ludifolie.com |  |
+| Ludisphère (1) | ludisphere.fr |  |
+| Ludum (1) | ludum.fr |  |
+| Milan Spiele (1) | milan-spiele.de |  |
+| Miniature Market (1) | miniaturemarket.com |  |
+| Okkazeo (1) | okkazeo.com |  |
+| Philibert (1) | philibertnet.com | **Plus** a separate game-detail overlay (`game-overlay.js`) on `/{lang}/cat/<id>-…html` — see the platforms table above |
+| Spiele-Offensive (1) | spiele-offensive.de |  |
+| Spieletaxi (1) | spieletaxi.de |  |
+| Thalia (1) | thalia.de |  |
+| Zatu (1) | board-game.co.uk |  |
+<!-- AUTO:retail-brands END -->
 
 ---
 
@@ -50,13 +81,15 @@ All sites in this group share the same flow:
 
 Wired in `src/background/service-worker.js`. Every item is a redirect to `boardgamematcher.com` except the popup-opener.
 
+<!-- AUTO:context-menus START -->
 | Menu item | Visible on | Behavior |
 |---|---|---|
 | Extract Board Games from this page | page right-click | Opens `boardgamematcher.com/extract?url=<pageUrl>` |
 | Extract Board Games from this link | link right-click | Opens `…/extract?url=<linkUrl>` |
+| Search "%s" on BoardGameMatcher | text selection | Opens `…/search?q=<selection>` |
 | Extract Board Games from this URL | text selection that **is** a URL (Firefox-only auto-hide) | Opens `…/extract?url=<selection>` |
-| Search "X" on BoardGameMatcher | text selection | Opens `…/search?q=<selection>` |
-| Find "X" in BGM extension | text selection | Opens the extension popup pre-filled with the query (falls back to `…/search?q=` if `chrome.action.openPopup()` is unsupported) |
+| Find "%s" in BGM extension | text selection | Opens the extension popup pre-filled with the query (falls back to `…/search?q=` if `chrome.action.openPopup()` is unsupported) |
+<!-- AUTO:context-menus END -->
 
 ---
 
@@ -118,14 +151,17 @@ All BGM endpoints below are under `https://boardgamematcher.com` (or `chrome.sto
 
 Polls run on `chrome.alarms` regardless of login state, but every endpoint requires the BGM session cookie, so logged-out users get 401 and no notification fires.
 
-| Alarm | Endpoint | Notification on hit | Click destination |
-|---|---|---|---|
-| News | `GET /api/news/latest` (no credentials) | "New on BGM: …" | `/news/<slug>` |
-| Friend requests | `GET /api/friends/pending-summary` | "X new friend request(s)" | `/friends` |
-| New matches | `GET /api/matches/new` | "X new match(es)" | `/play` |
-| Session invites | `GET /api/sessions/invites/pending` | "Invited to <session>" | `/play/sessions/<id>` |
-| Unread messages | `GET /api/messages/unread-summary` | "X unread message(s)" | `/messages` |
-| Wishlist (overlay support) | `GET /api/me/wishlist` | — (caches list for badges & overlay) | — |
+<!-- AUTO:bg-polls START -->
+| Alarm | Period | Endpoint | Notification on hit | Click destination |
+|---|---|---|---|---|
+| News | every 1 h | `GET /api/news/latest` | "New on BGM: …" | `/news/<slug>` |
+| Friend requests | every 5 min | `GET /api/friends/pending-summary` | "X new friend request(s)" | `/friends` |
+| New matches | every 1 h | `GET /api/matches/new` | "X new match(es)" | `/play` |
+| Session invites | every 5 min | `GET /api/sessions/invites/pending` | "Invited to <session>" | `/play/sessions/<id>` |
+| Unread messages | every 1 min | `GET /api/messages/unread-summary` | "X unread message(s)" | `/messages` |
+<!-- AUTO:bg-polls END -->
+
+Wishlist refresh is also serviced by the background — see §3.7 / overlay messages — but is request-driven, not alarm-driven, so it's not in the table above.
 
 The service worker also exposes message handlers used by the Philibert overlay and the wishlist badge:
 
