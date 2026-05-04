@@ -4,12 +4,38 @@ let editingIndex = null;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
+  await loadDevMode();
   await loadPatterns();
   await loadNotifSettings();
   setupTabs();
   setupEventListeners();
   renderCustomPatterns();
 });
+
+async function loadDevMode() {
+  const { bgmDevMode = false } = await chrome.storage.local.get('bgmDevMode');
+  document.body.classList.toggle('dev-mode', bgmDevMode);
+  const toggle = document.getElementById('dev-mode-toggle');
+  if (toggle) toggle.checked = bgmDevMode;
+
+  // The Custom Patterns tab is the default active tab in markup but is gated
+  // behind dev mode. If the user opens options without dev mode on, switch
+  // the active tab to Notifications so they don't land on a hidden surface.
+  if (!bgmDevMode) {
+    const customBtn = document.querySelector('.tab-btn[data-tab="custom"]');
+    const customPanel = document.getElementById('custom-tab');
+    if (customBtn && customBtn.classList.contains('active')) {
+      customBtn.classList.remove('active');
+      customPanel.classList.remove('active');
+      const notifBtn = document.querySelector('.tab-btn[data-tab="notifications"]');
+      const notifPanel = document.getElementById('notifications-tab');
+      if (notifBtn && notifPanel) {
+        notifBtn.classList.add('active');
+        notifPanel.classList.add('active');
+      }
+    }
+  }
+}
 
 // Setup tab switching
 function setupTabs() {
@@ -96,6 +122,19 @@ function setupEventListeners() {
   document.getElementById('modal-close').addEventListener('click', closeModal);
   document.getElementById('cancel-btn').addEventListener('click', closeModal);
   document.getElementById('pattern-form').addEventListener('submit', handleFormSubmit);
+
+  // Developer mode toggle
+  document.getElementById('dev-mode-toggle').addEventListener('change', async (e) => {
+    const enabled = e.target.checked;
+    await chrome.storage.local.set({ bgmDevMode: enabled });
+    document.body.classList.toggle('dev-mode', enabled);
+    if (!enabled) {
+      const customTab = document.getElementById('custom-tab');
+      if (customTab.classList.contains('active')) {
+        document.querySelector('.tab-btn[data-tab="notifications"]').click();
+      }
+    }
+  });
 }
 
 // Load patterns from storage

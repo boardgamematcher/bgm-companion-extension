@@ -117,6 +117,21 @@ main {
   display: block;
 }
 
+/* Dev-mode-only elements (Custom Patterns tab + related Help section) are
+   hidden until the user enables Developer mode in the Help tab. */
+body:not(.dev-mode) .dev-only {
+  display: none;
+}
+
+.dev-mode-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
 /* ── Section header ── */
 .section-toolbar {
   display: flex;

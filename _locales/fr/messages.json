@@ -491,6 +491,15 @@
   "optionsHelpWishlist": {
     "message": "<strong>Liste de souhaits :</strong> ajoutez rapidement des jeux à votre liste de souhaits BGM depuis le popup."
   },
+  "optionsHelpDevModeTitle": {
+    "message": "Mode développeur"
+  },
+  "optionsHelpDevModeBody": {
+    "message": "Affiche l'onglet Modèles personnalisés pour créer vos propres règles d'extraction. Désactivé par défaut — la plupart des utilisateurs n'en ont pas besoin."
+  },
+  "optionsHelpDevModeLabel": {
+    "message": "Activer le mode développeur"
+  },
   "optionsHelpCustomTitle": {
     "message": "Modèles personnalisés"
   },

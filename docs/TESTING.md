@@ -34,6 +34,7 @@ What's tested, by feature area. Spec column links to the Playwright file under `
 | Extraction | Knapix end-to-end: extract → review → confirm → success | `popup-knapix-happy-path` |
 | Custom patterns | Create / edit / delete (with confirm) + export → import roundtrip | `options-custom-patterns` |
 | Custom patterns | Cancelling the delete confirm keeps the pattern | `options-custom-patterns` |
+| Custom patterns | Tab is hidden by default and revealed by the Developer mode toggle | `options-custom-patterns` |
 | Wishlist badge | Amazon search — only matching titles get a badge | `wishlist-badge` |
 | Wishlist badge | Philibert category page renders badges | `wishlist-badge` |
 | Wishlist badge | Empty wishlist injects no badges | `wishlist-badge` |
