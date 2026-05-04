@@ -350,23 +350,11 @@
   "optionsTitle": {
     "message": "Paramètres BGM Toolbox"
   },
-  "optionsTabSupported": {
-    "message": "Sites compatibles"
-  },
   "optionsTabCustom": {
     "message": "Modèles personnalisés"
   },
   "optionsTabHelp": {
     "message": "Aide"
-  },
-  "optionsSupportedTitle": {
-    "message": "Modèles de sites intégrés"
-  },
-  "optionsSupportedSubtitle": {
-    "message": "Ces modèles sont inclus dans l'extension"
-  },
-  "optionsSearchPlaceholder": {
-    "message": "Rechercher des sites…"
   },
   "optionsCustomTitle": {
     "message": "Modèles personnalisés"

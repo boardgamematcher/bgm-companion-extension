@@ -1,6 +1,5 @@
 // Options page controller
 let customPatterns = [];
-let builtInPatterns = [];
 let editingIndex = null;
 
 // Initialize
@@ -55,9 +54,6 @@ async function loadNotifSettings() {
 
 // Setup event listeners
 function setupEventListeners() {
-  // Refresh profiles
-  document.getElementById('refresh-profiles-btn').addEventListener('click', handleRefreshProfiles);
-
   // Notifications toggles
   document.getElementById('notif-news').addEventListener('change', async (e) => {
     await chrome.storage.local.set({ newsNotifEnabled: e.target.checked });
@@ -101,29 +97,11 @@ function setupEventListeners() {
   document.getElementById('modal-close').addEventListener('click', closeModal);
   document.getElementById('cancel-btn').addEventListener('click', closeModal);
   document.getElementById('pattern-form').addEventListener('submit', handleFormSubmit);
-
-  // Search
-  document.getElementById('search-supported').addEventListener('input', handleSearch);
 }
 
 // Load patterns from storage
 async function loadPatterns() {
   try {
-    // Prefer the live cache (populated by the SW from GitHub) over the
-    // bundled fallback, so the list reflects any recently refreshed profiles.
-    const cached = await chrome.storage.local.get('cachedProfiles');
-    const entry = cached.cachedProfiles;
-    if (entry && Array.isArray(entry.profiles) && entry.profiles.length > 0) {
-      builtInPatterns = entry.profiles;
-      updateProfilesMeta(entry.timestamp, entry.profiles.length);
-    } else {
-      // Fall back to the bundled JSON when the cache is empty or missing.
-      const response = await fetch(chrome.runtime.getURL('patterns/built-in.json'));
-      const data = await response.json();
-      builtInPatterns = data.profiles || data.patterns || [];
-      updateProfilesMeta(null, builtInPatterns.length);
-    }
-
     const result = await chrome.storage.local.get('customPatterns');
     customPatterns = result.customPatterns || [];
   } catch (error) {
@@ -131,73 +109,9 @@ async function loadPatterns() {
   }
 }
 
-function updateProfilesMeta(timestamp, count) {
-  const el = document.getElementById('profiles-meta');
-  if (!el) return;
-  const countStr = `${count} site${count !== 1 ? 's' : ''}`;
-  if (!timestamp) {
-    el.textContent = countStr;
-    return;
-  }
-  const ago = formatTimeAgo(timestamp);
-  el.textContent = `${countStr} — updated ${ago}`;
-}
-
-function formatTimeAgo(timestamp) {
-  const diffMs = Date.now() - timestamp;
-  const diffMin = Math.floor(diffMs / 60000);
-  if (diffMin < 1) return 'just now';
-  if (diffMin < 60) return `${diffMin}m ago`;
-  const diffH = Math.floor(diffMin / 60);
-  if (diffH < 24) return `${diffH}h ago`;
-  return `${Math.floor(diffH / 24)}d ago`;
-}
-
-async function handleRefreshProfiles() {
-  const btn = document.getElementById('refresh-profiles-btn');
-  btn.disabled = true;
-  btn.textContent = 'Refreshing…';
-
-  try {
-    await chrome.storage.local.remove('cachedProfiles');
-    await new Promise((resolve, reject) => {
-      chrome.runtime.sendMessage({ action: 'reloadPatterns' }, (response) => {
-        if (chrome.runtime.lastError) return reject(chrome.runtime.lastError);
-        resolve(response);
-      });
-    });
-    await loadPatterns();
-    renderSupportedPatterns(document.getElementById('search-supported').value);
-  } catch (err) {
-    console.error('Failed to refresh profiles:', err);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Refresh profiles';
-  }
-}
-
 // Render all patterns
 function renderPatterns() {
-  renderSupportedPatterns();
   renderCustomPatterns();
-}
-
-// Render built-in patterns
-function renderSupportedPatterns(filter = '') {
-  const list = document.getElementById('supported-list');
-  list.innerHTML = '';
-
-  const filtered = builtInPatterns.filter(
-    (p) =>
-      filter === '' ||
-      p.name.toLowerCase().includes(filter.toLowerCase()) ||
-      p.domain.toLowerCase().includes(filter.toLowerCase())
-  );
-
-  filtered.forEach((pattern) => {
-    const card = createPatternCard(pattern, false);
-    list.appendChild(card);
-  });
 }
 
 // Render custom patterns
@@ -488,12 +402,6 @@ function handleExport() {
   a.click();
 
   URL.revokeObjectURL(url);
-}
-
-// Handle search
-function handleSearch(e) {
-  const query = e.target.value;
-  renderSupportedPatterns(query);
 }
 
 // Parse comma-separated string to array
