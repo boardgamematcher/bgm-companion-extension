@@ -1587,7 +1587,7 @@ async function loadDashboard(user) {
     const u = encodeURIComponent(user.username);
     setDashHref('dash-link-home', bgmLink('/', 'dash-home'));
     setDashHref('dash-link-collections', bgmLink(`/collections/${u}`, 'dash-collections'));
-    setDashHref('dash-link-wishlist', bgmLink(`/collections/${u}?type=wishlist`, 'dash-wishlist'));
+    setDashHref('dash-link-wishlist', bgmLink(`/collections/${u}?tab=wishlist`, 'dash-wishlist'));
   }
 
   setDashHref('dash-messages', bgmLink('/messages', 'dash-messages'));
