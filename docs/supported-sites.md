@@ -31,7 +31,7 @@ All play imports POST the parsed list to `boardgamematcher.com/api/plays/batch` 
 All sites in this group share the same flow:
 
 1. Two content scripts auto-load on every matched URL: `content-script.js` (extraction, runs on demand) and `wishlist-badge.js` + CSS (read-only "✓ on your wishlist" badge, runs at `document_idle`).
-2. The user opens the popup and clicks **Extract**. The popup runs the right pattern from `patterns/built-in.json`, the public [`site-profiles`](https://github.com/boardgamematcher/site-profiles) repo (refreshed every 6 h), or a user-defined custom pattern.
+2. The user opens the popup and clicks **Extract**. The popup runs the right pattern from `patterns/built-in.json`, the public [`site-profiles`](https://github.com/boardgamematcher/site-profiles) repo (refreshed every 6 h), or a user-defined custom pattern (the Custom Patterns tab is hidden by default — flip "Developer mode" in the Help tab to expose it).
 3. Matched titles + prices are previewed via `POST /api/extract/preview`, then on confirm sent to `POST /api/extract/extension`. On any failure the popup falls back to opening `boardgamematcher.com/extract?url=<page>` so the BGM web extractor takes over.
 
 **51 retail domains in v0.7.1**, grouped by brand:

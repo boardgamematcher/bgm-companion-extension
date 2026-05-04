@@ -2,6 +2,14 @@ import { test, expect } from './fixtures/extension.js';
 import fs from 'node:fs/promises';
 
 test.describe('options page — custom patterns CRUD', () => {
+  // Custom Patterns is gated behind the Developer mode flag. Seed it via the
+  // extension's service worker so the tab is reachable in every test.
+  test.beforeEach(async ({ context }) => {
+    let [worker] = context.serviceWorkers();
+    if (!worker) worker = await context.waitForEvent('serviceworker');
+    await worker.evaluate(() => chrome.storage.local.set({ bgmDevMode: true }));
+  });
+
   test('create / edit / delete / export-import roundtrip', async ({
     context,
     extensionId,
@@ -76,5 +84,25 @@ test.describe('options page — custom patterns CRUD', () => {
     page.once('dialog', (d) => d.dismiss());
     await page.click('#custom-list .pattern-card .icon-btn.delete');
     await expect(page.locator('#custom-list .pattern-card')).toHaveCount(1);
+  });
+});
+
+test.describe('options page — developer mode gating', () => {
+  test('Custom Patterns tab is hidden by default and revealed by the toggle', async ({
+    context,
+    extensionId,
+  }) => {
+    const page = await context.newPage();
+    await page.goto(`chrome-extension://${extensionId}/src/options/options.html`);
+
+    const customTabBtn = page.locator('button[data-tab="custom"]');
+    await expect(customTabBtn).toBeHidden();
+
+    await page.click('button[data-tab="help"]');
+    await page.check('#dev-mode-toggle');
+    await expect(customTabBtn).toBeVisible();
+
+    await page.uncheck('#dev-mode-toggle');
+    await expect(customTabBtn).toBeHidden();
   });
 });

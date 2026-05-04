@@ -511,6 +511,18 @@
     "message": "<strong>Wishlist:</strong> quickly add games to your BGM wishlist from the popup.",
     "description": "Help bullet about the wishlist quick-add."
   },
+  "optionsHelpDevModeTitle": {
+    "message": "Developer mode",
+    "description": "Subheading of the developer-mode section in Help."
+  },
+  "optionsHelpDevModeBody": {
+    "message": "Reveals the Custom Patterns tab so you can author your own site-extraction rules. Off by default — most users never need it.",
+    "description": "Help text describing what developer mode unlocks."
+  },
+  "optionsHelpDevModeLabel": {
+    "message": "Enable developer mode",
+    "description": "Label next to the developer-mode checkbox."
+  },
   "optionsHelpCustomTitle": {
     "message": "Custom patterns",
     "description": "Subheading of the custom-patterns section in Help."

@@ -12,7 +12,7 @@
       </header>
 
       <nav class="tabs">
-        <button class="tab-btn active" data-tab="custom" data-i18n="optionsTabCustom">
+        <button class="tab-btn active dev-only" data-tab="custom" data-i18n="optionsTabCustom">
           Custom Patterns
         </button>
         <button class="tab-btn" data-tab="notifications" data-i18n="optionsTabNotifications">
@@ -146,6 +146,18 @@
           </section>
 
           <section class="help-section">
+            <h3 data-i18n="optionsHelpDevModeTitle">Developer mode</h3>
+            <p data-i18n="optionsHelpDevModeBody">
+              Reveals the Custom Patterns tab so you can author your own site-extraction rules. Off
+              by default — most users never need it.
+            </p>
+            <label class="dev-mode-toggle">
+              <input type="checkbox" id="dev-mode-toggle" />
+              <span data-i18n="optionsHelpDevModeLabel">Enable developer mode</span>
+            </label>
+          </section>
+
+          <section class="help-section dev-only">
             <h3 data-i18n="optionsHelpCustomTitle">Custom patterns</h3>
             <p>
               <span data-i18n="optionsHelpCustomBody"
