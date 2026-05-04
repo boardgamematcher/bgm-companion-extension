@@ -1246,8 +1246,8 @@
     "description": "More tab row — opens the extension's options page."
   },
   "moreSettingsSub": {
-    "message": "Language, notifications",
-    "description": "Subtitle for the settings row."
+    "message": "Notifications",
+    "description": "Subtitle for the settings row. Reflects what's visible to non-dev users in the options page (custom patterns hidden behind a dev-mode flag — BGM-1017; no language picker yet — BGM-1016)."
   },
   "morePrivacy": {
     "message": "Privacy",
