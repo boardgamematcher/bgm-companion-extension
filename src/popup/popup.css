@@ -1441,6 +1441,21 @@ body {
   margin-top: 2px;
 }
 
+/* ── Flash highlight for cross-tab CTAs (More → Extract) ── */
+.flash-highlight {
+  animation: bgm-flash 1.6s ease-out;
+}
+@keyframes bgm-flash {
+  0% {
+    box-shadow: 0 0 0 2px var(--amber);
+    background: var(--amber-glow);
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+    background: transparent;
+  }
+}
+
 /* ── Message toast ── */
 .message {
   margin: 0 12px 8px;
