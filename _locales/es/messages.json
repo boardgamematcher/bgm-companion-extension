@@ -1075,7 +1075,6 @@
   "popupYucataLead": {
     "message": "Importa tu historial de partidas para seguir estadísticas y ganar insignias BGM"
   },
-
   "moreSectionGetMore": {
     "message": "Saca más de BGM"
   },
@@ -1085,7 +1084,6 @@
   "moreSectionHelp": {
     "message": "Ayuda"
   },
-
   "moreImportPlays": {
     "message": "Importa tus partidas"
   },
@@ -1104,7 +1102,6 @@
   "moreCustomPatternsSub": {
     "message": "Añade una tienda en 30 s"
   },
-
   "moreShare": {
     "message": "Comparte con otro jugador"
   },
@@ -1117,21 +1114,21 @@
   "moreShareCopied": {
     "message": "Enlace copiado — ¡compártelo con otro jugador!"
   },
-
+  "moreShareCopyLabel": {
+    "message": "Copiar enlace"
+  },
   "moreRate": {
     "message": "Valora esta extensión"
   },
   "moreRateSub": {
     "message": "5 estrellas ayudan mucho ⭐"
   },
-
   "moreWhatsNew": {
     "message": "Novedades"
   },
   "moreWhatsNewSub": {
     "message": "Changelog y hoja de ruta"
   },
-
   "moreFeedback": {
     "message": "Enviar comentarios"
   },
@@ -1155,5 +1152,11 @@
   },
   "morePrivacySub": {
     "message": "Qué enviamos y por qué"
+  },
+  "moreSuggestSite": {
+    "message": "Sugerir una tienda"
+  },
+  "moreSuggestSiteSub": {
+    "message": "Pídenos añadir un sitio"
   }
 }

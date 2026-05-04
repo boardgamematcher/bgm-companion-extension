@@ -682,7 +682,14 @@
                   </div>
                   <span class="more-chevron">›</span>
                 </button>
-                <button class="more-item" id="more-custom-patterns-btn">
+                <a
+                  class="more-item"
+                  id="more-suggest-site-btn"
+                  href="https://github.com/boardgamematcher/toolbox-extension/issues/new?labels=site-request&title=Site+request%3A+"
+                  target="_blank"
+                  rel="noopener"
+                  style="text-decoration: none; color: inherit"
+                >
                   <span class="more-icon-svg">
                     <svg
                       width="14"
@@ -695,18 +702,17 @@
                       stroke-linejoin="round"
                       aria-hidden="true"
                     >
-                      <line x1="12" y1="5" x2="12" y2="19" />
-                      <line x1="5" y1="12" x2="19" y2="12" />
+                      <circle cx="9" cy="21" r="1" />
+                      <circle cx="20" cy="21" r="1" />
+                      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
                     </svg>
                   </span>
                   <div class="more-info">
-                    <div class="more-title" data-i18n="moreCustomPatterns">
-                      Custom shop patterns
-                    </div>
-                    <div class="more-sub" data-i18n="moreCustomPatternsSub">Add a shop in 30s</div>
+                    <div class="more-title" data-i18n="moreSuggestSite">Suggest a new shop</div>
+                    <div class="more-sub" data-i18n="moreSuggestSiteSub">Ask us to add a site</div>
                   </div>
                   <span class="more-chevron">›</span>
-                </button>
+                </a>
               </div>
             </div>
 
@@ -715,40 +721,7 @@
                 Tell the world
               </div>
               <div class="more-section-list">
-                <button class="more-item" id="more-share-btn">
-                  <span class="more-icon-svg">
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <circle cx="18" cy="5" r="3" />
-                      <circle cx="6" cy="12" r="3" />
-                      <circle cx="18" cy="19" r="3" />
-                      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-                      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-                    </svg>
-                  </span>
-                  <div class="more-info">
-                    <div class="more-title" data-i18n="moreShare">Share with a fellow gamer</div>
-                    <div class="more-sub" data-i18n="moreShareSub">Copy link · X · WhatsApp</div>
-                  </div>
-                  <span class="more-chevron">›</span>
-                </button>
-                <a
-                  class="more-item"
-                  id="more-rate-btn"
-                  href="https://chrome.google.com/webstore/detail/bgm-toolbox"
-                  target="_blank"
-                  rel="noopener"
-                  style="text-decoration: none; color: inherit"
-                >
+                <button class="more-item" id="more-rate-btn">
                   <span class="more-icon-svg">
                     <svg
                       width="14"
@@ -771,15 +744,8 @@
                     <div class="more-sub" data-i18n="moreRateSub">5 stars help a lot ⭐</div>
                   </div>
                   <span class="more-chevron">›</span>
-                </a>
-                <a
-                  class="more-item"
-                  id="more-whats-new-btn"
-                  href="https://github.com/boardgamematcher/toolbox-extension/releases"
-                  target="_blank"
-                  rel="noopener"
-                  style="text-decoration: none; color: inherit"
-                >
+                </button>
+                <button class="more-item" id="more-whats-new-btn">
                   <span class="more-icon-svg">
                     <svg
                       width="14"
@@ -801,7 +767,7 @@
                     <div class="more-sub" data-i18n="moreWhatsNewSub">Changelog &amp; roadmap</div>
                   </div>
                   <span class="more-chevron">›</span>
-                </a>
+                </button>
               </div>
             </div>
 

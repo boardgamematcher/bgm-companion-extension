@@ -1084,7 +1084,6 @@
   "popupYucataLead": {
     "message": "Importez votre historique de parties pour suivre vos stats et gagner des badges BGM"
   },
-
   "moreSectionGetMore": {
     "message": "Tirez plus de BGM"
   },
@@ -1094,7 +1093,6 @@
   "moreSectionHelp": {
     "message": "Aide"
   },
-
   "moreImportPlays": {
     "message": "Importez vos parties"
   },
@@ -1113,7 +1111,6 @@
   "moreCustomPatternsSub": {
     "message": "Ajoutez une boutique en 30 s"
   },
-
   "moreShare": {
     "message": "Partagez avec un autre joueur"
   },
@@ -1126,21 +1123,21 @@
   "moreShareCopied": {
     "message": "Lien copié — partagez-le avec un autre joueur !"
   },
-
+  "moreShareCopyLabel": {
+    "message": "Copier le lien"
+  },
   "moreRate": {
     "message": "Notez cette extension"
   },
   "moreRateSub": {
     "message": "5 étoiles, ça aide ⭐"
   },
-
   "moreWhatsNew": {
     "message": "Nouveautés"
   },
   "moreWhatsNewSub": {
     "message": "Journal & feuille de route"
   },
-
   "moreFeedback": {
     "message": "Envoyer un retour"
   },
@@ -1164,5 +1161,11 @@
   },
   "morePrivacySub": {
     "message": "Ce que nous envoyons et pourquoi"
+  },
+  "moreSuggestSite": {
+    "message": "Suggérer une boutique"
+  },
+  "moreSuggestSiteSub": {
+    "message": "Demandez-nous d'ajouter un site"
   }
 }

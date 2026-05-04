@@ -1075,7 +1075,6 @@
   "popupYucataLead": {
     "message": "Importiere deine Spielhistorie, um Statistiken zu verfolgen und BGM-Abzeichen zu verdienen"
   },
-
   "moreSectionGetMore": {
     "message": "Mehr aus BGM herausholen"
   },
@@ -1085,7 +1084,6 @@
   "moreSectionHelp": {
     "message": "Hilfe"
   },
-
   "moreImportPlays": {
     "message": "Partien importieren"
   },
@@ -1104,7 +1102,6 @@
   "moreCustomPatternsSub": {
     "message": "Shop in 30 s hinzufügen"
   },
-
   "moreShare": {
     "message": "Mit anderen Spielern teilen"
   },
@@ -1117,21 +1114,21 @@
   "moreShareCopied": {
     "message": "Link kopiert — teile ihn mit anderen Spielern!"
   },
-
+  "moreShareCopyLabel": {
+    "message": "Link kopieren"
+  },
   "moreRate": {
     "message": "Diese Erweiterung bewerten"
   },
   "moreRateSub": {
     "message": "5 Sterne helfen sehr ⭐"
   },
-
   "moreWhatsNew": {
     "message": "Neuigkeiten"
   },
   "moreWhatsNewSub": {
     "message": "Changelog & Roadmap"
   },
-
   "moreFeedback": {
     "message": "Feedback senden"
   },
@@ -1155,5 +1152,11 @@
   },
   "morePrivacySub": {
     "message": "Was wir senden und warum"
+  },
+  "moreSuggestSite": {
+    "message": "Shop vorschlagen"
+  },
+  "moreSuggestSiteSub": {
+    "message": "Sag uns, welchen Shop wir hinzufügen sollen"
   }
 }
