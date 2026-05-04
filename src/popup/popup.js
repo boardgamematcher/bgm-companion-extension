@@ -1591,7 +1591,7 @@ async function loadDashboard(user) {
   }
 
   setDashHref('dash-messages', bgmLink('/messages', 'dash-messages'));
-  setDashHref('dash-matches', bgmLink('/play/players', 'dash-matches'));
+  setDashHref('dash-matches', bgmLink('/friends/suggestions', 'dash-matches'));
   setDashHref('dash-notifs', bgmLink('/notifications', 'dash-notifs'));
 
   // Messages — from service-worker cache
