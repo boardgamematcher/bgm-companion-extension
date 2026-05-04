@@ -1166,5 +1166,111 @@
         "example": "5"
       }
     }
+  },
+
+  "moreSectionGetMore": {
+    "message": "Get more out of BGM",
+    "description": "More tab — first section header. Activation-driving items."
+  },
+  "moreSectionTellTheWorld": {
+    "message": "Tell the world",
+    "description": "More tab — second section header. Growth / word-of-mouth items."
+  },
+  "moreSectionHelp": {
+    "message": "Help",
+    "description": "More tab — third section header. Support and trust items."
+  },
+
+  "moreImportPlays": {
+    "message": "Import your plays",
+    "description": "More tab row — jumps to the Extract tab and highlights the play-import strip."
+  },
+  "moreImportPlaysSub": {
+    "message": "BGA · BGG · Yucata · 3 more",
+    "description": "Subtitle for the Import-your-plays row, listing supported play-import platforms."
+  },
+  "moreBggSync": {
+    "message": "Sync your BGG collection",
+    "description": "More tab row — opens the BGG collection sync panel."
+  },
+  "moreBggSyncSub": {
+    "message": "Owned, wishlist, ratings",
+    "description": "Subtitle for the BGG-sync row, listing what gets imported."
+  },
+  "moreCustomPatterns": {
+    "message": "Custom shop patterns",
+    "description": "More tab row — opens the options page where users can add their own shop patterns."
+  },
+  "moreCustomPatternsSub": {
+    "message": "Add a shop in 30s",
+    "description": "Subtitle for the custom-patterns row — emphasizes how quick it is."
+  },
+
+  "moreShare": {
+    "message": "Share with a fellow gamer",
+    "description": "More tab row — uses the Web Share API or copies the BGM link to clipboard."
+  },
+  "moreShareSub": {
+    "message": "Copy link · X · WhatsApp",
+    "description": "Subtitle for the share row, listing the share targets."
+  },
+  "moreShareText": {
+    "message": "Check out BoardGameMatcher — find your next favourite board game and connect with players.",
+    "description": "Default text used by the Web Share API and as the seed for X / WhatsApp shares."
+  },
+  "moreShareCopied": {
+    "message": "Link copied — share it with a fellow gamer!",
+    "description": "Toast shown after the BGM link is copied to clipboard."
+  },
+
+  "moreRate": {
+    "message": "Rate this extension",
+    "description": "More tab row — opens the Chrome Web Store / AMO listing for the extension."
+  },
+  "moreRateSub": {
+    "message": "5 stars help a lot ⭐",
+    "description": "Subtitle for the rate row, gently nudging for 5-star reviews."
+  },
+
+  "moreWhatsNew": {
+    "message": "What's new",
+    "description": "More tab row — opens the GitHub releases page (changelog and roadmap)."
+  },
+  "moreWhatsNewSub": {
+    "message": "Changelog & roadmap",
+    "description": "Subtitle for the what's-new row."
+  },
+
+  "moreFeedback": {
+    "message": "Send feedback",
+    "description": "More tab row — opens a new GitHub issue for bug reports and ideas."
+  },
+  "moreFeedbackSub": {
+    "message": "Bug reports & ideas",
+    "description": "Subtitle for the feedback row."
+  },
+  "moreHelp": {
+    "message": "Help & documentation",
+    "description": "More tab row — opens the project README on GitHub."
+  },
+  "moreHelpSub": {
+    "message": "FAQ and guides",
+    "description": "Subtitle for the help row."
+  },
+  "moreSettings": {
+    "message": "Settings",
+    "description": "More tab row — opens the extension's options page."
+  },
+  "moreSettingsSub": {
+    "message": "Language, notifications",
+    "description": "Subtitle for the settings row."
+  },
+  "morePrivacy": {
+    "message": "Privacy",
+    "description": "More tab row — opens PRIVACY.md on GitHub."
+  },
+  "morePrivacySub": {
+    "message": "What we send and why",
+    "description": "Subtitle for the privacy row."
   }
 }

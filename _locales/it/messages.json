@@ -1086,5 +1086,86 @@
   },
   "popupYucataLead": {
     "message": "Importa la tua cronologia di partite per seguire le statistiche e guadagnare badge BGM"
+  },
+
+  "moreSectionGetMore": {
+    "message": "Ottieni di più da BGM"
+  },
+  "moreSectionTellTheWorld": {
+    "message": "Spargi la voce"
+  },
+  "moreSectionHelp": {
+    "message": "Aiuto"
+  },
+
+  "moreImportPlays": {
+    "message": "Importa le tue partite"
+  },
+  "moreImportPlaysSub": {
+    "message": "BGA · BGG · Yucata · 3 altri"
+  },
+  "moreBggSync": {
+    "message": "Sincronizza la tua collezione BGG"
+  },
+  "moreBggSyncSub": {
+    "message": "Posseduti, wishlist, voti"
+  },
+  "moreCustomPatterns": {
+    "message": "Pattern negozio personalizzati"
+  },
+  "moreCustomPatternsSub": {
+    "message": "Aggiungi un negozio in 30 s"
+  },
+
+  "moreShare": {
+    "message": "Condividi con un altro giocatore"
+  },
+  "moreShareSub": {
+    "message": "Copia · X · WhatsApp"
+  },
+  "moreShareText": {
+    "message": "Scopri BoardGameMatcher — trova il tuo prossimo gioco preferito e connettiti con altri giocatori."
+  },
+  "moreShareCopied": {
+    "message": "Link copiato — condividilo con un altro giocatore!"
+  },
+
+  "moreRate": {
+    "message": "Valuta questa estensione"
+  },
+  "moreRateSub": {
+    "message": "5 stelle aiutano molto ⭐"
+  },
+
+  "moreWhatsNew": {
+    "message": "Novità"
+  },
+  "moreWhatsNewSub": {
+    "message": "Changelog e roadmap"
+  },
+
+  "moreFeedback": {
+    "message": "Invia feedback"
+  },
+  "moreFeedbackSub": {
+    "message": "Bug e idee"
+  },
+  "moreHelp": {
+    "message": "Aiuto e documentazione"
+  },
+  "moreHelpSub": {
+    "message": "FAQ e guide"
+  },
+  "moreSettings": {
+    "message": "Impostazioni"
+  },
+  "moreSettingsSub": {
+    "message": "Lingua, notifiche"
+  },
+  "morePrivacy": {
+    "message": "Privacy"
+  },
+  "morePrivacySub": {
+    "message": "Cosa inviamo e perché"
   }
 }

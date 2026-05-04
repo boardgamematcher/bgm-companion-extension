@@ -132,6 +132,13 @@ function setupEventListeners() {
   const settingsMoreBtn = document.getElementById('settings-more-btn');
   if (settingsMoreBtn) settingsMoreBtn.addEventListener('click', handleSettings);
 
+  document
+    .getElementById('more-import-plays-btn')
+    ?.addEventListener('click', handleMoreImportPlays);
+  document.getElementById('more-bgg-sync-btn')?.addEventListener('click', handleMoreBggSync);
+  document.getElementById('more-custom-patterns-btn')?.addEventListener('click', handleSettings);
+  document.getElementById('more-share-btn')?.addEventListener('click', handleMoreShare);
+
   document.getElementById('dash-signin-btn').addEventListener('click', handleLogin);
   document.getElementById('dash-signup-link').addEventListener('click', handleSignup);
   document.getElementById('wl-strip-signin').addEventListener('click', handleLogin);
@@ -1022,6 +1029,58 @@ function showMessage(text, type) {
 
 function handleSettings() {
   chrome.runtime.openOptionsPage();
+}
+
+// ── More tab: cross-tab CTAs ──
+
+function flashElement(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  el.classList.add('flash-highlight');
+  setTimeout(() => el.classList.remove('flash-highlight'), 1600);
+}
+
+function handleMoreImportPlays() {
+  switchTab('extract');
+  setTimeout(() => flashElement('strip-play'), 50);
+}
+
+function handleMoreBggSync() {
+  if (!currentUser) {
+    handleLogin();
+    return;
+  }
+  switchTab('extract');
+  showBggSyncPanel(currentUser);
+  setTimeout(() => flashElement('bggSyncPanel'), 50);
+}
+
+async function handleMoreShare() {
+  const shareUrl = bgmLink('/', 'extension-share');
+  const shareText = chrome.i18n.getMessage('moreShareText') || 'Check out BoardGameMatcher';
+  const shareData = { title: 'BoardGameMatcher', text: shareText, url: shareUrl };
+
+  if (navigator.share) {
+    try {
+      await navigator.share(shareData);
+      return;
+    } catch (_e) {
+      // user cancelled or share unavailable — fall through to clipboard copy
+    }
+  }
+
+  try {
+    await navigator.clipboard.writeText(shareUrl);
+    showMessage(
+      chrome.i18n.getMessage('moreShareCopied') || 'Link copied — share it with a fellow gamer!',
+      'success'
+    );
+  } catch (_e) {
+    chrome.tabs.create({
+      url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`,
+    });
+  }
 }
 
 // ── Wishlist quick-add ──
