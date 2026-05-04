@@ -12,10 +12,7 @@
       </header>
 
       <nav class="tabs">
-        <button class="tab-btn active" data-tab="supported" data-i18n="optionsTabSupported">
-          Supported Sites
-        </button>
-        <button class="tab-btn" data-tab="custom" data-i18n="optionsTabCustom">
+        <button class="tab-btn active" data-tab="custom" data-i18n="optionsTabCustom">
           Custom Patterns
         </button>
         <button class="tab-btn" data-tab="notifications" data-i18n="optionsTabNotifications">
@@ -25,32 +22,8 @@
       </nav>
 
       <main>
-        <!-- Supported Sites Tab -->
-        <div id="supported-tab" class="tab-content active">
-          <div class="section-toolbar">
-            <div class="section-header">
-              <h2 data-i18n="optionsSupportedTitle">Built-in Site Patterns</h2>
-              <p class="subtitle" id="profiles-meta"></p>
-            </div>
-            <button id="refresh-profiles-btn" class="secondary-btn">Refresh profiles</button>
-          </div>
-
-          <div class="search-box">
-            <input
-              type="text"
-              id="search-supported"
-              data-i18n-placeholder="optionsSearchPlaceholder"
-              placeholder="Search sites..."
-            />
-          </div>
-
-          <div id="supported-list" class="pattern-list">
-            <!-- Populated by JavaScript -->
-          </div>
-        </div>
-
         <!-- Custom Patterns Tab -->
-        <div id="custom-tab" class="tab-content">
+        <div id="custom-tab" class="tab-content active">
           <div class="section-header">
             <h2 data-i18n="optionsCustomTitle">Custom Patterns</h2>
             <p class="subtitle" data-i18n="optionsCustomSubtitle">

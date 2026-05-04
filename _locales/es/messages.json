@@ -350,23 +350,11 @@
   "optionsTitle": {
     "message": "Configuración de BGM Toolbox"
   },
-  "optionsTabSupported": {
-    "message": "Sitios compatibles"
-  },
   "optionsTabCustom": {
     "message": "Patrones personalizados"
   },
   "optionsTabHelp": {
     "message": "Ayuda"
-  },
-  "optionsSupportedTitle": {
-    "message": "Patrones de sitios integrados"
-  },
-  "optionsSupportedSubtitle": {
-    "message": "Estos patrones están incluidos con la extensión"
-  },
-  "optionsSearchPlaceholder": {
-    "message": "Buscar sitios…"
   },
   "optionsCustomTitle": {
     "message": "Patrones personalizados"

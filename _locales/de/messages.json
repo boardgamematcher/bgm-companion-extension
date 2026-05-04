@@ -350,23 +350,11 @@
   "optionsTitle": {
     "message": "BGM Toolbox Einstellungen"
   },
-  "optionsTabSupported": {
-    "message": "Unterstützte Seiten"
-  },
   "optionsTabCustom": {
     "message": "Benutzerdefinierte Muster"
   },
   "optionsTabHelp": {
     "message": "Hilfe"
-  },
-  "optionsSupportedTitle": {
-    "message": "Integrierte Seitenmuster"
-  },
-  "optionsSupportedSubtitle": {
-    "message": "Diese Muster sind in der Erweiterung enthalten"
-  },
-  "optionsSearchPlaceholder": {
-    "message": "Seiten suchen…"
   },
   "optionsCustomTitle": {
     "message": "Benutzerdefinierte Muster"

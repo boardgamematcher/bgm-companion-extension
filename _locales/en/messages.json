@@ -327,29 +327,13 @@
     "message": "BGM Toolbox Settings",
     "description": "Page title of the settings page."
   },
-  "optionsTabSupported": {
-    "message": "Supported Sites",
-    "description": "First tab on the settings page."
-  },
   "optionsTabCustom": {
     "message": "Custom Patterns",
-    "description": "Second tab on the settings page."
+    "description": "First tab on the settings page."
   },
   "optionsTabHelp": {
     "message": "Help",
-    "description": "Third tab on the settings page."
-  },
-  "optionsSupportedTitle": {
-    "message": "Built-in Site Patterns",
-    "description": "Heading of the Supported Sites tab."
-  },
-  "optionsSupportedSubtitle": {
-    "message": "These patterns are included with the extension",
-    "description": "Subheading of the Supported Sites tab."
-  },
-  "optionsSearchPlaceholder": {
-    "message": "Search sites…",
-    "description": "Placeholder of the search input on the Supported Sites tab."
+    "description": "Last tab on the settings page."
   },
   "optionsCustomTitle": {
     "message": "Custom Patterns",
