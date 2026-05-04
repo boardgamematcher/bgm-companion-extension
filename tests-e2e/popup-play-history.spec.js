@@ -86,7 +86,13 @@ async function stubTabsForPlatform(page, fakeUrl, expectedAction) {
 
 test.describe('play-history platform smoke tests', () => {
   test.beforeEach(async ({ context }) => {
-    await mockJson(context, 'https://boardgamematcher.com/api/auth/me', { user: null }, 401);
+    // Logged-in fixture: BGA import gates on a BGM session (BGM-1010 preflight),
+    // and other platforms don't care, so a single signed-in mock works for all.
+    await mockJson(context, 'https://boardgamematcher.com/api/me', {
+      id: 1,
+      email: 'qa@example.com',
+      username: 'qa',
+    });
   });
 
   for (const p of PLATFORMS) {
