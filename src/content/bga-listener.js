@@ -93,7 +93,9 @@ async function importBGAPlays() {
   // Step 1: Get player ID
   const playerId = extractPlayerId();
   if (!playerId) {
-    throw new Error('Sign in to BoardGameArena and try again.');
+    const err = new Error('Sign in to BoardGameArena and try again.');
+    err.code = 'NOT_LOGGED_IN_BGA';
+    throw err;
   }
 
   // Step 2: Load BGA→BGG mapping
@@ -168,7 +170,11 @@ if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.onMessage)
         })
         .catch((error) => {
           console.error('BGA import error:', error);
-          sendResponse({ success: false, error: error.message });
+          sendResponse({
+            success: false,
+            error: error.message,
+            code: error.code || null,
+          });
         });
 
       // Keep the message channel open for async response

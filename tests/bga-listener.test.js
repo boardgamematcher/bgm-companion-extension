@@ -5,6 +5,7 @@ const { describe, test, expect, beforeEach } = require('@jest/globals');
 const {
   extractPlayerId,
   readPlayerIdFromCookie,
+  importBGAPlays,
 } = require('../src/content/bga-listener.js');
 
 function resetDom() {
@@ -118,6 +119,19 @@ describe('extractPlayerId', () => {
     document.cookie = 'TournoiEnLigne_sso_user=84147370; path=/';
     // Cookie should win because the inline script is filtered out.
     expect(extractPlayerId()).toBe('84147370');
+  });
+});
+
+describe('importBGAPlays', () => {
+  beforeEach(resetDom);
+
+  test('throws an Error with code=NOT_LOGGED_IN_BGA when no player ID is resolvable', async () => {
+    setUrl('/');
+    // No body attr, no cookies, no inline script → extractPlayerId returns null
+    await expect(importBGAPlays()).rejects.toMatchObject({
+      code: 'NOT_LOGGED_IN_BGA',
+      message: expect.stringContaining('BoardGameArena'),
+    });
   });
 });
 
