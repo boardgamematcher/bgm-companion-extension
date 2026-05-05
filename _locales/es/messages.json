@@ -1,6 +1,6 @@
 {
   "extName": {
-    "message": "BGM Toolbox — Compañero de BoardGameMatcher"
+    "message": "BGM Companion"
   },
   "extDescription": {
     "message": "Tu compañero de juegos de mesa: extrae juegos de tiendas, registra partidas, sincroniza colecciones — todo conectado a BoardGameMatcher.com"
@@ -93,7 +93,7 @@
     "message": "No se detectaron juegos en esta página"
   },
   "popupUnsupportedNoTab": {
-    "message": "Abre una pestaña del navegador para usar BGM Toolbox."
+    "message": "Abre una pestaña del navegador para usar BGM Companion."
   },
   "popupUnsupportedDefault": {
     "message": "Abre una tienda de juegos de mesa compatible para extraer juegos."
@@ -348,7 +348,7 @@
     "message": "Extraer juegos de mesa de este enlace"
   },
   "optionsTitle": {
-    "message": "Configuración de BGM Toolbox"
+    "message": "Configuración de BGM Companion"
   },
   "optionsTabCustom": {
     "message": "Patrones personalizados"
@@ -593,7 +593,7 @@
     "message": "Notificaciones"
   },
   "optionsNotifSubtitle": {
-    "message": "Elige qué notificaciones del navegador puede enviarte BGM Toolbox"
+    "message": "Elige qué notificaciones del navegador puede enviarte BGM Companion"
   },
   "optionsNotifNewsLabel": {
     "message": "Noticias y anuncios"
