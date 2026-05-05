@@ -348,7 +348,7 @@
     "message": "Extraire les jeux de société de ce lien"
   },
   "optionsTitle": {
-    "message": "Paramètres BGM Toolbox"
+    "message": "Paramètres de BGM Toolbox"
   },
   "optionsTabCustom": {
     "message": "Modèles personnalisés"
@@ -480,16 +480,16 @@
     "message": "Aide & Documentation"
   },
   "optionsHelpWhatTitle": {
-    "message": "Ce qu'il fait"
+    "message": "Fonctionnalités"
   },
   "optionsHelpShopDeals": {
-    "message": "<strong>Offres en boutique :</strong> sur les boutiques de jeux de société compatibles, cliquez sur l'icône de la barre d'outils pour extraire les noms de jeux, puis les comparer sur BoardGameMatcher.com."
+    "message": "<strong>Jeux en boutique :</strong> sur les boutiques de jeux de société compatibles, cliquez sur l'icône de l'extension pour extraire les noms de jeux, puis les comparer sur BoardGameMatcher.com."
   },
   "optionsHelpPlayHistory": {
     "message": "<strong>Historique des parties :</strong> sur Board Game Arena et Yucata, importez vos parties passées dans votre profil BGM en un clic."
   },
   "optionsHelpWishlist": {
-    "message": "<strong>Liste de souhaits :</strong> ajoutez rapidement des jeux à votre liste de souhaits BGM depuis le popup."
+    "message": "<strong>Liste de souhaits :</strong> ajoutez rapidement des jeux à votre liste de souhaits BGM depuis l'extension."
   },
   "optionsHelpDevModeTitle": {
     "message": "Mode développeur"
