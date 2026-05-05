@@ -1013,6 +1013,14 @@
     "message": "Cancel & keep results",
     "description": "Button to cancel a bulk extraction and keep what was found so far."
   },
+  "popupFooterMissingSite": {
+    "message": "Missing a site? Request it →",
+    "description": "Footer link on the popup unsupported-page strip — opens the BGM contact form pre-filled with a [Companion] Site Request subject."
+  },
+  "popupFooterFoundIssue": {
+    "message": "Found an issue? Report it →",
+    "description": "Footer link on the popup unsupported-page strip — opens the BGM contact form pre-filled with a [Companion] Bug Report subject."
+  },
   "popupTabletopiaCtx": {
     "message": "Tabletopia",
     "description": "Context pill label on the Tabletopia import panel."
