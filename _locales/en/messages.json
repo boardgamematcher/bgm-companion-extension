@@ -1228,11 +1228,7 @@
   },
   "moreWhatsNew": {
     "message": "What's new",
-    "description": "More tab row — opens the GitHub releases page (changelog and roadmap)."
-  },
-  "moreWhatsNewSub": {
-    "message": "Changelog & roadmap",
-    "description": "Subtitle for the what's-new row."
+    "description": "More tab row — opens the GitHub releases page with the latest news."
   },
   "moreFeedback": {
     "message": "Send feedback",
