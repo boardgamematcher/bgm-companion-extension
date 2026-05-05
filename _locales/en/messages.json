@@ -1,6 +1,6 @@
 {
   "extName": {
-    "message": "BGM Toolbox — BoardGameMatcher Companion",
+    "message": "BGM Companion",
     "description": "Extension name shown in the browser UI and store listings."
   },
   "extDescription": {
@@ -324,7 +324,7 @@
     "description": "Right-click context menu entry for a link."
   },
   "optionsTitle": {
-    "message": "BGM Toolbox Settings",
+    "message": "BGM Companion Settings",
     "description": "Page title of the settings page."
   },
   "optionsTabCustom": {
@@ -616,7 +616,7 @@
     "description": "Section heading on the Notifications settings tab."
   },
   "optionsNotifSubtitle": {
-    "message": "Choose which browser notifications BGM Toolbox can send you",
+    "message": "Choose which browser notifications BGM Companion can send you",
     "description": "Subtitle on the Notifications settings tab."
   },
   "optionsNotifNewsLabel": {
