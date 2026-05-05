@@ -589,6 +589,18 @@
   "optionsTabNotifications": {
     "message": "Notifiche"
   },
+  "optionsLangTitle": {
+    "message": "Lingua"
+  },
+  "optionsLangSubtitle": {
+    "message": "Sovrascrive la lingua del browser. Gli utenti loggati la sincronizzano col loro profilo BGM."
+  },
+  "optionsLangLabel": {
+    "message": "Lingua di visualizzazione"
+  },
+  "optionsLangAuto": {
+    "message": "Auto (predefinita del browser)"
+  },
   "optionsNotifTitle": {
     "message": "Notifiche"
   },

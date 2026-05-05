@@ -589,6 +589,18 @@
   "optionsTabNotifications": {
     "message": "Notificaciones"
   },
+  "optionsLangTitle": {
+    "message": "Idioma"
+  },
+  "optionsLangSubtitle": {
+    "message": "Anula el idioma del navegador. Los usuarios conectados sincronizan con su perfil BGM."
+  },
+  "optionsLangLabel": {
+    "message": "Idioma de visualización"
+  },
+  "optionsLangAuto": {
+    "message": "Auto (idioma del navegador)"
+  },
   "optionsNotifTitle": {
     "message": "Notificaciones"
   },

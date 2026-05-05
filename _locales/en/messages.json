@@ -611,6 +611,22 @@
     "message": "Notifications",
     "description": "Tab label for the Notifications settings tab."
   },
+  "optionsLangTitle": {
+    "message": "Language",
+    "description": "Section heading for the UI language selector on the Notifications tab."
+  },
+  "optionsLangSubtitle": {
+    "message": "Override the browser default. Logged-in users sync this to their BGM web profile.",
+    "description": "Subtitle for the UI language selector section."
+  },
+  "optionsLangLabel": {
+    "message": "Display language",
+    "description": "Label next to the UI language dropdown."
+  },
+  "optionsLangAuto": {
+    "message": "Auto (browser default)",
+    "description": "First option in the UI language dropdown — clears the override."
+  },
   "optionsNotifTitle": {
     "message": "Notifications",
     "description": "Section heading on the Notifications settings tab."

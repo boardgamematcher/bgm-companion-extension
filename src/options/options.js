@@ -1,4 +1,5 @@
 // Options page controller
+const BGM_BASE_URL = 'https://boardgamematcher.com';
 let customPatterns = [];
 let editingIndex = null;
 
@@ -7,6 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadDevMode();
   await loadPatterns();
   await loadNotifSettings();
+  await loadLanguageSetting();
   setupTabs();
   setupEventListeners();
   renderCustomPatterns();
@@ -75,6 +77,49 @@ function setupTabs() {
 
 // ── Notifications settings ──
 
+// Reads the current UI locale override from chrome.storage.local (the same key
+// the bgmI18n module writes to via setLocale). An empty value means "auto" —
+// fall back to the browser default.
+async function loadLanguageSetting() {
+  const sel = document.getElementById('ui-language');
+  if (!sel) return;
+  const { bgmUiLocale = '' } = await chrome.storage.local.get('bgmUiLocale');
+  sel.value = bgmUiLocale || '';
+}
+
+// Apply a new UI locale. Persists locally via bgmI18n (which also re-applies
+// translations on the current page) and, if the user is logged in, mirrors
+// the choice into their BGM web profile so /api/me on the next popup open
+// returns the same value (otherwise syncUiLocaleFromUser would overwrite the
+// local override on every popup open).
+//
+// Logged-out push: silently ignored (401 swallowed) — the local override
+// still applies, which is the correct behavior pre-login.
+async function applyLanguageChange(locale) {
+  if (window.bgmI18n && typeof window.bgmI18n.setLocale === 'function') {
+    await window.bgmI18n.setLocale(locale || null);
+  } else {
+    if (locale) {
+      await chrome.storage.local.set({ bgmUiLocale: locale });
+    } else {
+      await chrome.storage.local.remove('bgmUiLocale');
+    }
+  }
+
+  if (!locale) return; // "auto" — nothing to push to the server.
+
+  try {
+    await fetch(`${BGM_BASE_URL}/api/me/preferences`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ preferred_language: locale }),
+    });
+  } catch (err) {
+    console.warn('Failed to sync preferred_language to BGM profile:', err);
+  }
+}
+
 async function loadNotifSettings() {
   const { newsNotifEnabled = true } = await chrome.storage.local.get('newsNotifEnabled');
   document.getElementById('notif-news').checked = newsNotifEnabled;
@@ -96,6 +141,14 @@ async function loadNotifSettings() {
 
 // Setup event listeners
 function setupEventListeners() {
+  // Language selector
+  const langSel = document.getElementById('ui-language');
+  if (langSel) {
+    langSel.addEventListener('change', (e) => {
+      applyLanguageChange(e.target.value);
+    });
+  }
+
   // Notifications toggles
   document.getElementById('notif-news').addEventListener('change', async (e) => {
     await chrome.storage.local.set({ newsNotifEnabled: e.target.checked });
