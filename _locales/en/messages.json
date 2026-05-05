@@ -737,6 +737,10 @@
     "message": "Get notified when someone invites you to a game night session",
     "description": "Options page: description for the game night invite notifications toggle."
   },
+  "optionsNotifSessionInviteBadge": {
+    "message": "Coming Q3 2026",
+    "description": "Options page: pill next to the Game night invites label, signaling the feature is in development."
+  },
   "notifSessionInviteTitle": {
     "message": "Game Night Invite",
     "description": "Notification title when a new game night invite is received."

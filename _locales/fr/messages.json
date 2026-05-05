@@ -704,6 +704,10 @@
   "optionsNotifSessionInviteDesc": {
     "message": "Soyez notifié quand quelqu'un vous invite à une soirée jeux"
   },
+  "optionsNotifSessionInviteBadge": {
+    "message": "Bientôt — T3 2026",
+    "description": "Options page: pill next to the Game night invites label, signaling the feature is in development."
+  },
   "notifSessionInviteTitle": {
     "message": "Invitation à une soirée jeux"
   },
