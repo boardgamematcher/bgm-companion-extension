@@ -1162,6 +1162,7 @@ function toggleChip(typeKey) {
   chrome.storage.local.set({ selectedCollectionTypes: selectedTypes });
   renderChips();
   syncChipReadout();
+  renderWishlistCount();
   document.querySelectorAll('.wl-btn-add').forEach((btn) => {
     btn.textContent = getAddButtonLabel();
     btn.title = getAddButtonLabel();
@@ -1183,7 +1184,7 @@ async function loadWishlistCount() {
 
 function renderWishlistCount() {
   const el = document.getElementById('wishlist-count');
-  if (wishlistCount === null) {
+  if (wishlistCount === null || !selectedTypes.includes('wishlist')) {
     el.textContent = '';
   } else if (wishlistCount === 1) {
     el.textContent = chrome.i18n.getMessage('popupWishlistCountSingular');

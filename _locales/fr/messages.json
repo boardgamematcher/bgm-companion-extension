@@ -822,6 +822,10 @@
     "message": "appuyer pour activer, choix multiples",
     "description": "Hint next to collection type chips."
   },
+  "popupCollSaveAs": {
+    "message": "Marquer comme",
+    "description": "Label preceding the collection chips — tells the user the chips below are statuses that will be applied to the selected game."
+  },
   "popupCollTypeOwn": {
     "message": "Possédé",
     "description": "Collection type: own."
