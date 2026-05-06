@@ -813,6 +813,45 @@
     "message": "Sammlung ansehen →",
     "description": "Footer link on the collection tab."
   },
+  "popupGdPlayers": {
+    "message": "Spieler"
+  },
+  "popupGdMinutes": {
+    "message": "Min"
+  },
+  "popupGdWeightLabel": {
+    "message": "Komplexität"
+  },
+  "popupGdBgmRating": {
+    "message": "BGM"
+  },
+  "popupGdRateOnBgm": {
+    "message": "Auf BGM bewerten →"
+  },
+  "popupGdViewOnBgm": {
+    "message": "Auf BoardGameMatcher ansehen →"
+  },
+  "popupGdStatsTitle": {
+    "message": "Deine Statistiken"
+  },
+  "popupGdPlays": {
+    "message": "Partien"
+  },
+  "popupGdWins": {
+    "message": "Siege"
+  },
+  "popupGdNoPlays": {
+    "message": "Noch keine Partien protokolliert"
+  },
+  "popupGdSignInCta": {
+    "message": "Anmelden, um zu verfolgen →"
+  },
+  "popupGdLogPlayCta": {
+    "message": "Erste Partie eintragen →"
+  },
+  "popupGdHistoryCta": {
+    "message": "Vollständige Historie →"
+  },
   "popupBulkExtractButton": {
     "message": "Alle Seiten extrahieren",
     "description": "Button to start a bulk paginated extraction."

@@ -422,19 +422,33 @@
                   <img class="gd-cover" id="gd-cover" src="" alt="" />
                   <div class="gd-meta">
                     <div class="gd-name" id="gd-name"></div>
-                    <div class="gd-year" id="gd-year"></div>
+                    <div class="gd-year-line" id="gd-year-line"></div>
+                    <div class="gd-specs" id="gd-specs" style="display: none"></div>
                     <div class="gd-rating" id="gd-rating" style="display: none">
+                      <span class="gd-rating-star">&#9733;</span>
                       <span class="gd-rating-val" id="gd-rating-val"></span>
-                      <span class="gd-rating-label">BGM score</span>
+                      <span class="gd-rating-label" data-i18n="popupGdBgmRating">BGM</span>
                     </div>
                     <div class="gd-no-rating" id="gd-no-rating" style="display: none">
-                      <span class="gd-stars">☆☆☆☆☆</span>
-                      <a class="gd-rate-link" id="gd-rate-link" href="#">Rate on BGM →</a>
+                      <a
+                        class="gd-rate-link"
+                        id="gd-rate-link"
+                        href="#"
+                        data-i18n="popupGdRateOnBgm"
+                        >Rate on BGM &rarr;</a
+                      >
                     </div>
                   </div>
                 </div>
+                <div class="gd-stats" id="gd-stats" style="display: none">
+                  <div class="gd-stats-title" data-i18n="popupGdStatsTitle">Your stats</div>
+                  <div class="gd-stats-row" id="gd-stats-row"></div>
+                  <a class="gd-stats-link" id="gd-stats-link" href="#"></a>
+                </div>
                 <div class="gd-pills" id="gd-pills"></div>
-                <a class="gd-cta" id="gd-cta" href="#">View on BoardGameMatcher →</a>
+                <a class="gd-cta" id="gd-cta" href="#" data-i18n="popupGdViewOnBgm"
+                  >View on BoardGameMatcher &rarr;</a
+                >
               </div>
 
               <div class="wl-footer" id="wl-footer">
