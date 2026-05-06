@@ -1236,7 +1236,7 @@
   },
   "moreFeedback": {
     "message": "Send feedback",
-    "description": "More tab row — opens a new GitHub issue for bug reports and ideas."
+    "description": "More tab row — opens the BGM contact form pre-filled with a [Companion] Bug Report subject."
   },
   "moreFeedbackSub": {
     "message": "Bug reports & ideas",
