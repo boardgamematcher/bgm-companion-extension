@@ -267,13 +267,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return false;
   }
 
-  if (message.action === 'syncBggCollection') {
-    syncBggCollection(message.bggUsername)
-      .then((results) => sendResponse({ success: true, results }))
-      .catch((error) => sendResponse({ success: false, error: error.message }));
-    return true;
-  }
-
   if (message.action === 'pollNews') {
     pollNews();
     sendResponse({ success: true });
@@ -763,27 +756,4 @@ async function setCollectionType(gameId, collectionType, add) {
     headers: { 'X-BGM-Source': 'toolbox' },
   });
   if (!res.ok) throw new Error(`status ${res.status}`);
-}
-
-// Import a BGG collection into BGM
-async function syncBggCollection(bggUsername) {
-  const response = await fetch(`${BGM_BASE_URL}/api/bgg/import-collection`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
-    body: JSON.stringify({ bgg_username: bggUsername }),
-  });
-
-  if (!response.ok) {
-    let errMsg = `API error ${response.status}`;
-    try {
-      const data = await response.json();
-      if (data && data.error) errMsg = data.error;
-    } catch (_e) {
-      // ignore parse error
-    }
-    throw new Error(errMsg);
-  }
-
-  return response.json();
 }

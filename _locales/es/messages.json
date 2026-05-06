@@ -542,50 +542,6 @@
     "message": "Obteniendo todas las partidas de BGG… por favor espera",
     "description": "Status shown immediately after clicking Import BGG Plays."
   },
-  "popupBggSyncTitle": {
-    "message": "Sincronizar colección BGG"
-  },
-  "popupBggSyncBody": {
-    "message": "Importa tus juegos en propiedad, lista de deseos y valoraciones de BoardGameGeek."
-  },
-  "popupBggSyncButton": {
-    "message": "Importar colección"
-  },
-  "popupBggSyncAs": {
-    "message": "Sincronizando como: $username$",
-    "placeholders": {
-      "username": {
-        "content": "$1",
-        "example": "jmailing"
-      }
-    }
-  },
-  "popupBggSyncNotYou": {
-    "message": "¿no eres tú?"
-  },
-  "popupBggSyncNoUser": {
-    "message": "Visita boardgamegeek.com con sesión iniciada para sincronizar tu colección."
-  },
-  "importBggSyncFetching": {
-    "message": "Obteniendo tu colección de BGG… por favor espera"
-  },
-  "popupBggSyncSummary": {
-    "message": "$owned$ en propiedad · $wishlist$ deseos · $ratings$ valoraciones",
-    "placeholders": {
-      "owned": {
-        "content": "$1",
-        "example": "42"
-      },
-      "wishlist": {
-        "content": "$2",
-        "example": "15"
-      },
-      "ratings": {
-        "content": "$3",
-        "example": "120"
-      }
-    }
-  },
   "optionsTabNotifications": {
     "message": "Notificaciones"
   },
@@ -1117,12 +1073,6 @@
   },
   "moreImportPlaysSub": {
     "message": "BGA · BGG · Yucata · 3 más"
-  },
-  "moreBggSync": {
-    "message": "Sincroniza tu colección BGG"
-  },
-  "moreBggSyncSub": {
-    "message": "Posesión, wishlist, valoraciones"
   },
   "moreCustomPatterns": {
     "message": "Patrones de tienda"

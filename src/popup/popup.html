@@ -322,52 +322,6 @@
                 </button>
                 <div id="spielbywebStatus" class="import-status"></div>
               </div>
-
-              <!-- Strip 3: BGG Collection sync -->
-              <div class="ext-strip" id="strip-bgg">
-                <div class="ext-strip-icon">
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-                  </svg>
-                </div>
-                <div class="ext-strip-body">
-                  <div class="ext-strip-title">BGG Collection sync</div>
-                  <div class="ext-strip-sub">
-                    Import owned, wishlist and ratings from BoardGameGeek
-                  </div>
-                </div>
-              </div>
-              <div id="bggSyncPanel" style="display: none" class="ext-platform-panel">
-                <p class="section-label" data-i18n="popupBggSyncTitle">Sync BGG Collection</p>
-                <p class="card-body-text" data-i18n="popupBggSyncBody">
-                  Import your owned games, wishlist and ratings from BoardGameGeek.
-                </p>
-                <p class="bgg-sync-user-row" id="bggSyncAsRow" style="display: none">
-                  <span id="bggSyncAsText"></span
-                  ><a
-                    href="#"
-                    id="bggSyncClear"
-                    class="bgg-sync-clear"
-                    data-i18n="popupBggSyncNotYou"
-                    >not you?</a
-                  >
-                </p>
-                <button id="bggSyncBtn" class="btn-primary" data-i18n="popupBggSyncButton" disabled>
-                  Import Collection
-                </button>
-                <div id="bggSyncStatus" class="import-status"></div>
-              </div>
             </div>
             <!-- /.ext-strips -->
 
@@ -658,29 +612,6 @@
                     <div class="more-sub" data-i18n="moreImportPlaysSub">
                       BGA · BGG · Yucata · 3 more
                     </div>
-                  </div>
-                  <span class="more-chevron">›</span>
-                </button>
-                <button class="more-item" id="more-bgg-sync-btn">
-                  <span class="more-icon-svg">
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M3 6l9 6 9-6" />
-                      <rect x="3" y="6" width="18" height="14" rx="2" />
-                    </svg>
-                  </span>
-                  <div class="more-info">
-                    <div class="more-title" data-i18n="moreBggSync">Sync your BGG collection</div>
-                    <div class="more-sub" data-i18n="moreBggSyncSub">Owned, wishlist, ratings</div>
                   </div>
                   <span class="more-chevron">›</span>
                 </button>
