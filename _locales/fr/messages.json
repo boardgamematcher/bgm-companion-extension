@@ -862,6 +862,14 @@
     "message": "Annuler et garder les résultats",
     "description": "Button to cancel a bulk extraction and keep what was found so far."
   },
+  "popupFooterMissingSite": {
+    "message": "Un site manquant ? Demandez-le →",
+    "description": "Footer link on the popup unsupported-page strip — opens the BGM contact form pre-filled with a [Companion] Site Request subject."
+  },
+  "popupFooterFoundIssue": {
+    "message": "Un problème ? Signalez-le →",
+    "description": "Footer link on the popup unsupported-page strip — opens the BGM contact form pre-filled with a [Companion] Bug Report subject."
+  },
   "popupTabletopiaCtx": {
     "message": "Tabletopia"
   },
