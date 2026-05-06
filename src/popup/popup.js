@@ -37,12 +37,12 @@ let _bulkCancelRequested = false;
 let _activeTabId = null;
 
 const COLLECTION_TYPES = [
-  { key: 'own', i18nKey: 'popupCollTypeOwn', emoji: '📦' },
-  { key: 'played', i18nKey: 'popupCollTypePlayed', emoji: '✅' },
-  { key: 'wishlist', i18nKey: 'popupCollTypeWishlist', emoji: '⭐' },
-  { key: 'wanttoplay', i18nKey: 'popupCollTypeWantToPlay', emoji: '🎯' },
-  { key: 'wanttolearn', i18nKey: 'popupCollTypeWantToLearn', emoji: '📖' },
-  { key: 'canteach', i18nKey: 'popupCollTypeCanTeach', emoji: '🎓' },
+  { key: 'own', i18nKey: 'popupCollTypeOwn' },
+  { key: 'played', i18nKey: 'popupCollTypePlayed' },
+  { key: 'wishlist', i18nKey: 'popupCollTypeWishlist' },
+  { key: 'wanttoplay', i18nKey: 'popupCollTypeWantToPlay' },
+  { key: 'wanttolearn', i18nKey: 'popupCollTypeWantToLearn' },
+  { key: 'canteach', i18nKey: 'popupCollTypeCanTeach' },
 ];
 
 let selectedTypes = ['wishlist'];
@@ -1129,7 +1129,9 @@ function renderChips() {
     btn.className = 'col-chip' + (isActive ? ' active' : '');
     btn.dataset.typeKey = type.key;
     const label = chrome.i18n.getMessage(type.i18nKey) || type.key;
-    btn.textContent = (isActive ? '✓ ' : '') + type.emoji + ' ' + label;
+    // Plain label only — the ✓ on active is rendered via CSS ::before in popup.css
+    // (BGM-776: drop emojis to align with the popup's sober palette).
+    btn.textContent = label;
     btn.addEventListener('click', () => toggleChip(type.key));
     container.appendChild(btn);
   }
@@ -1438,18 +1440,25 @@ async function renderGameDetail(game) {
     cover.style.display = 'none';
   }
 
-  // Name + year
+  // Name + year/designer line
   document.getElementById('gd-name').textContent = game.name;
-  document.getElementById('gd-year').textContent = game.year_published
-    ? String(game.year_published)
-    : '';
+  const yearLine = document.getElementById('gd-year-line');
+  const yearText = game.year_published ? String(game.year_published) : '';
+  const designer = (game.designers && game.designers[0]) || game.designer || '';
+  yearLine.textContent = [yearText, designer].filter(Boolean).join(' · ');
 
-  // Rating — show score badge if available, otherwise invite user to rate
+  // Specs — players · playtime · weight (BGM-776)
+  renderGameSpecs(game);
+
+  // Rating — BGM is on a 0–5 stars scale. The bayes_average column today is
+  // imported from BGG (0–10), so divide by 2 for display until BGM has its
+  // own community votes.
   const ratingWrap = document.getElementById('gd-rating');
   const noRatingWrap = document.getElementById('gd-no-rating');
   const gameUrl = gameDetailUrl(game.slug, 'game-detail-card');
   if (game.bayes_average) {
-    document.getElementById('gd-rating-val').textContent = String(game.bayes_average);
+    const stars5 = (Number(game.bayes_average) / 2).toFixed(1);
+    document.getElementById('gd-rating-val').textContent = stars5;
     ratingWrap.style.display = '';
     noRatingWrap.style.display = 'none';
   } else {
@@ -1462,6 +1471,9 @@ async function renderGameDetail(game) {
     };
     noRatingWrap.style.display = '';
   }
+
+  // Personal stats teaser (BGM-776)
+  renderGameStats(game, gameUrl);
 
   // CTA — always link directly to the game detail page via slug
   const cta = document.getElementById('gd-cta');
@@ -1503,7 +1515,7 @@ async function renderGameDetail(game) {
     const pill = document.createElement('button');
     pill.type = 'button';
     pill.className = 'gd-pill' + (activeTypes.has(ct.key) ? ' active' : '');
-    pill.textContent = `${ct.emoji} ${chrome.i18n.getMessage(ct.i18nKey) || ct.key}`;
+    pill.textContent = chrome.i18n.getMessage(ct.i18nKey) || ct.key;
     pill.addEventListener('click', async () => {
       pill.disabled = true;
       const isActive = pill.classList.contains('active');
@@ -1527,6 +1539,138 @@ async function renderGameDetail(game) {
     });
     pillsContainer.appendChild(pill);
   }
+}
+
+// Render player count · playtime · weight under the year/designer line.
+// Hidden if no spec data is present (older API responses without these fields).
+function renderGameSpecs(game) {
+  const wrap = document.getElementById('gd-specs');
+  if (!wrap) return;
+  const parts = [];
+
+  const minP = Number(game.min_players) || null;
+  const maxP = Number(game.max_players) || null;
+  if (minP || maxP) {
+    let range = minP && maxP && minP !== maxP ? `${minP}–${maxP}` : String(minP || maxP);
+    parts.push(`${range} ${chrome.i18n.getMessage('popupGdPlayers') || 'players'}`);
+  }
+
+  const playing = Number(game.playing_time) || null;
+  if (playing) parts.push(`${playing} ${chrome.i18n.getMessage('popupGdMinutes') || 'min'}`);
+
+  const weight = Number(game.weight_average ?? game.weight);
+  if (weight) {
+    parts.push(`${chrome.i18n.getMessage('popupGdWeightLabel') || 'weight'} ${weight.toFixed(1)}`);
+  }
+
+  if (parts.length === 0) {
+    wrap.style.display = 'none';
+    wrap.textContent = '';
+    return;
+  }
+
+  wrap.style.display = '';
+  wrap.textContent = '';
+  parts.forEach((text, idx) => {
+    if (idx > 0) {
+      const sep = document.createElement('span');
+      sep.className = 'gd-specs-sep';
+      sep.textContent = ' · ';
+      wrap.appendChild(sep);
+    }
+    const span = document.createElement('span');
+    span.textContent = text;
+    wrap.appendChild(span);
+  });
+}
+
+// Render the personal stats teaser block under the cover row. Three states:
+//   - logged out: blurred placeholder + "Sign in to track yours"
+//   - logged in, no plays: "No plays logged yet" + log CTA
+//   - logged in, has plays: real numbers + history link
+function renderGameStats(game, gameUrl) {
+  const wrap = document.getElementById('gd-stats');
+  const row = document.getElementById('gd-stats-row');
+  const link = document.getElementById('gd-stats-link');
+  if (!wrap || !row || !link) return;
+
+  wrap.style.display = '';
+  row.classList.remove('is-blurred', 'is-empty');
+  row.textContent = '';
+
+  const setLink = (textKey, fallback, href) => {
+    link.textContent = chrome.i18n.getMessage(textKey) || fallback;
+    link.href = href;
+    link.onclick = (e) => {
+      e.preventDefault();
+      chrome.tabs.create({ url: href });
+    };
+  };
+
+  const renderRow = (segments, opts = {}) => {
+    if (opts.blurred) row.classList.add('is-blurred');
+    if (opts.empty) row.classList.add('is-empty');
+    segments.forEach((seg, idx) => {
+      if (idx > 0) {
+        const sep = document.createElement('span');
+        sep.className = 'gd-stats-sep';
+        sep.textContent = ' · ';
+        row.appendChild(sep);
+      }
+      const span = document.createElement('span');
+      span.textContent = seg;
+      row.appendChild(span);
+    });
+  };
+
+  if (!currentUser) {
+    // Logged-out: blurred placeholder values, sign-in CTA.
+    renderRow(
+      [
+        `42 ${chrome.i18n.getMessage('popupGdPlays') || 'plays'}`,
+        `68% ${chrome.i18n.getMessage('popupGdWins') || 'wins'}`,
+      ],
+      { blurred: true }
+    );
+    setLink('popupGdSignInCta', 'Sign in to track yours →', BGM_BASE_URL + '/auth/login');
+    return;
+  }
+
+  // Logged-in: try to fetch per-game stats. 404/non-OK → "no plays" empty state.
+  link.textContent = chrome.i18n.getMessage('popupGdHistoryCta') || 'See full history →';
+  link.href = gameUrl;
+  link.onclick = (e) => {
+    e.preventDefault();
+    chrome.tabs.create({ url: gameUrl });
+  };
+
+  fetch(`${BGM_BASE_URL}/api/games/${encodeURIComponent(game.slug)}/my-stats`, {
+    credentials: 'include',
+  })
+    .then((res) => (res.ok ? res.json() : null))
+    .then((stats) => {
+      row.textContent = '';
+      row.classList.remove('is-blurred', 'is-empty');
+      if (!stats || !stats.plays) {
+        renderRow([chrome.i18n.getMessage('popupGdNoPlays') || 'No plays logged yet'], {
+          empty: true,
+        });
+        setLink('popupGdLogPlayCta', 'Log your first play →', gameUrl);
+        return;
+      }
+      const segments = [`${stats.plays} ${chrome.i18n.getMessage('popupGdPlays') || 'plays'}`];
+      if (typeof stats.win_rate === 'number') {
+        segments.push(`${stats.win_rate}% ${chrome.i18n.getMessage('popupGdWins') || 'wins'}`);
+      }
+      renderRow(segments);
+    })
+    .catch(() => {
+      row.textContent = '';
+      renderRow([chrome.i18n.getMessage('popupGdNoPlays') || 'No plays logged yet'], {
+        empty: true,
+      });
+      setLink('popupGdLogPlayCta', 'Log your first play →', gameUrl);
+    });
 }
 
 async function addToCollection(game, btn) {

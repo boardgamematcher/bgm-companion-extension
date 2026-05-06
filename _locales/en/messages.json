@@ -969,6 +969,58 @@
     "message": "View collection →",
     "description": "Footer link on the collection tab."
   },
+  "popupGdPlayers": {
+    "message": "players",
+    "description": "Game detail card spec — unit after the player count range (e.g. '3–4 players')."
+  },
+  "popupGdMinutes": {
+    "message": "min",
+    "description": "Game detail card spec — minutes unit after playtime (e.g. '60 min')."
+  },
+  "popupGdWeightLabel": {
+    "message": "weight",
+    "description": "Game detail card spec — label before the complexity/weight value (e.g. 'weight 2.3')."
+  },
+  "popupGdBgmRating": {
+    "message": "BGM",
+    "description": "Game detail card — short label after the BGM star rating (e.g. '★ 4.2 BGM')."
+  },
+  "popupGdRateOnBgm": {
+    "message": "Rate on BGM →",
+    "description": "Game detail card — link shown when the game has no rating yet."
+  },
+  "popupGdViewOnBgm": {
+    "message": "View on BoardGameMatcher →",
+    "description": "Game detail card — main CTA to the game's BGM page."
+  },
+  "popupGdStatsTitle": {
+    "message": "Your stats",
+    "description": "Game detail card — title of the personal stats teaser block."
+  },
+  "popupGdPlays": {
+    "message": "plays",
+    "description": "Game detail card — unit after the play count (e.g. '12 plays')."
+  },
+  "popupGdWins": {
+    "message": "wins",
+    "description": "Game detail card — unit after the win-rate percentage (e.g. '67% wins')."
+  },
+  "popupGdNoPlays": {
+    "message": "No plays logged yet",
+    "description": "Game detail card — empty state when the logged-in user has no plays for this game."
+  },
+  "popupGdSignInCta": {
+    "message": "Sign in to track yours →",
+    "description": "Game detail card — CTA shown to logged-out users below the blurred stats teaser."
+  },
+  "popupGdLogPlayCta": {
+    "message": "Log your first play →",
+    "description": "Game detail card — CTA shown to logged-in users with no plays yet."
+  },
+  "popupGdHistoryCta": {
+    "message": "See full history →",
+    "description": "Game detail card — link shown to logged-in users with plays, leading to their history on BGM."
+  },
   "popupBulkExtractButton": {
     "message": "Extract all pages",
     "description": "Button to start a bulk paginated extraction."
