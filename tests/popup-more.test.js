@@ -56,7 +56,6 @@ describe('More tab DOM smoke test', () => {
 
   const MORE_TAB_IDS = [
     'more-import-plays-btn',
-    'more-bgg-sync-btn',
     'more-suggest-site-btn',
     'more-rate-btn',
     'more-whats-new-btn',

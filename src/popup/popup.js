@@ -18,7 +18,6 @@ function gameDetailUrl(slug, campaign) {
 let currentDomain = null;
 let currentPattern = null;
 let currentUser = null;
-let bggUsername = null;
 let siteContext = 'neutral'; // 'shop' | 'bga' | 'yucata' | 'bgg' | 'bgg-game' | 'neutral'
 let bggGameName = null;
 let bggGameAutoSelect = false; // true on BGG game pages — auto-jump to detail card on first search result
@@ -93,8 +92,6 @@ function setupEventListeners() {
   document.getElementById('wishlist-input').addEventListener('input', handleWishlistInput);
   document.getElementById('wishlist-input').addEventListener('keydown', handleWishlistKeydown);
   document.getElementById('user-avatar').addEventListener('click', handleAvatarClick);
-  document.getElementById('bggSyncBtn').addEventListener('click', handleBggSync);
-  document.getElementById('bggSyncClear').addEventListener('click', handleBggSyncClear);
   document.getElementById('bgaTeaserSignin').addEventListener('click', handleLogin);
 
   document.getElementById('review-back').addEventListener('click', hideReviewPanel);
@@ -135,7 +132,6 @@ function setupEventListeners() {
   document
     .getElementById('more-import-plays-btn')
     ?.addEventListener('click', handleMoreImportPlays);
-  document.getElementById('more-bgg-sync-btn')?.addEventListener('click', handleMoreBggSync);
   document.getElementById('more-rate-btn')?.addEventListener('click', handleMoreRate);
   document.getElementById('more-whats-new-btn')?.addEventListener('click', handleMoreWhatsNew);
 
@@ -181,7 +177,7 @@ function applyCardLayout() {
   if (bnExtract) bnExtract.classList.remove('compatible');
 
   // Reset extract strips
-  ['strip-shop', 'strip-play', 'strip-bgg'].forEach((id) => {
+  ['strip-shop', 'strip-play'].forEach((id) => {
     document.getElementById(id)?.classList.remove('active');
   });
 
@@ -212,10 +208,6 @@ function applyCardLayout() {
     document.getElementById('strip-play')?.classList.add('active');
     if (bnExtract) bnExtract.classList.add('compatible');
     switchTab('extract');
-    if (siteContext === 'bgg') {
-      document.getElementById('strip-bgg')?.classList.add('active');
-      if (currentUser) showBggSyncPanel(currentUser);
-    }
   }
 
   // Collection tab: show the right card based on auth state
@@ -1065,16 +1057,6 @@ function handleMoreImportPlays() {
   setTimeout(() => flashElement('strip-play'), 50);
 }
 
-function handleMoreBggSync() {
-  if (!currentUser) {
-    handleLogin();
-    return;
-  }
-  switchTab('extract');
-  showBggSyncPanel(currentUser);
-  setTimeout(() => flashElement('bggSyncPanel'), 50);
-}
-
 function handleMoreRate() {
   chrome.tabs.create({ url: rateUrl() });
 }
@@ -1734,111 +1716,6 @@ async function loadDashNotifications() {
   } catch (_e) {
     document.getElementById('dash-notifs-sub').textContent = '';
   }
-}
-
-// ── BGG Collection Sync ──
-
-async function showBggSyncPanel(_user) {
-  document.getElementById('bggSyncPanel').style.display = '';
-
-  let detected = await detectBggUsername();
-  if (!detected) {
-    const stored = await chrome.storage.local.get('bggUsername');
-    detected = stored.bggUsername || null;
-  }
-
-  renderBggSyncPanel(detected);
-}
-
-async function detectBggUsername() {
-  try {
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    if (!tab || !tab.url) return null;
-    const url = new URL(tab.url);
-    if (!url.hostname.includes('boardgamegeek.com')) return null;
-    const results = await chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      func: () => {
-        const m = location.pathname.match(/^\/(?:profile|user)\/([^/]+)/);
-        if (m) return decodeURIComponent(m[1]);
-        if (document.body.dataset.username) return document.body.dataset.username;
-        const navLink = document.querySelector('a[href*="/user/"]');
-        if (navLink) {
-          const lm = navLink.href.match(/\/user\/([^/?#]+)/);
-          if (lm) return lm[1];
-        }
-        return null;
-      },
-    });
-    return results?.[0]?.result || null;
-  } catch (_e) {
-    return null;
-  }
-}
-
-function renderBggSyncPanel(username) {
-  bggUsername = username;
-  const btn = document.getElementById('bggSyncBtn');
-  const row = document.getElementById('bggSyncAsRow');
-  const asText = document.getElementById('bggSyncAsText');
-  const status = document.getElementById('bggSyncStatus');
-
-  if (username) {
-    asText.textContent = chrome.i18n.getMessage('popupBggSyncAs', [username]);
-    row.style.display = '';
-    btn.disabled = false;
-    status.textContent = '';
-    status.className = 'import-status';
-  } else {
-    row.style.display = 'none';
-    btn.disabled = true;
-    status.textContent = chrome.i18n.getMessage('popupBggSyncNoUser');
-    status.className = 'import-status';
-  }
-}
-
-function handleBggSyncClear(e) {
-  e.preventDefault();
-  chrome.storage.local.remove('bggUsername');
-  renderBggSyncPanel(null);
-  chrome.tabs.create({ url: 'https://www.boardgamegeek.com' });
-}
-
-async function handleBggSync() {
-  if (!bggUsername) return;
-
-  const btn = document.getElementById('bggSyncBtn');
-  const status = document.getElementById('bggSyncStatus');
-
-  btn.disabled = true;
-  status.textContent = chrome.i18n.getMessage('importBggSyncFetching');
-  status.className = 'import-status';
-
-  chrome.runtime.sendMessage({ action: 'syncBggCollection', bggUsername }, (response) => {
-    btn.disabled = false;
-    if (chrome.runtime.lastError) {
-      status.textContent = chrome.i18n.getMessage('importErrorPrefix', [
-        chrome.runtime.lastError.message,
-      ]);
-      status.className = 'import-status is-error';
-      return;
-    }
-    if (!response || !response.success) {
-      status.textContent = chrome.i18n.getMessage('importErrorPrefix', [
-        (response && response.error) || 'Unknown error',
-      ]);
-      status.className = 'import-status is-error';
-      return;
-    }
-    chrome.storage.local.set({ bggUsername });
-    const r = response.results;
-    status.textContent = chrome.i18n.getMessage('popupBggSyncSummary', [
-      String(r.owned_imported ?? 0),
-      String(r.wishlist_imported ?? 0),
-      String(r.ratings_imported ?? 0),
-    ]);
-    status.className = 'import-status is-success';
-  });
 }
 
 if (typeof module !== 'undefined') module.exports = { rateUrl };
