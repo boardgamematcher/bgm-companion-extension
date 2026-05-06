@@ -813,6 +813,10 @@
     "message": "toca para activar, elige varios",
     "description": "Hint next to collection type chips."
   },
+  "popupCollSaveAs": {
+    "message": "Marcar como",
+    "description": "Label preceding the collection chips — tells the user the chips below are statuses that will be applied to the selected game."
+  },
   "popupCollTypeOwn": {
     "message": "Tengo",
     "description": "Collection type: own."

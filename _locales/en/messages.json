@@ -973,6 +973,10 @@
     "message": "tap to toggle, pick several",
     "description": "Hint next to collection type chips."
   },
+  "popupCollSaveAs": {
+    "message": "Mark as",
+    "description": "Label preceding the collection chips — tells the user the chips below are statuses that will be applied to the selected game."
+  },
   "popupCollTypeOwn": {
     "message": "Own",
     "description": "Collection type: own."
