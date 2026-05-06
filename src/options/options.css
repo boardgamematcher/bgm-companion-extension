@@ -507,6 +507,42 @@ body:not(.dev-mode) .dev-only {
   border-top: 1px solid var(--border);
 }
 
+/* ── Language selector ── */
+.lang-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-top: 8px;
+  margin-bottom: 24px;
+}
+
+.lang-label {
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.lang-select {
+  font-size: 13px;
+  padding: 6px 10px;
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  min-width: 180px;
+}
+
+.lang-select:hover,
+.lang-select:focus {
+  border-color: var(--amber);
+  outline: none;
+}
+
 /* ── Notifications settings ── */
 .notif-list {
   display: flex;

@@ -598,6 +598,18 @@
   "optionsTabNotifications": {
     "message": "Notifications"
   },
+  "optionsLangTitle": {
+    "message": "Langue"
+  },
+  "optionsLangSubtitle": {
+    "message": "Outrepasser la langue du navigateur. Les utilisateurs connectés synchronisent ce choix avec leur profil BGM."
+  },
+  "optionsLangLabel": {
+    "message": "Langue d'affichage"
+  },
+  "optionsLangAuto": {
+    "message": "Auto (langue du navigateur)"
+  },
   "optionsNotifTitle": {
     "message": "Notifications"
   },

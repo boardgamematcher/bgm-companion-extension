@@ -58,6 +58,26 @@
         <!-- Notifications Tab -->
         <div id="notifications-tab" class="tab-content">
           <div class="section-header">
+            <h2 data-i18n="optionsLangTitle">Language</h2>
+            <p class="subtitle" data-i18n="optionsLangSubtitle">
+              Override the browser default. Logged-in users sync this to their BGM web profile.
+            </p>
+          </div>
+          <div class="lang-row">
+            <label for="ui-language" class="lang-label" data-i18n="optionsLangLabel"
+              >Display language</label
+            >
+            <select id="ui-language" class="lang-select">
+              <option value="" data-i18n="optionsLangAuto">Auto (browser default)</option>
+              <option value="en">English</option>
+              <option value="fr">Français</option>
+              <option value="it">Italiano</option>
+              <option value="de">Deutsch</option>
+              <option value="es">Español</option>
+            </select>
+          </div>
+
+          <div class="section-header">
             <h2 data-i18n="optionsNotifTitle">Notifications</h2>
             <p class="subtitle" data-i18n="optionsNotifSubtitle">
               Choose which browser notifications BGM Companion can send you
