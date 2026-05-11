@@ -202,8 +202,7 @@ function applyCardLayout() {
     siteContext === 'yucata' ||
     siteContext === 'bgg' ||
     siteContext === 'tabletopia' ||
-    siteContext === 'ludopedia' ||
-    siteContext === 'spielbyweb'
+    siteContext === 'ludopedia'
   ) {
     document.getElementById('strip-play')?.classList.add('active');
     if (bnExtract) bnExtract.classList.add('compatible');

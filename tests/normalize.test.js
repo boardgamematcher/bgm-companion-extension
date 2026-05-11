@@ -32,8 +32,6 @@ describe('normalizeName', () => {
     // Wishlist: "Catan" vs page: "Catan." (trailing dot)
     expect(normalizeName('Catan')).toBe(normalizeName('Catan.'));
     // Colon vs no colon
-    expect(normalizeName('Ticket to Ride Europe')).toBe(
-      normalizeName('Ticket to Ride: Europe')
-    );
+    expect(normalizeName('Ticket to Ride Europe')).toBe(normalizeName('Ticket to Ride: Europe'));
   });
 });

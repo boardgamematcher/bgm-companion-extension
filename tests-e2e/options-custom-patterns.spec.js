@@ -10,10 +10,7 @@ test.describe('options page — custom patterns CRUD', () => {
     await worker.evaluate(() => chrome.storage.local.set({ bgmDevMode: true }));
   });
 
-  test('create / edit / delete / export-import roundtrip', async ({
-    context,
-    extensionId,
-  }) => {
+  test('create / edit / delete / export-import roundtrip', async ({ context, extensionId }) => {
     const page = await context.newPage();
     await page.goto(`chrome-extension://${extensionId}/src/options/options.html`);
 

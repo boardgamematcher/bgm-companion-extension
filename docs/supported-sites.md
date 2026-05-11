@@ -22,7 +22,6 @@ For each row: "On-page extraction?" means a content script runs in the user's ta
 | BoardGameGeek | User plays / collection / game detail | `https://boardgamegeek.com/user/<u>/plays` | Yes — `src/content/bgg-scraper.js` | Popup → "Import BGG Plays" / "Sync BGG Collection"; on game detail pages popup auto-targets the game (one-click add to BGM collection) | Calls BGG XML2 API `/xmlapi2/user/<u>/{plays,collection}`; on `/boardgame/<id>/<slug>` pages the popup runs `/api/games/search` then `/api/collections/{id}/{type}` |
 | Tabletopia | Any page when logged in | `https://tabletopia.com/...` | Yes — `src/content/tabletopia-scraper.js` | Popup → "Import Tabletopia Matches" | Calls Tabletopia REST `/api/v2/players/current/matches` with pagination |
 | Ludopedia | User history | `https://ludopedia.com.br/usuario/...` | Yes — `src/content/ludopedia-scraper.js` | Popup → "Import Ludopedia Plays" | Calls Ludopedia `/api/v1/plays`; BGG IDs already in payload |
-| SpielByWeb | Finished games list | `https://www.spielbyweb.de/GameList.php` | Yes — `src/content/spielbyweb-scraper.js` | Popup → "Import SpielByWeb Plays" | DOM table parser, mapping via `spielbyweb-mapping.json` |
 | Philibert (game-detail overlay) | Product detail | `https://www.philibertnet.com/{lang}/cat/<id>-<slug>.html` | Yes — `src/content/game-overlay.js` | Inline overlay: BGM card, rating, wishlist status; per-user collection pills when logged in | Reads page metadata, resolves via `resolveOverlayGame` background message, posts to `/api/collections/<id>/<type>` |
 <!-- AUTO:sites-table END -->
 
@@ -99,53 +98,52 @@ All BGM endpoints below are under `https://boardgamematcher.com` (or `chrome.sto
 
 ### 3.1 Popup — always-on
 
-| Action | What the user sees | URL hit | Auth required? |
-|---|---|---|---|
-| Open popup | Auth check on load | `GET /api/me` | No (returns 401 if logged out, popup switches to logged-out layout) |
-| Sign in | Bottom CTA | Opens tab `/auth/login` | — |
-| Sign up | Bottom CTA | Opens tab `/auth/register` | — |
-| Avatar click | Top-right avatar | Opens tab `/users/<username>` | Logged in |
-| Theme toggle | 🌙/☀️ button | Local only (`chrome.storage.local.theme`) | No |
-| Settings | ⚙️ button | Opens extension `options.html` | No |
+| Action       | What the user sees | URL hit                                   | Auth required?                                                      |
+| ------------ | ------------------ | ----------------------------------------- | ------------------------------------------------------------------- |
+| Open popup   | Auth check on load | `GET /api/me`                             | No (returns 401 if logged out, popup switches to logged-out layout) |
+| Sign in      | Bottom CTA         | Opens tab `/auth/login`                   | —                                                                   |
+| Sign up      | Bottom CTA         | Opens tab `/auth/register`                | —                                                                   |
+| Avatar click | Top-right avatar   | Opens tab `/users/<username>`             | Logged in                                                           |
+| Theme toggle | 🌙/☀️ button       | Local only (`chrome.storage.local.theme`) | No                                                                  |
+| Settings     | ⚙️ button          | Opens extension `options.html`            | No                                                                  |
 
 ### 3.2 Popup — Extract tab (shop sites)
 
-| Action | URL hit | Auth required? | Notes |
-|---|---|---|---|
-| Click **Extract** → preview | `POST /api/extract/preview` | Optional | Logged-out users still get a preview; on any error popup falls back to opening `/extract?url=<page>` |
-| Confirm extraction | `POST /api/extract/extension` | Logged in for the result to be saved | Returns `job_id`; success card links to `/extract?job=<jobId>` |
-| Wishlist badges on shop pages | `GET /api/me/wishlist` (cached in service worker) | Logged in | Without login, no badges render |
-| "View collection" link (bottom nav on shop pages) | Opens tab `/collections/<username>` | Logged in | |
+| Action                                            | URL hit                                           | Auth required?                       | Notes                                                                                                |
+| ------------------------------------------------- | ------------------------------------------------- | ------------------------------------ | ---------------------------------------------------------------------------------------------------- |
+| Click **Extract** → preview                       | `POST /api/extract/preview`                       | Optional                             | Logged-out users still get a preview; on any error popup falls back to opening `/extract?url=<page>` |
+| Confirm extraction                                | `POST /api/extract/extension`                     | Logged in for the result to be saved | Returns `job_id`; success card links to `/extract?job=<jobId>`                                       |
+| Wishlist badges on shop pages                     | `GET /api/me/wishlist` (cached in service worker) | Logged in                            | Without login, no badges render                                                                      |
+| "View collection" link (bottom nav on shop pages) | Opens tab `/collections/<username>`               | Logged in                            |                                                                                                      |
 
 ### 3.3 Popup — Extract tab (play platforms)
 
-| Action | URL hit | Auth required? |
-|---|---|---|
-| Import BGA / Yucata / Tabletopia / Ludopedia / SpielByWeb / BGG plays | `POST /api/plays/batch` (per-batch, with progress) | Yes |
-| BGA stats summary | `GET /api/plays/summary` | Yes |
-| BGG collection sync | `POST /api/bgg/import-collection` | Yes |
+| Action              | URL hit                           | Auth required? |
+| ------------------- | --------------------------------- | -------------- |
+| BGA stats summary   | `GET /api/plays/summary`          | Yes            |
+| BGG collection sync | `POST /api/bgg/import-collection` | Yes            |
 
 ### 3.4 Popup — Wishlist tab (game search & quick-add)
 
-| Action | URL hit | Auth required? |
-|---|---|---|
-| Type in search box | `GET /api/games/search?q=<q>` | No (search works logged out, but pills hidden) |
-| Open game detail card | `GET /api/collections/<gameId>` (read user's current types) | Yes |
-| Toggle a collection pill (own/played/wishlist/wanttoplay/wanttolearn/canteach) | `POST` or `DELETE /api/collections/<gameId>/<type>` | Yes |
-| "Add" button | `POST /api/collections/<gameId>/<type>` × selected types | Yes |
-| Open game on BGM (CTA / "rate this") | Opens tab `/{lang}/game/<slug>` (localized: en→game, fr→jeu, de→spiel, es→juego, it→gioco) | — |
+| Action                                                                         | URL hit                                                                                    | Auth required?                                 |
+| ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------ | ---------------------------------------------- |
+| Type in search box                                                             | `GET /api/games/search?q=<q>`                                                              | No (search works logged out, but pills hidden) |
+| Open game detail card                                                          | `GET /api/collections/<gameId>` (read user's current types)                                | Yes                                            |
+| Toggle a collection pill (own/played/wishlist/wanttoplay/wanttolearn/canteach) | `POST` or `DELETE /api/collections/<gameId>/<type>`                                        | Yes                                            |
+| "Add" button                                                                   | `POST /api/collections/<gameId>/<type>` × selected types                                   | Yes                                            |
+| Open game on BGM (CTA / "rate this")                                           | Opens tab `/{lang}/game/<slug>` (localized: en→game, fr→jeu, de→spiel, es→juego, it→gioco) | —                                              |
 
 ### 3.5 Popup — Dashboard tab (logged-in)
 
-| Action | URL hit | Auth required? |
-|---|---|---|
-| Dashboard load — matches tile | `GET /api/matches/new` | Yes |
-| Dashboard load — notifications tile | `GET /api/notifications/count` | Yes |
-| Messages tile / banner | reads `chrome.storage.local.unreadMessages` (filled by background poll) | Yes |
-| Click messages | Opens tab `/messages` | — |
-| Click matches | Opens tab `/play/players` | — |
-| Click notifications | Opens tab `/notifications` | — |
-| Quick links | Opens tab `/`, `/collections/<u>`, `/collections/<u>?type=wishlist` | — |
+| Action                              | URL hit                                                                 | Auth required? |
+| ----------------------------------- | ----------------------------------------------------------------------- | -------------- |
+| Dashboard load — matches tile       | `GET /api/matches/new`                                                  | Yes            |
+| Dashboard load — notifications tile | `GET /api/notifications/count`                                          | Yes            |
+| Messages tile / banner              | reads `chrome.storage.local.unreadMessages` (filled by background poll) | Yes            |
+| Click messages                      | Opens tab `/messages`                                                   | —              |
+| Click matches                       | Opens tab `/play/players`                                               | —              |
+| Click notifications                 | Opens tab `/notifications`                                              | —              |
+| Quick links                         | Opens tab `/`, `/collections/<u>`, `/collections/<u>?type=wishlist`     | —              |
 
 ### 3.6 Background service worker — periodic polls
 
@@ -165,33 +163,33 @@ Wishlist refresh is also serviced by the background — see §3.7 / overlay mess
 
 The service worker also exposes message handlers used by the Philibert overlay and the wishlist badge:
 
-| Background message | URL hit | Auth required? |
-|---|---|---|
-| `resolveOverlayGame` | `GET /api/games/search?q=<title>` then `GET /api/collections/<id>` | Search works logged out; collection types only with login |
-| `setCollectionType` (overlay pills) | `POST` or `DELETE /api/collections/<gameId>/<type>` | Yes |
+| Background message                  | URL hit                                                            | Auth required?                                            |
+| ----------------------------------- | ------------------------------------------------------------------ | --------------------------------------------------------- |
+| `resolveOverlayGame`                | `GET /api/games/search?q=<title>` then `GET /api/collections/<id>` | Search works logged out; collection types only with login |
+| `setCollectionType` (overlay pills) | `POST` or `DELETE /api/collections/<gameId>/<type>`                | Yes                                                       |
 
 ### 3.7 Direct on-page links (no popup)
 
-| Surface | Destination |
-|---|---|
-| Wishlist badge on shop product card | `/boardgames/<slug>` (no UTM) |
-| Philibert game overlay — title / CTA | `/{lang}/game/<slug>` |
-| Philibert game overlay — brand link | `https://boardgamematcher.com` |
-| BGG sync clear → "log in to BGG" | `https://www.boardgamegeek.com` |
+| Surface                              | Destination                     |
+| ------------------------------------ | ------------------------------- |
+| Wishlist badge on shop product card  | `/boardgames/<slug>` (no UTM)   |
+| Philibert game overlay — title / CTA | `/{lang}/game/<slug>`           |
+| Philibert game overlay — brand link  | `https://boardgamematcher.com`  |
+| BGG sync clear → "log in to BGG"     | `https://www.boardgamegeek.com` |
 
 ---
 
 ## 4. Logged-in vs logged-out summary
 
-| Capability | Logged out | Logged in |
-|---|---|---|
-| Extract from shops (preview) | ✅ falls back to `/extract?url=` on website | ✅ inline preview + save to BGM |
-| Wishlist badges on shop pages | ❌ | ✅ |
-| Philibert game overlay (rating, name) | ✅ public data only | ✅ + per-user collection pills |
-| Game search in popup | ✅ | ✅ |
-| Quick-add to collection | ❌ | ✅ |
-| Play imports (BGA, Yucata, …) | ❌ | ✅ |
-| BGG collection sync | ❌ | ✅ |
-| Background polls / notifications | no-op (401) | ✅ news, friends, matches, sessions, messages |
-| Dashboard tiles | sign-in CTA | matches / notifications / messages live counts |
-| Context-menu redirects | ✅ (open BGM page) | ✅ |
+| Capability                            | Logged out                                  | Logged in                                      |
+| ------------------------------------- | ------------------------------------------- | ---------------------------------------------- |
+| Extract from shops (preview)          | ✅ falls back to `/extract?url=` on website | ✅ inline preview + save to BGM                |
+| Wishlist badges on shop pages         | ❌                                          | ✅                                             |
+| Philibert game overlay (rating, name) | ✅ public data only                         | ✅ + per-user collection pills                 |
+| Game search in popup                  | ✅                                          | ✅                                             |
+| Quick-add to collection               | ❌                                          | ✅                                             |
+| Play imports (BGA, Yucata, …)         | ❌                                          | ✅                                             |
+| BGG collection sync                   | ❌                                          | ✅                                             |
+| Background polls / notifications      | no-op (401)                                 | ✅ news, friends, matches, sessions, messages  |
+| Dashboard tiles                       | sign-in CTA                                 | matches / notifications / messages live counts |
+| Context-menu redirects                | ✅ (open BGM page)                          | ✅                                             |

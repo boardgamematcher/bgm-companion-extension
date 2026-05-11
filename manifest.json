@@ -6,20 +6,12 @@
   "default_locale": "en",
   "author": "BoardGameMatcher",
   "homepage_url": "https://boardgamematcher.com",
-  "permissions": [
-    "activeTab",
-    "alarms",
-    "contextMenus",
-    "notifications",
-    "storage",
-    "scripting"
-  ],
+  "permissions": ["activeTab", "alarms", "contextMenus", "notifications", "storage", "scripting"],
   "host_permissions": [
     "https://boardgamematcher.com/*",
     "https://boardgamearena.com/*",
     "https://en.boardgamearena.com/*",
     "https://tabletopia.com/*",
-    "https://www.spielbyweb.de/*",
     "https://ludopedia.com.br/*",
     "https://www.ludopedia.com.br/*",
     "https://www.philibertnet.com/*",
@@ -109,10 +101,7 @@
         "*://*.veepee.lu/*",
         "*://*.veepee.nl/*"
       ],
-      "js": [
-        "src/lib/pattern-matcher.js",
-        "src/content/content-script.js"
-      ]
+      "js": ["src/lib/pattern-matcher.js", "src/content/content-script.js"]
     },
     {
       "matches": [
@@ -177,19 +166,12 @@
         "*://*.veepee.lu/*",
         "*://*.veepee.nl/*"
       ],
-      "js": [
-        "src/lib/normalize.js",
-        "src/content/wishlist-badge.js"
-      ],
-      "css": [
-        "src/content/wishlist-badge.css"
-      ],
+      "js": ["src/lib/normalize.js", "src/content/wishlist-badge.js"],
+      "css": ["src/content/wishlist-badge.css"],
       "run_at": "document_idle"
     },
     {
-      "matches": [
-        "https://www.yucata.de/*"
-      ],
+      "matches": ["https://www.yucata.de/*"],
       "js": [
         "src/lib/yucata-mapper.js",
         "src/content/yucata-scraper.js",
@@ -197,63 +179,25 @@
       ]
     },
     {
-      "matches": [
-        "https://boardgamearena.com/*",
-        "https://en.boardgamearena.com/*"
-      ],
-      "js": [
-        "src/content/bga-scraper.js",
-        "src/content/bga-listener.js"
-      ]
+      "matches": ["https://boardgamearena.com/*", "https://en.boardgamearena.com/*"],
+      "js": ["src/content/bga-scraper.js", "src/content/bga-listener.js"]
     },
     {
-      "matches": [
-        "https://boardgamegeek.com/*",
-        "https://www.boardgamegeek.com/*"
-      ],
-      "js": [
-        "src/content/bgg-scraper.js",
-        "src/content/bgg-listener.js"
-      ]
+      "matches": ["https://boardgamegeek.com/*", "https://www.boardgamegeek.com/*"],
+      "js": ["src/content/bgg-scraper.js", "src/content/bgg-listener.js"]
     },
     {
-      "matches": [
-        "https://tabletopia.com/*"
-      ],
-      "js": [
-        "src/content/tabletopia-scraper.js",
-        "src/content/tabletopia-listener.js"
-      ]
+      "matches": ["https://tabletopia.com/*"],
+      "js": ["src/content/tabletopia-scraper.js", "src/content/tabletopia-listener.js"]
     },
     {
-      "matches": [
-        "https://ludopedia.com.br/*",
-        "https://www.ludopedia.com.br/*"
-      ],
-      "js": [
-        "src/content/ludopedia-scraper.js",
-        "src/content/ludopedia-listener.js"
-      ]
+      "matches": ["https://ludopedia.com.br/*", "https://www.ludopedia.com.br/*"],
+      "js": ["src/content/ludopedia-scraper.js", "src/content/ludopedia-listener.js"]
     },
     {
-      "matches": [
-        "https://www.spielbyweb.de/*"
-      ],
-      "js": [
-        "src/content/spielbyweb-scraper.js",
-        "src/content/spielbyweb-listener.js"
-      ]
-    },
-    {
-      "matches": [
-        "*://*.philibertnet.com/*"
-      ],
-      "js": [
-        "src/content/game-overlay.js"
-      ],
-      "css": [
-        "src/content/game-overlay.css"
-      ],
+      "matches": ["*://*.philibertnet.com/*"],
+      "js": ["src/content/game-overlay.js"],
+      "css": ["src/content/game-overlay.css"],
       "run_at": "document_idle"
     }
   ],
@@ -265,46 +209,20 @@
   },
   "web_accessible_resources": [
     {
-      "resources": [
-        "patterns/built-in.json"
-      ],
-      "matches": [
-        "<all_urls>"
-      ]
+      "resources": ["patterns/built-in.json"],
+      "matches": ["<all_urls>"]
     },
     {
-      "resources": [
-        "patterns/yucata-mapping.json",
-        "src/content/yucata-page-extract.js"
-      ],
-      "matches": [
-        "https://www.yucata.de/*"
-      ]
+      "resources": ["patterns/yucata-mapping.json", "src/content/yucata-page-extract.js"],
+      "matches": ["https://www.yucata.de/*"]
     },
     {
-      "resources": [
-        "patterns/bga-mapping.json"
-      ],
-      "matches": [
-        "https://boardgamearena.com/*",
-        "https://en.boardgamearena.com/*"
-      ]
+      "resources": ["patterns/bga-mapping.json"],
+      "matches": ["https://boardgamearena.com/*", "https://en.boardgamearena.com/*"]
     },
     {
-      "resources": [
-        "patterns/tabletopia-mapping.json"
-      ],
-      "matches": [
-        "https://tabletopia.com/*"
-      ]
-    },
-    {
-      "resources": [
-        "patterns/spielbyweb-mapping.json"
-      ],
-      "matches": [
-        "https://www.spielbyweb.de/*"
-      ]
+      "resources": ["patterns/tabletopia-mapping.json"],
+      "matches": ["https://tabletopia.com/*"]
     }
   ]
 }

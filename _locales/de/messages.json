@@ -896,18 +896,6 @@
   "importLudopediaFetching": {
     "message": "Alle Partien von Ludopedia werden abgerufen … bitte warten"
   },
-  "popupSpielByWebCtx": {
-    "message": "SpielByWeb"
-  },
-  "popupSpielByWebLead": {
-    "message": "Importiere deine Spielhistorie, um Statistiken zu verfolgen und BGM-Abzeichen zu verdienen"
-  },
-  "popupSpielByWebButton": {
-    "message": "SpielByWeb-Partien importieren"
-  },
-  "importSpielByWebFetching": {
-    "message": "Abgeschlossene Spiele auf dieser Seite werden gescannt … bitte warten"
-  },
   "bnGames": {
     "message": "Spiele",
     "description": "Bottom nav label for the games/collection tab."

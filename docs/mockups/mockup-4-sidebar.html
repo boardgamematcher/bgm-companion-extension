@@ -1,184 +1,421 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Mockup 4 — Sidebar Panel</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #1a1a2e; display: flex; justify-content: center; align-items: flex-start; padding: 40px; min-height: 100vh; }
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mockup 4 — Sidebar Panel</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #1a1a2e;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 40px;
+        min-height: 100vh;
+      }
 
-  .browser-mock { width: 900px; height: 580px; background: #f5f5f5; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); overflow: hidden; display: flex; flex-direction: column; }
+      .browser-mock {
+        width: 900px;
+        height: 580px;
+        background: #f5f5f5;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
 
-  /* Browser chrome */
-  .browser-chrome { background: #e8e8e8; padding: 8px 12px; display: flex; align-items: center; gap: 10px; }
-  .browser-dots { display: flex; gap: 5px; }
-  .browser-dots span { width: 10px; height: 10px; border-radius: 50%; }
-  .browser-dots span:nth-child(1) { background: #ff5f57; }
-  .browser-dots span:nth-child(2) { background: #ffbd2e; }
-  .browser-dots span:nth-child(3) { background: #28c840; }
-  .url-bar { flex: 1; background: #fff; border-radius: 6px; padding: 5px 10px; font-size: 11px; color: #555; }
+      /* Browser chrome */
+      .browser-chrome {
+        background: #e8e8e8;
+        padding: 8px 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .browser-dots {
+        display: flex;
+        gap: 5px;
+      }
+      .browser-dots span {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+      .browser-dots span:nth-child(1) {
+        background: #ff5f57;
+      }
+      .browser-dots span:nth-child(2) {
+        background: #ffbd2e;
+      }
+      .browser-dots span:nth-child(3) {
+        background: #28c840;
+      }
+      .url-bar {
+        flex: 1;
+        background: #fff;
+        border-radius: 6px;
+        padding: 5px 10px;
+        font-size: 11px;
+        color: #555;
+      }
 
-  .browser-body { flex: 1; display: flex; overflow: hidden; }
+      .browser-body {
+        flex: 1;
+        display: flex;
+        overflow: hidden;
+      }
 
-  /* Fake page content */
-  .page-content { flex: 1; background: #fff; padding: 20px; overflow: auto; }
-  .page-content h2 { font-size: 18px; color: #333; margin-bottom: 10px; }
-  .page-content .fake-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  .fake-card { background: #f9f9f9; border: 1px solid #eee; border-radius: 8px; padding: 12px; }
-  .fake-card .thumb { width: 100%; height: 80px; background: linear-gradient(135deg, #e3f2fd, #f3e5f5); border-radius: 6px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
-  .fake-card .fname { font-size: 12px; font-weight: 600; color: #333; }
-  .fake-card .fprice { font-size: 11px; color: #e65100; font-weight: 700; margin-top: 2px; }
+      /* Fake page content */
+      .page-content {
+        flex: 1;
+        background: #fff;
+        padding: 20px;
+        overflow: auto;
+      }
+      .page-content h2 {
+        font-size: 18px;
+        color: #333;
+        margin-bottom: 10px;
+      }
+      .page-content .fake-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+      .fake-card {
+        background: #f9f9f9;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        padding: 12px;
+      }
+      .fake-card .thumb {
+        width: 100%;
+        height: 80px;
+        background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+        border-radius: 6px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+      }
+      .fake-card .fname {
+        font-size: 12px;
+        font-weight: 600;
+        color: #333;
+      }
+      .fake-card .fprice {
+        font-size: 11px;
+        color: #e65100;
+        font-weight: 700;
+        margin-top: 2px;
+      }
 
-  /* Sidebar */
-  .sidebar { width: 300px; background: #fafafa; border-left: 1px solid #e0e0e0; display: flex; flex-direction: column; }
+      /* Sidebar */
+      .sidebar {
+        width: 300px;
+        background: #fafafa;
+        border-left: 1px solid #e0e0e0;
+        display: flex;
+        flex-direction: column;
+      }
 
-  .sidebar-header { background: linear-gradient(135deg, #2e7d32, #43a047); padding: 12px 14px; color: #fff; display: flex; align-items: center; justify-content: space-between; }
-  .sidebar-header h3 { font-size: 13px; font-weight: 700; }
-  .sidebar-header button { background: none; border: none; color: rgba(255,255,255,0.7); cursor: pointer; font-size: 16px; }
+      .sidebar-header {
+        background: linear-gradient(135deg, #2e7d32, #43a047);
+        padding: 12px 14px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .sidebar-header h3 {
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .sidebar-header button {
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.7);
+        cursor: pointer;
+        font-size: 16px;
+      }
 
-  .sidebar-content { flex: 1; overflow-y: auto; padding: 12px; }
+      .sidebar-content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 12px;
+      }
 
-  /* Sidebar sections */
-  .sb-section { margin-bottom: 16px; }
-  .sb-section-title { font-size: 10px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: .7px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; }
-  .sb-section-title .count { background: #e65100; color: #fff; font-size: 8px; padding: 1px 5px; border-radius: 6px; }
+      /* Sidebar sections */
+      .sb-section {
+        margin-bottom: 16px;
+      }
+      .sb-section-title {
+        font-size: 10px;
+        font-weight: 700;
+        color: #999;
+        text-transform: uppercase;
+        letter-spacing: 0.7px;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .sb-section-title .count {
+        background: #e65100;
+        color: #fff;
+        font-size: 8px;
+        padding: 1px 5px;
+        border-radius: 6px;
+      }
 
-  .sb-game { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 6px; cursor: pointer; transition: background .1s; }
-  .sb-game:hover { background: #f0f0f0; }
-  .sb-game .check { width: 16px; height: 16px; border: 2px solid #ddd; border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; }
-  .sb-game .check.checked { background: #2e7d32; border-color: #2e7d32; color: #fff; }
-  .sb-game .info { flex: 1; }
-  .sb-game .info .name { font-size: 11px; font-weight: 600; color: #333; display: block; }
-  .sb-game .info .detail { font-size: 9px; color: #999; }
-  .sb-game .price { font-size: 11px; font-weight: 700; color: #e65100; }
-  .sb-game .actions { display: flex; gap: 3px; }
-  .sb-game .actions button { background: none; border: none; font-size: 12px; cursor: pointer; opacity: 0.4; }
-  .sb-game:hover .actions button { opacity: 1; }
+      .sb-game {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 8px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.1s;
+      }
+      .sb-game:hover {
+        background: #f0f0f0;
+      }
+      .sb-game .check {
+        width: 16px;
+        height: 16px;
+        border: 2px solid #ddd;
+        border-radius: 4px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+      }
+      .sb-game .check.checked {
+        background: #2e7d32;
+        border-color: #2e7d32;
+        color: #fff;
+      }
+      .sb-game .info {
+        flex: 1;
+      }
+      .sb-game .info .name {
+        font-size: 11px;
+        font-weight: 600;
+        color: #333;
+        display: block;
+      }
+      .sb-game .info .detail {
+        font-size: 9px;
+        color: #999;
+      }
+      .sb-game .price {
+        font-size: 11px;
+        font-weight: 700;
+        color: #e65100;
+      }
+      .sb-game .actions {
+        display: flex;
+        gap: 3px;
+      }
+      .sb-game .actions button {
+        background: none;
+        border: none;
+        font-size: 12px;
+        cursor: pointer;
+        opacity: 0.4;
+      }
+      .sb-game:hover .actions button {
+        opacity: 1;
+      }
 
-  .sb-btn { width: 100%; padding: 9px; border-radius: 7px; font-size: 11px; font-weight: 600; cursor: pointer; border: none; margin-top: 6px; }
-  .sb-btn-primary { background: #2e7d32; color: #fff; }
-  .sb-btn-secondary { background: #fff; color: #555; border: 1px solid #ddd; }
+      .sb-btn {
+        width: 100%;
+        padding: 9px;
+        border-radius: 7px;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        margin-top: 6px;
+      }
+      .sb-btn-primary {
+        background: #2e7d32;
+        color: #fff;
+      }
+      .sb-btn-secondary {
+        background: #fff;
+        color: #555;
+        border: 1px solid #ddd;
+      }
 
-  /* Quick actions strip */
-  .quick-strip { display: flex; gap: 4px; padding: 8px 12px; border-top: 1px solid #eee; background: #fff; }
-  .quick-strip button { flex: 1; padding: 8px 4px; border: 1px solid #eee; background: #fafafa; border-radius: 6px; cursor: pointer; text-align: center; font-size: 9px; color: #666; line-height: 1.3; }
-  .quick-strip button:hover { border-color: #2e7d32; color: #2e7d32; }
-  .quick-strip button .qicon { font-size: 14px; display: block; margin-bottom: 2px; }
+      /* Quick actions strip */
+      .quick-strip {
+        display: flex;
+        gap: 4px;
+        padding: 8px 12px;
+        border-top: 1px solid #eee;
+        background: #fff;
+      }
+      .quick-strip button {
+        flex: 1;
+        padding: 8px 4px;
+        border: 1px solid #eee;
+        background: #fafafa;
+        border-radius: 6px;
+        cursor: pointer;
+        text-align: center;
+        font-size: 9px;
+        color: #666;
+        line-height: 1.3;
+      }
+      .quick-strip button:hover {
+        border-color: #2e7d32;
+        color: #2e7d32;
+      }
+      .quick-strip button .qicon {
+        font-size: 14px;
+        display: block;
+        margin-bottom: 2px;
+      }
 
-  /* Highlight overlay on page */
-  .highlighted-game { outline: 2px solid #4caf50; outline-offset: 2px; border-radius: 6px; position: relative; }
-  .highlighted-game::after { content: 'BGM'; position: absolute; top: -8px; right: -4px; background: #4caf50; color: #fff; font-size: 8px; padding: 1px 5px; border-radius: 3px; font-weight: 700; }
-</style>
-</head>
-<body>
+      /* Highlight overlay on page */
+      .highlighted-game {
+        outline: 2px solid #4caf50;
+        outline-offset: 2px;
+        border-radius: 6px;
+        position: relative;
+      }
+      .highlighted-game::after {
+        content: 'BGM';
+        position: absolute;
+        top: -8px;
+        right: -4px;
+        background: #4caf50;
+        color: #fff;
+        font-size: 8px;
+        padding: 1px 5px;
+        border-radius: 3px;
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="browser-mock">
+      <div class="browser-chrome">
+        <div class="browser-dots"><span></span><span></span><span></span></div>
+        <div class="url-bar">🔒 philibert.net/jeux-de-strategie</div>
+      </div>
 
-<div class="browser-mock">
-  <div class="browser-chrome">
-    <div class="browser-dots"><span></span><span></span><span></span></div>
-    <div class="url-bar">🔒 philibert.net/jeux-de-strategie</div>
-  </div>
-
-  <div class="browser-body">
-    <div class="page-content">
-      <h2>Jeux de Strat&eacute;gie</h2>
-      <div class="fake-grid">
-        <div class="fake-card highlighted-game">
-          <div class="thumb">🏭</div>
-          <div class="fname">Brass: Birmingham</div>
-          <div class="fprice">42,90 &euro;</div>
+      <div class="browser-body">
+        <div class="page-content">
+          <h2>Jeux de Strat&eacute;gie</h2>
+          <div class="fake-grid">
+            <div class="fake-card highlighted-game">
+              <div class="thumb">🏭</div>
+              <div class="fname">Brass: Birmingham</div>
+              <div class="fprice">42,90 &euro;</div>
+            </div>
+            <div class="fake-card">
+              <div class="thumb">🦁</div>
+              <div class="fname">Ark Nova</div>
+              <div class="fprice">54,95 &euro;</div>
+            </div>
+            <div class="fake-card highlighted-game">
+              <div class="thumb">🐻</div>
+              <div class="fname">Cascadia</div>
+              <div class="fprice">29,90 &euro;</div>
+            </div>
+            <div class="fake-card">
+              <div class="thumb">🏛️</div>
+              <div class="fname">Dune: Imperium</div>
+              <div class="fprice">39,95 &euro;</div>
+            </div>
+            <div class="fake-card">
+              <div class="thumb">🌳</div>
+              <div class="fname">Everdell</div>
+              <div class="fprice">44,99 &euro;</div>
+            </div>
+            <div class="fake-card">
+              <div class="thumb">🗺️</div>
+              <div class="fname">Terraforming Mars</div>
+              <div class="fprice">39,90 &euro;</div>
+            </div>
+          </div>
         </div>
-        <div class="fake-card">
-          <div class="thumb">🦁</div>
-          <div class="fname">Ark Nova</div>
-          <div class="fprice">54,95 &euro;</div>
-        </div>
-        <div class="fake-card highlighted-game">
-          <div class="thumb">🐻</div>
-          <div class="fname">Cascadia</div>
-          <div class="fprice">29,90 &euro;</div>
-        </div>
-        <div class="fake-card">
-          <div class="thumb">🏛️</div>
-          <div class="fname">Dune: Imperium</div>
-          <div class="fprice">39,95 &euro;</div>
-        </div>
-        <div class="fake-card">
-          <div class="thumb">🌳</div>
-          <div class="fname">Everdell</div>
-          <div class="fprice">44,99 &euro;</div>
-        </div>
-        <div class="fake-card">
-          <div class="thumb">🗺️</div>
-          <div class="fname">Terraforming Mars</div>
-          <div class="fprice">39,90 &euro;</div>
+
+        <div class="sidebar">
+          <div class="sidebar-header">
+            <h3>BGM Toolbox</h3>
+            <button title="Close">&times;</button>
+          </div>
+
+          <div class="sidebar-content">
+            <div class="sb-section">
+              <div class="sb-section-title">Detected games <span class="count">6</span></div>
+              <div class="sb-game">
+                <div class="check checked">&#10003;</div>
+                <div class="info">
+                  <span class="name">Brass: Birmingham</span>
+                  <span class="detail">BGG 8.6 &middot; Weight 3.9 &middot; You own it</span>
+                </div>
+                <span class="price">42,90&euro;</span>
+              </div>
+              <div class="sb-game">
+                <div class="check checked">&#10003;</div>
+                <div class="info">
+                  <span class="name">Ark Nova</span>
+                  <span class="detail">BGG 8.5 &middot; Weight 3.7 &middot; On wishlist</span>
+                </div>
+                <span class="price">54,95&euro;</span>
+              </div>
+              <div class="sb-game">
+                <div class="check checked">&#10003;</div>
+                <div class="info">
+                  <span class="name">Cascadia</span>
+                  <span class="detail">BGG 8.1 &middot; Weight 1.9 &middot; 5 plays</span>
+                </div>
+                <span class="price">29,90&euro;</span>
+              </div>
+              <div class="sb-game">
+                <div class="check"></div>
+                <div class="info">
+                  <span class="name">Dune: Imperium</span>
+                  <span class="detail">BGG 8.3 &middot; Weight 3.0</span>
+                </div>
+                <span class="price">39,95&euro;</span>
+              </div>
+              <div class="sb-game">
+                <div class="check"></div>
+                <div class="info">
+                  <span class="name">Everdell</span>
+                  <span class="detail">BGG 7.8 &middot; Weight 2.8</span>
+                </div>
+                <span class="price">44,99&euro;</span>
+              </div>
+            </div>
+
+            <button class="sb-btn sb-btn-primary">Copy 3 selected to clipboard</button>
+            <button class="sb-btn sb-btn-secondary" style="margin-top: 4px">
+              Add selected to wishlist
+            </button>
+          </div>
+
+          <div class="quick-strip">
+            <button><span class="qicon">🔍</span>Lookup</button>
+            <button><span class="qicon">🎮</span>Plays</button>
+            <button><span class="qicon">📊</span>Prices</button>
+            <button><span class="qicon">⚙️</span>Settings</button>
+          </div>
         </div>
       </div>
     </div>
-
-    <div class="sidebar">
-      <div class="sidebar-header">
-        <h3>BGM Toolbox</h3>
-        <button title="Close">&times;</button>
-      </div>
-
-      <div class="sidebar-content">
-        <div class="sb-section">
-          <div class="sb-section-title">Detected games <span class="count">6</span></div>
-          <div class="sb-game">
-            <div class="check checked">&#10003;</div>
-            <div class="info">
-              <span class="name">Brass: Birmingham</span>
-              <span class="detail">BGG 8.6 &middot; Weight 3.9 &middot; You own it</span>
-            </div>
-            <span class="price">42,90&euro;</span>
-          </div>
-          <div class="sb-game">
-            <div class="check checked">&#10003;</div>
-            <div class="info">
-              <span class="name">Ark Nova</span>
-              <span class="detail">BGG 8.5 &middot; Weight 3.7 &middot; On wishlist</span>
-            </div>
-            <span class="price">54,95&euro;</span>
-          </div>
-          <div class="sb-game">
-            <div class="check checked">&#10003;</div>
-            <div class="info">
-              <span class="name">Cascadia</span>
-              <span class="detail">BGG 8.1 &middot; Weight 1.9 &middot; 5 plays</span>
-            </div>
-            <span class="price">29,90&euro;</span>
-          </div>
-          <div class="sb-game">
-            <div class="check"></div>
-            <div class="info">
-              <span class="name">Dune: Imperium</span>
-              <span class="detail">BGG 8.3 &middot; Weight 3.0</span>
-            </div>
-            <span class="price">39,95&euro;</span>
-          </div>
-          <div class="sb-game">
-            <div class="check"></div>
-            <div class="info">
-              <span class="name">Everdell</span>
-              <span class="detail">BGG 7.8 &middot; Weight 2.8</span>
-            </div>
-            <span class="price">44,99&euro;</span>
-          </div>
-        </div>
-
-        <button class="sb-btn sb-btn-primary">Copy 3 selected to clipboard</button>
-        <button class="sb-btn sb-btn-secondary" style="margin-top:4px;">Add selected to wishlist</button>
-      </div>
-
-      <div class="quick-strip">
-        <button><span class="qicon">🔍</span>Lookup</button>
-        <button><span class="qicon">🎮</span>Plays</button>
-        <button><span class="qicon">📊</span>Prices</button>
-        <button><span class="qicon">⚙️</span>Settings</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-</body>
+  </body>
 </html>

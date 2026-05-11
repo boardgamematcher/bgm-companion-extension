@@ -1,176 +1,426 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Mockup 2 — Context-First Adaptive</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #1a1a2e; display: flex; justify-content: center; align-items: flex-start; padding: 40px; min-height: 100vh; gap: 30px; }
-  .phone-frame { width: 360px; background: #fff; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); overflow: hidden; }
-  .label { color: #fff; font-size: 13px; font-weight: 600; text-align: center; margin-bottom: 10px; opacity: 0.7; }
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mockup 2 — Context-First Adaptive</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #1a1a2e;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 40px;
+        min-height: 100vh;
+        gap: 30px;
+      }
+      .phone-frame {
+        width: 360px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+      }
+      .label {
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 10px;
+        opacity: 0.7;
+      }
 
-  /* Header */
-  .header { background: linear-gradient(135deg, #1565c0, #1e88e5); padding: 12px 16px; color: #fff; display: flex; align-items: center; justify-content: space-between; }
-  .header.shop { background: linear-gradient(135deg, #e65100, #f57c00); }
-  .header.play { background: linear-gradient(135deg, #6a1b9a, #8e24aa); }
-  .header h1 { font-size: 14px; font-weight: 700; }
-  .header .context-badge { font-size: 10px; background: rgba(255,255,255,0.2); padding: 3px 8px; border-radius: 10px; }
-  .header .menu-btn { background: none; border: none; color: #fff; font-size: 18px; cursor: pointer; }
+      /* Header */
+      .header {
+        background: linear-gradient(135deg, #1565c0, #1e88e5);
+        padding: 12px 16px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .header.shop {
+        background: linear-gradient(135deg, #e65100, #f57c00);
+      }
+      .header.play {
+        background: linear-gradient(135deg, #6a1b9a, #8e24aa);
+      }
+      .header h1 {
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .header .context-badge {
+        font-size: 10px;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 3px 8px;
+        border-radius: 10px;
+      }
+      .header .menu-btn {
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 18px;
+        cursor: pointer;
+      }
 
-  /* Adaptive hero */
-  .hero { padding: 16px; }
-  .hero-shop { background: linear-gradient(180deg, #fff3e0, #fff); }
-  .hero-play { background: linear-gradient(180deg, #f3e5f5, #fff); }
-  .hero-neutral { background: linear-gradient(180deg, #e3f2fd, #fff); }
+      /* Adaptive hero */
+      .hero {
+        padding: 16px;
+      }
+      .hero-shop {
+        background: linear-gradient(180deg, #fff3e0, #fff);
+      }
+      .hero-play {
+        background: linear-gradient(180deg, #f3e5f5, #fff);
+      }
+      .hero-neutral {
+        background: linear-gradient(180deg, #e3f2fd, #fff);
+      }
 
-  .hero h2 { font-size: 16px; font-weight: 700; color: #333; margin-bottom: 4px; }
-  .hero p { font-size: 11px; color: #888; margin-bottom: 12px; }
+      .hero h2 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 4px;
+      }
+      .hero p {
+        font-size: 11px;
+        color: #888;
+        margin-bottom: 12px;
+      }
 
-  /* Action cards */
-  .action-card { background: #fff; border: 1px solid #eee; border-radius: 10px; padding: 12px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all .15s; }
-  .action-card:hover { border-color: #aaa; transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-  .action-card .icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-  .action-card .icon.green { background: #e8f5e9; }
-  .action-card .icon.orange { background: #fff3e0; }
-  .action-card .icon.purple { background: #f3e5f5; }
-  .action-card .icon.blue { background: #e3f2fd; }
-  .action-card .text { flex: 1; }
-  .action-card .text strong { font-size: 13px; color: #333; display: block; }
-  .action-card .text span { font-size: 10px; color: #999; }
-  .action-card .arrow { color: #ccc; font-size: 16px; }
+      /* Action cards */
+      .action-card {
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 10px;
+        padding: 12px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .action-card:hover {
+        border-color: #aaa;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      }
+      .action-card .icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      .action-card .icon.green {
+        background: #e8f5e9;
+      }
+      .action-card .icon.orange {
+        background: #fff3e0;
+      }
+      .action-card .icon.purple {
+        background: #f3e5f5;
+      }
+      .action-card .icon.blue {
+        background: #e3f2fd;
+      }
+      .action-card .text {
+        flex: 1;
+      }
+      .action-card .text strong {
+        font-size: 13px;
+        color: #333;
+        display: block;
+      }
+      .action-card .text span {
+        font-size: 10px;
+        color: #999;
+      }
+      .action-card .arrow {
+        color: #ccc;
+        font-size: 16px;
+      }
 
-  /* Mini stats */
-  .mini-stats { display: flex; gap: 8px; padding: 0 16px 14px; }
-  .mini-stat { flex: 1; background: #f8f8f8; border-radius: 8px; padding: 10px 8px; text-align: center; }
-  .mini-stat .val { font-size: 18px; font-weight: 800; color: #333; display: block; }
-  .mini-stat .label { font-size: 9px; color: #999; text-transform: uppercase; letter-spacing: .5px; }
+      /* Mini stats */
+      .mini-stats {
+        display: flex;
+        gap: 8px;
+        padding: 0 16px 14px;
+      }
+      .mini-stat {
+        flex: 1;
+        background: #f8f8f8;
+        border-radius: 8px;
+        padding: 10px 8px;
+        text-align: center;
+      }
+      .mini-stat .val {
+        font-size: 18px;
+        font-weight: 800;
+        color: #333;
+        display: block;
+      }
+      .mini-stat .label {
+        font-size: 9px;
+        color: #999;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
 
-  /* Content list */
-  .content { padding: 0 16px 14px; }
-  .section-label { font-size: 10px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 8px; }
+      /* Content list */
+      .content {
+        padding: 0 16px 14px;
+      }
+      .section-label {
+        font-size: 10px;
+        font-weight: 700;
+        color: #aaa;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 8px;
+      }
 
-  .game-row { display: flex; align-items: center; padding: 8px 0; border-bottom: 1px solid #f5f5f5; gap: 10px; }
-  .game-row:last-child { border: none; }
-  .game-row .rank { width: 20px; font-size: 11px; color: #ccc; font-weight: 700; text-align: center; }
-  .game-row .name { flex: 1; font-size: 12px; color: #333; font-weight: 500; }
-  .game-row .meta { font-size: 10px; color: #999; }
-  .game-row .price { font-size: 12px; font-weight: 700; color: #e65100; }
-  .game-row .badge-new { background: #e8f5e9; color: #2e7d32; font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 600; }
-  .game-row .badge-drop { background: #fff3e0; color: #e65100; font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 600; }
+      .game-row {
+        display: flex;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #f5f5f5;
+        gap: 10px;
+      }
+      .game-row:last-child {
+        border: none;
+      }
+      .game-row .rank {
+        width: 20px;
+        font-size: 11px;
+        color: #ccc;
+        font-weight: 700;
+        text-align: center;
+      }
+      .game-row .name {
+        flex: 1;
+        font-size: 12px;
+        color: #333;
+        font-weight: 500;
+      }
+      .game-row .meta {
+        font-size: 10px;
+        color: #999;
+      }
+      .game-row .price {
+        font-size: 12px;
+        font-weight: 700;
+        color: #e65100;
+      }
+      .game-row .badge-new {
+        background: #e8f5e9;
+        color: #2e7d32;
+        font-size: 9px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 600;
+      }
+      .game-row .badge-drop {
+        background: #fff3e0;
+        color: #e65100;
+        font-size: 9px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 600;
+      }
 
-  .cta-row { display: flex; gap: 8px; margin-top: 12px; }
-  .cta-row button { flex: 1; padding: 10px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; }
-  .cta-row .primary { background: #e65100; color: #fff; }
-  .cta-row .secondary { background: #f5f5f5; color: #555; }
-  .cta-row .primary-purple { background: #6a1b9a; color: #fff; }
+      .cta-row {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .cta-row button {
+        flex: 1;
+        padding: 10px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+      }
+      .cta-row .primary {
+        background: #e65100;
+        color: #fff;
+      }
+      .cta-row .secondary {
+        background: #f5f5f5;
+        color: #555;
+      }
+      .cta-row .primary-purple {
+        background: #6a1b9a;
+        color: #fff;
+      }
 
-  /* Bottom nav */
-  .bottom-nav { display: flex; border-top: 1px solid #eee; padding: 8px 0; }
-  .nav-item { flex: 1; text-align: center; cursor: pointer; }
-  .nav-item .nav-icon { font-size: 16px; display: block; }
-  .nav-item .nav-label { font-size: 9px; color: #999; }
-  .nav-item.active .nav-label { color: #1565c0; font-weight: 600; }
+      /* Bottom nav */
+      .bottom-nav {
+        display: flex;
+        border-top: 1px solid #eee;
+        padding: 8px 0;
+      }
+      .nav-item {
+        flex: 1;
+        text-align: center;
+        cursor: pointer;
+      }
+      .nav-item .nav-icon {
+        font-size: 16px;
+        display: block;
+      }
+      .nav-item .nav-label {
+        font-size: 9px;
+        color: #999;
+      }
+      .nav-item.active .nav-label {
+        color: #1565c0;
+        font-weight: 600;
+      }
 
-  .notif-dot { position: relative; }
-  .notif-dot::after { content: ''; position: absolute; top: -2px; right: calc(50% - 12px); width: 6px; height: 6px; background: #e65100; border-radius: 50%; }
-</style>
-</head>
-<body>
-
-<!-- STATE 1: On a shop site -->
-<div>
-  <div class="label">On Philibert.net</div>
-  <div class="phone-frame">
-    <div class="header shop">
-      <h1>BGM Toolbox</h1>
-      <span class="context-badge">🛒 Shop detected</span>
-      <button class="menu-btn">&#8942;</button>
-    </div>
-    <div class="hero hero-shop">
-      <h2>12 games found on this page</h2>
-      <p>Philibert.net &middot; Category: Strategy Games</p>
-      <div class="cta-row">
-        <button class="primary">Extract All</button>
-        <button class="secondary">Compare Prices</button>
+      .notif-dot {
+        position: relative;
+      }
+      .notif-dot::after {
+        content: '';
+        position: absolute;
+        top: -2px;
+        right: calc(50% - 12px);
+        width: 6px;
+        height: 6px;
+        background: #e65100;
+        border-radius: 50%;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- STATE 1: On a shop site -->
+    <div>
+      <div class="label">On Philibert.net</div>
+      <div class="phone-frame">
+        <div class="header shop">
+          <h1>BGM Toolbox</h1>
+          <span class="context-badge">🛒 Shop detected</span>
+          <button class="menu-btn">&#8942;</button>
+        </div>
+        <div class="hero hero-shop">
+          <h2>12 games found on this page</h2>
+          <p>Philibert.net &middot; Category: Strategy Games</p>
+          <div class="cta-row">
+            <button class="primary">Extract All</button>
+            <button class="secondary">Compare Prices</button>
+          </div>
+        </div>
+        <div class="content">
+          <div class="section-label">Top results</div>
+          <div class="game-row">
+            <span class="rank">1</span>
+            <span class="name">Brass: Birmingham</span>
+            <span class="price">42,90&euro;</span>
+          </div>
+          <div class="game-row">
+            <span class="rank">2</span>
+            <span class="name">Ark Nova</span>
+            <span class="badge-drop">&darr; 10&euro;</span>
+            <span class="price">44,95&euro;</span>
+          </div>
+          <div class="game-row">
+            <span class="rank">3</span>
+            <span class="name">Cascadia</span>
+            <span class="badge-new">Wishlist</span>
+            <span class="price">29,90&euro;</span>
+          </div>
+        </div>
+        <div class="bottom-nav">
+          <div class="nav-item active">
+            <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
+          </div>
+          <div class="nav-item notif-dot">
+            <span class="nav-icon">🎮</span><span class="nav-label">Plays</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">🔍</span><span class="nav-label">Lookup</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">⚙️</span><span class="nav-label">Settings</span>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="content">
-      <div class="section-label">Top results</div>
-      <div class="game-row">
-        <span class="rank">1</span>
-        <span class="name">Brass: Birmingham</span>
-        <span class="price">42,90&euro;</span>
-      </div>
-      <div class="game-row">
-        <span class="rank">2</span>
-        <span class="name">Ark Nova</span>
-        <span class="badge-drop">&darr; 10&euro;</span>
-        <span class="price">44,95&euro;</span>
-      </div>
-      <div class="game-row">
-        <span class="rank">3</span>
-        <span class="name">Cascadia</span>
-        <span class="badge-new">Wishlist</span>
-        <span class="price">29,90&euro;</span>
-      </div>
-    </div>
-    <div class="bottom-nav">
-      <div class="nav-item active"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></div>
-      <div class="nav-item notif-dot"><span class="nav-icon">🎮</span><span class="nav-label">Plays</span></div>
-      <div class="nav-item"><span class="nav-icon">🔍</span><span class="nav-label">Lookup</span></div>
-      <div class="nav-item"><span class="nav-icon">⚙️</span><span class="nav-label">Settings</span></div>
-    </div>
-  </div>
-</div>
 
-<!-- STATE 2: On BGA -->
-<div>
-  <div class="label">On Board Game Arena</div>
-  <div class="phone-frame">
-    <div class="header play">
-      <h1>BGM Toolbox</h1>
-      <span class="context-badge">🎮 Play platform</span>
-      <button class="menu-btn">&#8942;</button>
-    </div>
-    <div class="hero hero-play">
-      <h2>3 recent games to log</h2>
-      <p>Board Game Arena &middot; Last played 12 min ago</p>
-      <div class="cta-row">
-        <button class="primary-purple">Log All to BGM</button>
-        <button class="secondary">Review First</button>
+    <!-- STATE 2: On BGA -->
+    <div>
+      <div class="label">On Board Game Arena</div>
+      <div class="phone-frame">
+        <div class="header play">
+          <h1>BGM Toolbox</h1>
+          <span class="context-badge">🎮 Play platform</span>
+          <button class="menu-btn">&#8942;</button>
+        </div>
+        <div class="hero hero-play">
+          <h2>3 recent games to log</h2>
+          <p>Board Game Arena &middot; Last played 12 min ago</p>
+          <div class="cta-row">
+            <button class="primary-purple">Log All to BGM</button>
+            <button class="secondary">Review First</button>
+          </div>
+        </div>
+        <div class="mini-stats">
+          <div class="mini-stat">
+            <span class="val">147</span><span class="label">Total plays</span>
+          </div>
+          <div class="mini-stat">
+            <span class="val">58%</span><span class="label">Win rate</span>
+          </div>
+          <div class="mini-stat">
+            <span class="val">23</span><span class="label">This month</span>
+          </div>
+        </div>
+        <div class="content">
+          <div class="section-label">Recent unlogged</div>
+          <div class="game-row">
+            <span class="rank">🏆</span>
+            <span class="name">7 Wonders Duel</span>
+            <span class="meta">Won &middot; 22min</span>
+          </div>
+          <div class="game-row">
+            <span class="rank">2nd</span>
+            <span class="name">Res Arcana</span>
+            <span class="meta">Lost &middot; 35min</span>
+          </div>
+          <div class="game-row">
+            <span class="rank">🏆</span>
+            <span class="name">Agricola</span>
+            <span class="meta">Won &middot; 1h12</span>
+          </div>
+        </div>
+        <div class="bottom-nav">
+          <div class="nav-item active">
+            <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">🎮</span><span class="nav-label">Plays</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">🔍</span><span class="nav-label">Lookup</span>
+          </div>
+          <div class="nav-item">
+            <span class="nav-icon">⚙️</span><span class="nav-label">Settings</span>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="mini-stats">
-      <div class="mini-stat"><span class="val">147</span><span class="label">Total plays</span></div>
-      <div class="mini-stat"><span class="val">58%</span><span class="label">Win rate</span></div>
-      <div class="mini-stat"><span class="val">23</span><span class="label">This month</span></div>
-    </div>
-    <div class="content">
-      <div class="section-label">Recent unlogged</div>
-      <div class="game-row">
-        <span class="rank">🏆</span>
-        <span class="name">7 Wonders Duel</span>
-        <span class="meta">Won &middot; 22min</span>
-      </div>
-      <div class="game-row">
-        <span class="rank">2nd</span>
-        <span class="name">Res Arcana</span>
-        <span class="meta">Lost &middot; 35min</span>
-      </div>
-      <div class="game-row">
-        <span class="rank">🏆</span>
-        <span class="name">Agricola</span>
-        <span class="meta">Won &middot; 1h12</span>
-      </div>
-    </div>
-    <div class="bottom-nav">
-      <div class="nav-item active"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></div>
-      <div class="nav-item"><span class="nav-icon">🎮</span><span class="nav-label">Plays</span></div>
-      <div class="nav-item"><span class="nav-icon">🔍</span><span class="nav-label">Lookup</span></div>
-      <div class="nav-item"><span class="nav-icon">⚙️</span><span class="nav-label">Settings</span></div>
-    </div>
-  </div>
-</div>
-
-</body>
+  </body>
 </html>

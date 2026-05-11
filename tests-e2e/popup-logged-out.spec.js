@@ -37,10 +37,7 @@ test('all 4 nav tabs render and Extract tab is active by default', async ({
   await expect(popup.locator('#bn-extract')).toHaveClass(/active/);
 });
 
-test('Games tab: shows login strip; chips and footer hidden', async ({
-  context,
-  extensionId,
-}) => {
+test('Games tab: shows login strip; chips and footer hidden', async ({ context, extensionId }) => {
   const popup = await openPopupAt(context, extensionId);
   await popup.click('#bn-games');
   await expect(popup.locator('#wl-login-strip')).toBeVisible({ timeout: 5000 });

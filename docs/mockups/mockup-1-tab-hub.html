@@ -1,226 +1,529 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Mockup 1 — Tab Hub</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #1a1a2e; display: flex; justify-content: center; align-items: flex-start; padding: 40px; min-height: 100vh; }
-  .phone-frame { width: 380px; background: #fff; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); overflow: hidden; }
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mockup 1 — Tab Hub</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #1a1a2e;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 40px;
+        min-height: 100vh;
+      }
+      .phone-frame {
+        width: 380px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+      }
 
-  /* Header */
-  .header { background: linear-gradient(135deg, #2e7d32, #43a047); padding: 14px 16px 10px; color: #fff; display: flex; align-items: center; justify-content: space-between; }
-  .header h1 { font-size: 15px; font-weight: 700; letter-spacing: -0.3px; }
-  .header .avatar { width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; font-size: 13px; cursor: pointer; }
+      /* Header */
+      .header {
+        background: linear-gradient(135deg, #2e7d32, #43a047);
+        padding: 14px 16px 10px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .header h1 {
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: -0.3px;
+      }
+      .header .avatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        cursor: pointer;
+      }
 
-  /* Tabs */
-  .tabs { display: flex; background: #f5f5f5; border-bottom: 1px solid #e0e0e0; }
-  .tab { flex: 1; text-align: center; padding: 10px 4px; font-size: 11px; font-weight: 600; color: #888; cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s; }
-  .tab.active { color: #2e7d32; border-bottom-color: #2e7d32; background: #fff; }
-  .tab:hover:not(.active) { color: #555; }
+      /* Tabs */
+      .tabs {
+        display: flex;
+        background: #f5f5f5;
+        border-bottom: 1px solid #e0e0e0;
+      }
+      .tab {
+        flex: 1;
+        text-align: center;
+        padding: 10px 4px;
+        font-size: 11px;
+        font-weight: 600;
+        color: #888;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: all 0.2s;
+      }
+      .tab.active {
+        color: #2e7d32;
+        border-bottom-color: #2e7d32;
+        background: #fff;
+      }
+      .tab:hover:not(.active) {
+        color: #555;
+      }
 
-  /* Content */
-  .content { padding: 12px 14px; }
-  .section-title { font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 8px; }
+      /* Content */
+      .content {
+        padding: 12px 14px;
+      }
+      .section-title {
+        font-size: 11px;
+        font-weight: 700;
+        color: #999;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 8px;
+      }
 
-  /* Scraper panel */
-  .site-detected { display: flex; align-items: center; gap: 10px; background: #e8f5e9; border-radius: 8px; padding: 10px 12px; margin-bottom: 12px; }
-  .site-detected .icon { font-size: 20px; }
-  .site-detected .info { flex: 1; }
-  .site-detected .info strong { font-size: 13px; color: #2e7d32; display: block; }
-  .site-detected .info span { font-size: 11px; color: #666; }
-  .btn-primary { width: 100%; padding: 11px; background: #2e7d32; color: #fff; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
-  .btn-primary:hover { background: #256b29; }
+      /* Scraper panel */
+      .site-detected {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #e8f5e9;
+        border-radius: 8px;
+        padding: 10px 12px;
+        margin-bottom: 12px;
+      }
+      .site-detected .icon {
+        font-size: 20px;
+      }
+      .site-detected .info {
+        flex: 1;
+      }
+      .site-detected .info strong {
+        font-size: 13px;
+        color: #2e7d32;
+        display: block;
+      }
+      .site-detected .info span {
+        font-size: 11px;
+        color: #666;
+      }
+      .btn-primary {
+        width: 100%;
+        padding: 11px;
+        background: #2e7d32;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .btn-primary:hover {
+        background: #256b29;
+      }
 
-  /* Results preview */
-  .results-preview { margin-top: 12px; background: #fafafa; border-radius: 8px; padding: 10px; max-height: 140px; overflow-y: auto; }
-  .result-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #eee; font-size: 12px; }
-  .result-item:last-child { border: none; }
-  .result-item .name { color: #333; font-weight: 500; }
-  .result-item .price { color: #e65100; font-weight: 700; font-size: 12px; }
-  .result-item .actions { display: flex; gap: 4px; }
-  .result-item .actions button { background: none; border: 1px solid #ddd; border-radius: 4px; font-size: 10px; padding: 2px 6px; cursor: pointer; color: #666; }
-  .result-item .actions button:hover { border-color: #2e7d32; color: #2e7d32; }
+      /* Results preview */
+      .results-preview {
+        margin-top: 12px;
+        background: #fafafa;
+        border-radius: 8px;
+        padding: 10px;
+        max-height: 140px;
+        overflow-y: auto;
+      }
+      .result-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 0;
+        border-bottom: 1px solid #eee;
+        font-size: 12px;
+      }
+      .result-item:last-child {
+        border: none;
+      }
+      .result-item .name {
+        color: #333;
+        font-weight: 500;
+      }
+      .result-item .price {
+        color: #e65100;
+        font-weight: 700;
+        font-size: 12px;
+      }
+      .result-item .actions {
+        display: flex;
+        gap: 4px;
+      }
+      .result-item .actions button {
+        background: none;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 10px;
+        padding: 2px 6px;
+        cursor: pointer;
+        color: #666;
+      }
+      .result-item .actions button:hover {
+        border-color: #2e7d32;
+        color: #2e7d32;
+      }
 
-  /* Plays panel (hidden by default, showing structure) */
-  .play-entry { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
-  .play-entry .platform { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; }
-  .play-entry .platform.bga { background: #e3f2fd; color: #1565c0; }
-  .play-entry .platform.yucata { background: #fff3e0; color: #e65100; }
-  .play-entry .play-info { flex: 1; }
-  .play-entry .play-info strong { font-size: 12px; color: #333; display: block; }
-  .play-entry .play-info span { font-size: 10px; color: #999; }
-  .play-entry .log-btn { background: #2e7d32; color: #fff; border: none; border-radius: 6px; font-size: 10px; padding: 5px 10px; cursor: pointer; font-weight: 600; }
-  .play-entry .log-btn.logged { background: #e0e0e0; color: #999; }
+      /* Plays panel (hidden by default, showing structure) */
+      .play-entry {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 0;
+        border-bottom: 1px solid #f0f0f0;
+      }
+      .play-entry .platform {
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .play-entry .platform.bga {
+        background: #e3f2fd;
+        color: #1565c0;
+      }
+      .play-entry .platform.yucata {
+        background: #fff3e0;
+        color: #e65100;
+      }
+      .play-entry .play-info {
+        flex: 1;
+      }
+      .play-entry .play-info strong {
+        font-size: 12px;
+        color: #333;
+        display: block;
+      }
+      .play-entry .play-info span {
+        font-size: 10px;
+        color: #999;
+      }
+      .play-entry .log-btn {
+        background: #2e7d32;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        font-size: 10px;
+        padding: 5px 10px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      .play-entry .log-btn.logged {
+        background: #e0e0e0;
+        color: #999;
+      }
 
-  /* Quick lookup */
-  .lookup-bar { display: flex; gap: 6px; margin-bottom: 12px; }
-  .lookup-bar input { flex: 1; padding: 8px 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 12px; }
-  .lookup-bar button { padding: 8px 12px; background: #2e7d32; color: #fff; border: none; border-radius: 6px; font-size: 12px; cursor: pointer; }
+      /* Quick lookup */
+      .lookup-bar {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 12px;
+      }
+      .lookup-bar input {
+        flex: 1;
+        padding: 8px 10px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 12px;
+      }
+      .lookup-bar button {
+        padding: 8px 12px;
+        background: #2e7d32;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        font-size: 12px;
+        cursor: pointer;
+      }
 
-  .game-card { background: #f9f9f9; border-radius: 8px; padding: 12px; }
-  .game-card .game-title { font-size: 14px; font-weight: 700; color: #333; margin-bottom: 4px; }
-  .game-card .game-meta { font-size: 11px; color: #777; margin-bottom: 8px; }
-  .game-card .stats-row { display: flex; gap: 12px; }
-  .game-card .stat { text-align: center; }
-  .game-card .stat .val { font-size: 16px; font-weight: 700; color: #2e7d32; display: block; }
-  .game-card .stat .label { font-size: 9px; color: #999; text-transform: uppercase; }
+      .game-card {
+        background: #f9f9f9;
+        border-radius: 8px;
+        padding: 12px;
+      }
+      .game-card .game-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 4px;
+      }
+      .game-card .game-meta {
+        font-size: 11px;
+        color: #777;
+        margin-bottom: 8px;
+      }
+      .game-card .stats-row {
+        display: flex;
+        gap: 12px;
+      }
+      .game-card .stat {
+        text-align: center;
+      }
+      .game-card .stat .val {
+        font-size: 16px;
+        font-weight: 700;
+        color: #2e7d32;
+        display: block;
+      }
+      .game-card .stat .label {
+        font-size: 9px;
+        color: #999;
+        text-transform: uppercase;
+      }
 
-  .quick-actions { display: flex; gap: 6px; margin-top: 10px; }
-  .quick-actions button { flex: 1; padding: 7px; border: 1px solid #ddd; background: #fff; border-radius: 6px; font-size: 10px; cursor: pointer; font-weight: 500; }
-  .quick-actions button:hover { border-color: #2e7d32; color: #2e7d32; }
+      .quick-actions {
+        display: flex;
+        gap: 6px;
+        margin-top: 10px;
+      }
+      .quick-actions button {
+        flex: 1;
+        padding: 7px;
+        border: 1px solid #ddd;
+        background: #fff;
+        border-radius: 6px;
+        font-size: 10px;
+        cursor: pointer;
+        font-weight: 500;
+      }
+      .quick-actions button:hover {
+        border-color: #2e7d32;
+        color: #2e7d32;
+      }
 
-  /* Footer */
-  .footer { padding: 8px 14px; border-top: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
-  .footer a { font-size: 10px; color: #2e7d32; text-decoration: none; font-weight: 500; }
-  .footer .version { font-size: 9px; color: #ccc; }
+      /* Footer */
+      .footer {
+        padding: 8px 14px;
+        border-top: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .footer a {
+        font-size: 10px;
+        color: #2e7d32;
+        text-decoration: none;
+        font-weight: 500;
+      }
+      .footer .version {
+        font-size: 9px;
+        color: #ccc;
+      }
 
-  /* Panel visibility */
-  .panel { display: none; }
-  .panel.active { display: block; }
+      /* Panel visibility */
+      .panel {
+        display: none;
+      }
+      .panel.active {
+        display: block;
+      }
 
-  .badge { background: #e65100; color: #fff; font-size: 9px; border-radius: 8px; padding: 1px 5px; margin-left: 3px; vertical-align: top; }
-</style>
-</head>
-<body>
+      .badge {
+        background: #e65100;
+        color: #fff;
+        font-size: 9px;
+        border-radius: 8px;
+        padding: 1px 5px;
+        margin-left: 3px;
+        vertical-align: top;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="phone-frame">
+      <div class="header">
+        <h1>BGM Toolbox</h1>
+        <div class="avatar" title="julien@boardgamematcher">J</div>
+      </div>
 
-<div class="phone-frame">
-  <div class="header">
-    <h1>BGM Toolbox</h1>
-    <div class="avatar" title="julien@boardgamematcher">J</div>
-  </div>
+      <div class="tabs">
+        <div class="tab active" onclick="showPanel('scrape')">Scrape</div>
+        <div class="tab" onclick="showPanel('plays')">Plays <span class="badge">3</span></div>
+        <div class="tab" onclick="showPanel('lookup')">Lookup</div>
+        <div class="tab" onclick="showPanel('deals')">Deals</div>
+      </div>
 
-  <div class="tabs">
-    <div class="tab active" onclick="showPanel('scrape')">Scrape</div>
-    <div class="tab" onclick="showPanel('plays')">Plays <span class="badge">3</span></div>
-    <div class="tab" onclick="showPanel('lookup')">Lookup</div>
-    <div class="tab" onclick="showPanel('deals')">Deals</div>
-  </div>
+      <!-- SCRAPE PANEL -->
+      <div class="content">
+        <div id="panel-scrape" class="panel active">
+          <div class="site-detected">
+            <div class="icon">🛒</div>
+            <div class="info">
+              <strong>Philibert.net detected</strong>
+              <span>12 board games found on this page</span>
+            </div>
+          </div>
+          <button class="btn-primary">Extract & Copy to Clipboard</button>
+          <div class="results-preview">
+            <div class="result-item">
+              <span class="name">Brass: Birmingham</span>
+              <span class="price">42,90 &euro;</span>
+              <div class="actions">
+                <button title="Track price">📉</button><button title="Add to wishlist">♡</button>
+              </div>
+            </div>
+            <div class="result-item">
+              <span class="name">Ark Nova</span>
+              <span class="price">54,95 &euro;</span>
+              <div class="actions">
+                <button title="Track price">📉</button><button title="Add to wishlist">♡</button>
+              </div>
+            </div>
+            <div class="result-item">
+              <span class="name">Cascadia</span>
+              <span class="price">29,90 &euro;</span>
+              <div class="actions">
+                <button title="Track price">📉</button><button title="Add to wishlist">♡</button>
+              </div>
+            </div>
+            <div class="result-item">
+              <span class="name">Dune: Imperium</span>
+              <span class="price">39,95 &euro;</span>
+              <div class="actions">
+                <button title="Track price">📉</button><button title="Add to wishlist">♡</button>
+              </div>
+            </div>
+          </div>
+        </div>
 
-  <!-- SCRAPE PANEL -->
-  <div class="content">
-    <div id="panel-scrape" class="panel active">
-      <div class="site-detected">
-        <div class="icon">🛒</div>
-        <div class="info">
-          <strong>Philibert.net detected</strong>
-          <span>12 board games found on this page</span>
+        <!-- PLAYS PANEL -->
+        <div id="panel-plays" class="panel">
+          <div class="section-title">Unlogged plays detected</div>
+          <div class="play-entry">
+            <div class="platform bga">B</div>
+            <div class="play-info">
+              <strong>7 Wonders Duel</strong>
+              <span>BGA &middot; vs. alice42 &middot; Won &middot; 22min &middot; Today</span>
+            </div>
+            <button class="log-btn">Log</button>
+          </div>
+          <div class="play-entry">
+            <div class="platform bga">B</div>
+            <div class="play-info">
+              <strong>Res Arcana</strong>
+              <span>BGA &middot; vs. bob99 &middot; Lost &middot; 35min &middot; Today</span>
+            </div>
+            <button class="log-btn">Log</button>
+          </div>
+          <div class="play-entry">
+            <div class="platform yucata">Y</div>
+            <div class="play-info">
+              <strong>Agricola</strong>
+              <span>Yucata &middot; vs. charlie &middot; Won &middot; 1h12 &middot; Yesterday</span>
+            </div>
+            <button class="log-btn">Log</button>
+          </div>
+          <div style="margin-top: 12px">
+            <button class="btn-primary">Log All to BoardGameMatcher</button>
+          </div>
+        </div>
+
+        <!-- LOOKUP PANEL -->
+        <div id="panel-lookup" class="panel">
+          <div class="lookup-bar">
+            <input type="text" placeholder="Search a game..." value="Brass: Birmingham" />
+            <button>Search</button>
+          </div>
+          <div class="game-card">
+            <div class="game-title">Brass: Birmingham</div>
+            <div class="game-meta">
+              2018 &middot; Roxley Games &middot; 2-4 players &middot; 60-120 min
+            </div>
+            <div class="stats-row">
+              <div class="stat">
+                <span class="val">8.6</span><span class="label">BGG Rating</span>
+              </div>
+              <div class="stat"><span class="val">3.9</span><span class="label">Weight</span></div>
+              <div class="stat">
+                <span class="val">24</span><span class="label">Your Plays</span>
+              </div>
+              <div class="stat">
+                <span class="val">62%</span><span class="label">Win Rate</span>
+              </div>
+            </div>
+            <div class="quick-actions">
+              <button>+ Wishlist</button>
+              <button>Compare Prices</button>
+              <button>Rules PDF</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- DEALS PANEL -->
+        <div id="panel-deals" class="panel">
+          <div class="section-title">Price alerts &amp; deals</div>
+          <div class="result-item">
+            <span class="name"
+              >Cascadia <span style="color: #999; font-size: 10px">@ Amazon.fr</span></span
+            >
+            <span class="price" style="color: #2e7d32"
+              >19,99 &euro;
+              <span style="font-size: 9px; color: #999; text-decoration: line-through"
+                >29,90&euro;</span
+              ></span
+            >
+          </div>
+          <div class="result-item">
+            <span class="name"
+              >Ark Nova <span style="color: #999; font-size: 10px">@ Philibert</span></span
+            >
+            <span class="price" style="color: #2e7d32"
+              >44,95 &euro;
+              <span style="font-size: 9px; color: #999; text-decoration: line-through"
+                >54,95&euro;</span
+              ></span
+            >
+          </div>
+          <div class="result-item">
+            <span class="name"
+              >Everdell <span style="color: #999; font-size: 10px">@ Fantasywelt</span></span
+            >
+            <span class="price" style="color: #2e7d32"
+              >31,50 &euro;
+              <span style="font-size: 9px; color: #999; text-decoration: line-through"
+                >44,99&euro;</span
+              ></span
+            >
+          </div>
+          <div style="text-align: center; margin-top: 14px">
+            <a href="#" style="font-size: 11px; color: #2e7d32"
+              >View all tracked games (8) &rarr;</a
+            >
+          </div>
         </div>
       </div>
-      <button class="btn-primary">Extract & Copy to Clipboard</button>
-      <div class="results-preview">
-        <div class="result-item">
-          <span class="name">Brass: Birmingham</span>
-          <span class="price">42,90 &euro;</span>
-          <div class="actions"><button title="Track price">📉</button><button title="Add to wishlist">♡</button></div>
-        </div>
-        <div class="result-item">
-          <span class="name">Ark Nova</span>
-          <span class="price">54,95 &euro;</span>
-          <div class="actions"><button title="Track price">📉</button><button title="Add to wishlist">♡</button></div>
-        </div>
-        <div class="result-item">
-          <span class="name">Cascadia</span>
-          <span class="price">29,90 &euro;</span>
-          <div class="actions"><button title="Track price">📉</button><button title="Add to wishlist">♡</button></div>
-        </div>
-        <div class="result-item">
-          <span class="name">Dune: Imperium</span>
-          <span class="price">39,95 &euro;</span>
-          <div class="actions"><button title="Track price">📉</button><button title="Add to wishlist">♡</button></div>
-        </div>
+
+      <div class="footer">
+        <a href="#">Settings</a>
+        <span class="version">v2.0.0</span>
       </div>
     </div>
 
-    <!-- PLAYS PANEL -->
-    <div id="panel-plays" class="panel">
-      <div class="section-title">Unlogged plays detected</div>
-      <div class="play-entry">
-        <div class="platform bga">B</div>
-        <div class="play-info">
-          <strong>7 Wonders Duel</strong>
-          <span>BGA &middot; vs. alice42 &middot; Won &middot; 22min &middot; Today</span>
-        </div>
-        <button class="log-btn">Log</button>
-      </div>
-      <div class="play-entry">
-        <div class="platform bga">B</div>
-        <div class="play-info">
-          <strong>Res Arcana</strong>
-          <span>BGA &middot; vs. bob99 &middot; Lost &middot; 35min &middot; Today</span>
-        </div>
-        <button class="log-btn">Log</button>
-      </div>
-      <div class="play-entry">
-        <div class="platform yucata">Y</div>
-        <div class="play-info">
-          <strong>Agricola</strong>
-          <span>Yucata &middot; vs. charlie &middot; Won &middot; 1h12 &middot; Yesterday</span>
-        </div>
-        <button class="log-btn">Log</button>
-      </div>
-      <div style="margin-top: 12px;">
-        <button class="btn-primary">Log All to BoardGameMatcher</button>
-      </div>
-    </div>
-
-    <!-- LOOKUP PANEL -->
-    <div id="panel-lookup" class="panel">
-      <div class="lookup-bar">
-        <input type="text" placeholder="Search a game..." value="Brass: Birmingham">
-        <button>Search</button>
-      </div>
-      <div class="game-card">
-        <div class="game-title">Brass: Birmingham</div>
-        <div class="game-meta">2018 &middot; Roxley Games &middot; 2-4 players &middot; 60-120 min</div>
-        <div class="stats-row">
-          <div class="stat"><span class="val">8.6</span><span class="label">BGG Rating</span></div>
-          <div class="stat"><span class="val">3.9</span><span class="label">Weight</span></div>
-          <div class="stat"><span class="val">24</span><span class="label">Your Plays</span></div>
-          <div class="stat"><span class="val">62%</span><span class="label">Win Rate</span></div>
-        </div>
-        <div class="quick-actions">
-          <button>+ Wishlist</button>
-          <button>Compare Prices</button>
-          <button>Rules PDF</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- DEALS PANEL -->
-    <div id="panel-deals" class="panel">
-      <div class="section-title">Price alerts &amp; deals</div>
-      <div class="result-item">
-        <span class="name">Cascadia <span style="color:#999;font-size:10px">@ Amazon.fr</span></span>
-        <span class="price" style="color:#2e7d32">19,99 &euro; <span style="font-size:9px;color:#999;text-decoration:line-through">29,90&euro;</span></span>
-      </div>
-      <div class="result-item">
-        <span class="name">Ark Nova <span style="color:#999;font-size:10px">@ Philibert</span></span>
-        <span class="price" style="color:#2e7d32">44,95 &euro; <span style="font-size:9px;color:#999;text-decoration:line-through">54,95&euro;</span></span>
-      </div>
-      <div class="result-item">
-        <span class="name">Everdell <span style="color:#999;font-size:10px">@ Fantasywelt</span></span>
-        <span class="price" style="color:#2e7d32">31,50 &euro; <span style="font-size:9px;color:#999;text-decoration:line-through">44,99&euro;</span></span>
-      </div>
-      <div style="text-align:center; margin-top:14px;">
-        <a href="#" style="font-size:11px; color:#2e7d32;">View all tracked games (8) &rarr;</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="footer">
-    <a href="#">Settings</a>
-    <span class="version">v2.0.0</span>
-  </div>
-</div>
-
-<script>
-function showPanel(name) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('panel-' + name).classList.add('active');
-  event.target.classList.add('active');
-}
-</script>
-</body>
+    <script>
+      function showPanel(name) {
+        document.querySelectorAll('.panel').forEach((p) => p.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach((t) => t.classList.remove('active'));
+        document.getElementById('panel-' + name).classList.add('active');
+        event.target.classList.add('active');
+      }
+    </script>
+  </body>
 </html>
