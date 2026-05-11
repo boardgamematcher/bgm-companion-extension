@@ -1,13 +1,13 @@
 name: Release QA Checklist
 description: Manual QA sign-off for a new extension release. Open one per release, check every box before shipping.
-title: "Release QA — v[VERSION]"
-labels: ["product:clipper-extension"]
+title: 'Release QA — v[VERSION]'
+labels: ['product:clipper-extension']
 body:
   - type: input
     id: version
     attributes:
       label: Version
-      placeholder: "e.g. 1.0.0"
+      placeholder: 'e.g. 1.0.0'
     validations:
       required: true
 
@@ -15,7 +15,7 @@ body:
     id: date
     attributes:
       label: Date
-      placeholder: "e.g. 2026-05-15"
+      placeholder: 'e.g. 2026-05-15'
     validations:
       required: true
 
@@ -28,84 +28,84 @@ body:
   - type: checkboxes
     id: cross-browser
     attributes:
-      label: "G · Cross-browser"
+      label: 'G · Cross-browser'
       options:
-        - label: "**Chrome** — install unpacked → popup opens, extract works, options accessible, wishlist badge renders, context menus present, no console errors"
-        - label: "**Firefox** — install as temporary add-on → full smoke test (popup, extract, options, context menus)"
-        - label: "**Edge** — install unpacked → popup + context menu smoke test"
+        - label: '**Chrome** — install unpacked → popup opens, extract works, options accessible, wishlist badge renders, context menus present, no console errors'
+        - label: '**Firefox** — install as temporary add-on → full smoke test (popup, extract, options, context menus)'
+        - label: '**Edge** — install unpacked → popup + context menu smoke test'
 
   - type: checkboxes
     id: play-imports
     attributes:
-      label: "H · Play Imports — real accounts"
+      label: 'H · Play Imports — real accounts'
       options:
-        - label: "**BGA** — navigate to player stats page → import → plays appear in BGM, count matches, no duplicates on re-import"
-        - label: "**BGG** — import plays from BGG profile → count matches BGG XML API"
-        - label: "**Yucata** — import plays from Yucata profile"
-        - label: "**Tabletopia** — import plays from Tabletopia matches page"
-        - label: "**Ludopedia** — import plays from Ludopedia"
-        - label: "**Logged-out CTA** — on every platform, \"Sign in to BGM\" card shown instead of import button; no import triggered"
+        - label: '**BGA** — navigate to player stats page → import → plays appear in BGM, count matches, no duplicates on re-import'
+        - label: '**BGG** — import plays from BGG profile → count matches BGG XML API'
+        - label: '**Yucata** — import plays from Yucata profile'
+        - label: '**Tabletopia** — import plays from Tabletopia matches page'
+        - label: '**Ludopedia** — import plays from Ludopedia'
+        - label: '**Logged-out CTA** — on every platform, "Sign in to BGM" card shown instead of import button; no import triggered'
 
   - type: checkboxes
     id: auth
     attributes:
-      label: "I · Auth Session Lifecycle"
+      label: 'I · Auth Session Lifecycle'
       options:
-        - label: "Sign-in CTA opens BGM with `utm_source=extension&utm_medium=popup`"
-        - label: "Log in on BGM web → reopen popup → logged-in state shown automatically"
-        - label: "Log out on BGM web → reopen popup → logged-out state shown"
+        - label: 'Sign-in CTA opens BGM with `utm_source=extension&utm_medium=popup`'
+        - label: 'Log in on BGM web → reopen popup → logged-in state shown automatically'
+        - label: 'Log out on BGM web → reopen popup → logged-out state shown'
 
   - type: checkboxes
     id: notifications
     attributes:
-      label: "J · Background Notifications"
+      label: 'J · Background Notifications'
       options:
-        - label: "Unread message → browser notification fires with sender name"
-        - label: "Friend request → browser notification fires"
-        - label: "New player match → browser notification fires"
-        - label: "News / announcement → browser notification fires"
-        - label: "Clicking any notification → navigates to the correct BGM page"
-        - label: "Disabled notification type (Options toggle off) → no notification fired"
+        - label: 'Unread message → browser notification fires with sender name'
+        - label: 'Friend request → browser notification fires'
+        - label: 'New player match → browser notification fires'
+        - label: 'News / announcement → browser notification fires'
+        - label: 'Clicking any notification → navigates to the correct BGM page'
+        - label: 'Disabled notification type (Options toggle off) → no notification fired'
 
   - type: checkboxes
     id: i18n
     attributes:
-      label: "K · Internationalisation"
+      label: 'K · Internationalisation'
       options:
-        - label: "**French** — entire popup UI translated (all tabs, tooltips, CTAs, error messages)"
-        - label: "**German** — spot-check 10+ key strings"
-        - label: "**Spanish** — spot-check 10+ key strings"
-        - label: "**Italian** — spot-check 10+ key strings"
-        - label: "Language preference persists after browser restart"
-        - label: "No raw i18n keys or empty strings visible in any locale"
+        - label: '**French** — entire popup UI translated (all tabs, tooltips, CTAs, error messages)'
+        - label: '**German** — spot-check 10+ key strings'
+        - label: '**Spanish** — spot-check 10+ key strings'
+        - label: '**Italian** — spot-check 10+ key strings'
+        - label: 'Language preference persists after browser restart'
+        - label: 'No raw i18n keys or empty strings visible in any locale'
 
   - type: checkboxes
     id: real-shops
     attributes:
-      label: "L · Real Shop Extraction"
+      label: 'L · Real Shop Extraction'
       options:
-        - label: "**Amazon** — wishlist badge visible on known wishlisted game; extraction picks up titles"
-        - label: "**Fnac** — extraction happy path on board games category page"
-        - label: "**Coolshop** — extraction happy path"
-        - label: "**Next.js shop** (Veepee / Privalia) — `__NEXT_DATA__` strategy extracts clean titles"
+        - label: '**Amazon** — wishlist badge visible on known wishlisted game; extraction picks up titles'
+        - label: '**Fnac** — extraction happy path on board games category page'
+        - label: '**Coolshop** — extraction happy path'
+        - label: '**Next.js shop** (Veepee / Privalia) — `__NEXT_DATA__` strategy extracts clean titles'
 
   - type: checkboxes
     id: prerelease
     attributes:
-      label: "M · Pre-Release"
+      label: 'M · Pre-Release'
       options:
-        - label: "Extension zip < 10 MB (Chrome); Firefox zip < 200 MB"
-        - label: "`manifest.json` version and `package.json` version match"
-        - label: "`manifest.json` passes Chrome MV3 validator"
-        - label: "All declared `permissions` and `host_permissions` are actually used"
-        - label: "Zero `console.error` on popup open"
-        - label: "`PRIVACY.md` accurately describes all data sent to BGM; no third-party data sharing"
-        - label: "**Chrome Web Store** — name ≤ 45 chars, short description ≤ 132 chars, 5 screenshots (1280×800), promo tile (440×280), privacy policy URL, permission justifications"
-        - label: "**Firefox AMO** — `gecko.id` + `strict_min_version` set in manifest, `web-ext lint` passes, source zip prepared"
+        - label: 'Extension zip < 10 MB (Chrome); Firefox zip < 200 MB'
+        - label: '`manifest.json` version and `package.json` version match'
+        - label: '`manifest.json` passes Chrome MV3 validator'
+        - label: 'All declared `permissions` and `host_permissions` are actually used'
+        - label: 'Zero `console.error` on popup open'
+        - label: '`PRIVACY.md` accurately describes all data sent to BGM; no third-party data sharing'
+        - label: '**Chrome Web Store** — name ≤ 45 chars, short description ≤ 132 chars, 5 screenshots (1280×800), promo tile (440×280), privacy policy URL, permission justifications'
+        - label: '**Firefox AMO** — `gecko.id` + `strict_min_version` set in manifest, `web-ext lint` passes, source zip prepared'
 
   - type: textarea
     id: notes
     attributes:
       label: Notes / skipped items
       description: Explain any skipped checkboxes or issues found.
-      placeholder: "e.g. Ludopedia skipped — no test account available"
+      placeholder: 'e.g. Ludopedia skipped — no test account available'

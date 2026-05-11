@@ -35,7 +35,9 @@ test('version number matches manifest.json', async ({ context, extensionId }) =>
   const popup = await openMoreTab(context, extensionId);
 
   // Find the element that displays the version string
-  const versionEl = popup.locator('[id*="version"], [class*="version"], [data-i18n*="version"]').first();
+  const versionEl = popup
+    .locator('[id*="version"], [class*="version"], [data-i18n*="version"]')
+    .first();
   // If no dedicated element, check the whole tab text
   const tabText = await popup.locator('#tab-more').textContent();
   expect(tabText).toContain(manifest.version);

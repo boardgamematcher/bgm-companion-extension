@@ -13,6 +13,7 @@
 ## Task 1: Project Foundation & Manifest
 
 **Files:**
+
 - Create: `manifest.json`
 - Create: `.gitignore`
 - Create: `README.md`
@@ -60,12 +61,14 @@ A browser extension for extracting board game names from websites.
 ## Installation
 
 ### Chrome
+
 1. Open `chrome://extensions/`
 2. Enable "Developer mode"
 3. Click "Load unpacked"
 4. Select the extension directory
 
 ### Firefox
+
 1. Open `about:debugging#/runtime/this-firefox`
 2. Click "Load Temporary Add-on"
 3. Select `manifest.json`
@@ -94,11 +97,7 @@ Create `manifest.json`:
   "name": "Board Game Extractor",
   "version": "1.0.0",
   "description": "Extract board game names from websites with configurable patterns",
-  "permissions": [
-    "activeTab",
-    "clipboardWrite",
-    "storage"
-  ],
+  "permissions": ["activeTab", "clipboardWrite", "storage"],
   "background": {
     "service_worker": "src/background/service-worker.js"
   },
@@ -110,10 +109,12 @@ Create `manifest.json`:
       "128": "icons/icon128.png"
     }
   },
-  "content_scripts": [{
-    "matches": ["<all_urls>"],
-    "js": ["src/lib/pattern-matcher.js", "src/content/content-script.js"]
-  }],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/lib/pattern-matcher.js", "src/content/content-script.js"]
+    }
+  ],
   "options_page": "src/options/options.html",
   "icons": {
     "16": "icons/icon16.png",
@@ -135,6 +136,7 @@ git commit -m "feat: add project foundation and manifest"
 ## Task 2: Create Directory Structure & Placeholder Icons
 
 **Files:**
+
 - Create: `src/background/` (directory)
 - Create: `src/content/` (directory)
 - Create: `src/popup/` (directory)
@@ -179,6 +181,7 @@ git commit -m "feat: create directory structure and placeholder icons"
 ## Task 3: Storage Helper Module
 
 **Files:**
+
 - Create: `src/lib/storage.js`
 
 **Step 1: Create storage.js with pattern management**
@@ -229,12 +232,12 @@ const Storage = {
 
     // Create map with built-in patterns
     const patternMap = new Map();
-    builtIn.forEach(pattern => {
+    builtIn.forEach((pattern) => {
       patternMap.set(pattern.domain, pattern);
     });
 
     // Override with custom patterns
-    custom.forEach(pattern => {
+    custom.forEach((pattern) => {
       patternMap.set(pattern.domain, pattern);
     });
 
@@ -244,7 +247,7 @@ const Storage = {
   // Find pattern matching current domain
   findPatternForDomain(patterns, domain) {
     // Try exact match first
-    let pattern = patterns.find(p => domain === p.domain || domain.endsWith('.' + p.domain));
+    let pattern = patterns.find((p) => domain === p.domain || domain.endsWith('.' + p.domain));
     return pattern || null;
   },
 
@@ -268,7 +271,7 @@ const Storage = {
       console.error('Error saving stats:', error);
       return false;
     }
-  }
+  },
 };
 
 // Make available to other scripts
@@ -289,6 +292,7 @@ git commit -m "feat: add storage helper module"
 ## Task 4: Pattern Matcher Module
 
 **Files:**
+
 - Create: `src/lib/pattern-matcher.js`
 
 **Step 1: Create pattern-matcher.js with extraction logic**
@@ -307,7 +311,7 @@ const PatternMatcher = {
     try {
       // Execute CSS selector
       const elements = document.querySelectorAll(pattern.selector);
-      let games = Array.from(elements).map(el => el.textContent);
+      let games = Array.from(elements).map((el) => el.textContent);
 
       // Apply filters
       if (pattern.filters) {
@@ -327,27 +331,25 @@ const PatternMatcher = {
 
     // Trim whitespace if enabled
     if (filters.trim !== false) {
-      filtered = filtered.map(game => game.trim());
+      filtered = filtered.map((game) => game.trim());
     }
 
     // Apply exclude patterns
     if (filters.exclude && Array.isArray(filters.exclude)) {
-      filters.exclude.forEach(pattern => {
+      filters.exclude.forEach((pattern) => {
         const regex = new RegExp(pattern);
-        filtered = filtered.filter(game => !regex.test(game));
+        filtered = filtered.filter((game) => !regex.test(game));
       });
     }
 
     // Apply include patterns (only keep matches)
     if (filters.include && Array.isArray(filters.include)) {
-      const includeRegexes = filters.include.map(pattern => new RegExp(pattern));
-      filtered = filtered.filter(game =>
-        includeRegexes.some(regex => regex.test(game))
-      );
+      const includeRegexes = filters.include.map((pattern) => new RegExp(pattern));
+      filtered = filtered.filter((game) => includeRegexes.some((regex) => regex.test(game)));
     }
 
     // Remove empty strings
-    filtered = filtered.filter(game => game.length > 0);
+    filtered = filtered.filter((game) => game.length > 0);
 
     // Deduplicate if enabled
     if (filters.deduplicate !== false) {
@@ -383,7 +385,7 @@ const PatternMatcher = {
     }
 
     return { valid: true };
-  }
+  },
 };
 
 // Make available to other scripts
@@ -404,6 +406,7 @@ git commit -m "feat: add pattern matcher module with extraction logic"
 ## Task 5: Built-in Patterns Configuration
 
 **Files:**
+
 - Create: `patterns/built-in.json`
 
 **Step 1: Create built-in.json with initial patterns**
@@ -474,6 +477,7 @@ git commit -m "feat: add built-in patterns for knapix, amazon, philibert"
 ## Task 6: Background Service Worker
 
 **Files:**
+
 - Create: `src/background/service-worker.js`
 
 **Step 1: Create service-worker.js**
@@ -509,10 +513,10 @@ async function reloadPatterns() {
 
     // Merge patterns (custom overrides built-in by domain)
     const patternMap = new Map();
-    builtIn.forEach(pattern => {
+    builtIn.forEach((pattern) => {
       patternMap.set(pattern.domain, pattern);
     });
-    custom.forEach(pattern => {
+    custom.forEach((pattern) => {
       patternMap.set(pattern.domain, pattern);
     });
 
@@ -526,9 +530,7 @@ async function reloadPatterns() {
 
 // Find pattern for domain
 function findPatternForDomain(domain) {
-  return cachedPatterns.find(p =>
-    domain === p.domain || domain.endsWith('.' + p.domain)
-  ) || null;
+  return cachedPatterns.find((p) => domain === p.domain || domain.endsWith('.' + p.domain)) || null;
 }
 
 // Message handler
@@ -537,7 +539,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     const pattern = findPatternForDomain(message.domain);
     sendResponse({
       supported: pattern !== null,
-      pattern: pattern
+      pattern: pattern,
     });
     return false;
   }
@@ -562,7 +564,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 
   if (message.action === 'getStats') {
-    getStats().then(stats => {
+    getStats().then((stats) => {
       sendResponse({ success: true, stats });
     });
     return true; // Async response
@@ -613,6 +615,7 @@ git commit -m "feat: add background service worker with pattern management"
 ## Task 7: Content Script
 
 **Files:**
+
 - Create: `src/content/content-script.js`
 
 **Step 1: Create content-script.js**
@@ -630,7 +633,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     sendResponse({
       success: true,
       games: games,
-      count: games.length
+      count: games.length,
     });
     return false;
   }
@@ -655,7 +658,7 @@ function extractGames(pattern) {
     const elements = document.querySelectorAll(pattern.selector);
     console.log('Found elements:', elements.length);
 
-    let games = Array.from(elements).map(el => el.textContent);
+    let games = Array.from(elements).map((el) => el.textContent);
     console.log('Raw games:', games.length);
 
     // Apply filters using PatternMatcher
@@ -684,6 +687,7 @@ git commit -m "feat: add content script for DOM extraction"
 ## Task 8: Popup HTML Structure
 
 **Files:**
+
 - Create: `src/popup/popup.html`
 
 **Step 1: Create popup.html**
@@ -693,49 +697,47 @@ Create `src/popup/popup.html`:
 ```html
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <title>Board Game Extractor</title>
-  <link rel="stylesheet" href="popup.css">
-</head>
-<body>
-  <div class="container">
-    <header>
-      <h1>Board Game Extractor</h1>
-    </header>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Board Game Extractor</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Board Game Extractor</h1>
+      </header>
 
-    <main>
-      <div id="status-section">
-        <div id="site-status" class="status-badge">
-          <span id="status-icon">⏳</span>
-          <span id="status-text">Checking site...</span>
+      <main>
+        <div id="status-section">
+          <div id="site-status" class="status-badge">
+            <span id="status-icon">⏳</span>
+            <span id="status-text">Checking site...</span>
+          </div>
         </div>
-      </div>
 
-      <div id="action-section">
-        <button id="extract-btn" class="primary-btn" disabled>
-          Extract Board Games
-        </button>
-      </div>
+        <div id="action-section">
+          <button id="extract-btn" class="primary-btn" disabled>Extract Board Games</button>
+        </div>
 
-      <div id="stats-section">
-        <p id="stats-text" class="stats">No extractions yet</p>
-      </div>
+        <div id="stats-section">
+          <p id="stats-text" class="stats">No extractions yet</p>
+        </div>
 
-      <div id="message" class="message hidden"></div>
-    </main>
+        <div id="message" class="message hidden"></div>
+      </main>
 
-    <footer>
-      <div class="footer-links">
-        <button id="suggest-btn" class="link-btn">Suggest a Site</button>
-        <button id="settings-btn" class="link-btn">Settings</button>
-      </div>
-      <div class="version">v1.0.0</div>
-    </footer>
-  </div>
+      <footer>
+        <div class="footer-links">
+          <button id="suggest-btn" class="link-btn">Suggest a Site</button>
+          <button id="settings-btn" class="link-btn">Settings</button>
+        </div>
+        <div class="version">v1.0.0</div>
+      </footer>
+    </div>
 
-  <script src="popup.js"></script>
-</body>
+    <script src="popup.js"></script>
+  </body>
 </html>
 ```
 
@@ -751,6 +753,7 @@ git commit -m "feat: add popup HTML structure"
 ## Task 9: Popup Styles
 
 **Files:**
+
 - Create: `src/popup/popup.css`
 
 **Step 1: Create popup.css**
@@ -765,7 +768,8 @@ Create `src/popup/popup.css`:
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-size: 14px;
   color: #333;
   width: 320px;
@@ -779,7 +783,7 @@ body {
 }
 
 header {
-  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
   color: white;
   padding: 16px;
   text-align: center;
@@ -830,7 +834,7 @@ main {
 .primary-btn {
   width: 100%;
   padding: 12px 24px;
-  background: #4CAF50;
+  background: #4caf50;
   color: white;
   border: none;
   border-radius: 8px;
@@ -900,7 +904,7 @@ footer {
 .link-btn {
   background: none;
   border: none;
-  color: #4CAF50;
+  color: #4caf50;
   font-size: 12px;
   cursor: pointer;
   text-decoration: none;
@@ -930,6 +934,7 @@ git commit -m "feat: add popup styles"
 ## Task 10: Popup JavaScript Logic
 
 **Files:**
+
 - Create: `src/popup/popup.js`
 
 **Step 1: Create popup.js**
@@ -1046,7 +1051,7 @@ async function handleExtract() {
           const text = games.join('\n');
           await chrome.runtime.sendMessage({
             action: 'copyToClipboard',
-            text: text
+            text: text,
           });
 
           // Update stats
@@ -1054,12 +1059,12 @@ async function handleExtract() {
             lastExtraction: {
               domain: currentDomain,
               count: games.length,
-              timestamp: Date.now()
-            }
+              timestamp: Date.now(),
+            },
           };
           await chrome.runtime.sendMessage({
             action: 'updateStats',
-            stats: stats
+            stats: stats,
           });
 
           // Update UI
@@ -1142,6 +1147,7 @@ git commit -m "feat: add popup JavaScript logic"
 ## Task 11: Options Page HTML Structure
 
 **Files:**
+
 - Create: `src/options/options.html`
 
 **Step 1: Create options.html**
@@ -1151,171 +1157,177 @@ Create `src/options/options.html`:
 ```html
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <title>Board Game Extractor - Settings</title>
-  <link rel="stylesheet" href="options.css">
-</head>
-<body>
-  <div class="container">
-    <header>
-      <h1>Board Game Extractor Settings</h1>
-    </header>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Board Game Extractor - Settings</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Board Game Extractor Settings</h1>
+      </header>
 
-    <nav class="tabs">
-      <button class="tab-btn active" data-tab="supported">Supported Sites</button>
-      <button class="tab-btn" data-tab="custom">Custom Patterns</button>
-      <button class="tab-btn" data-tab="help">Help</button>
-    </nav>
+      <nav class="tabs">
+        <button class="tab-btn active" data-tab="supported">Supported Sites</button>
+        <button class="tab-btn" data-tab="custom">Custom Patterns</button>
+        <button class="tab-btn" data-tab="help">Help</button>
+      </nav>
 
-    <main>
-      <!-- Supported Sites Tab -->
-      <div id="supported-tab" class="tab-content active">
-        <div class="section-header">
-          <h2>Built-in Site Patterns</h2>
-          <p class="subtitle">These patterns are included with the extension</p>
+      <main>
+        <!-- Supported Sites Tab -->
+        <div id="supported-tab" class="tab-content active">
+          <div class="section-header">
+            <h2>Built-in Site Patterns</h2>
+            <p class="subtitle">These patterns are included with the extension</p>
+          </div>
+
+          <div class="search-box">
+            <input type="text" id="search-supported" placeholder="Search sites..." />
+          </div>
+
+          <div id="supported-list" class="pattern-list">
+            <!-- Populated by JavaScript -->
+          </div>
         </div>
 
-        <div class="search-box">
-          <input type="text" id="search-supported" placeholder="Search sites...">
+        <!-- Custom Patterns Tab -->
+        <div id="custom-tab" class="tab-content">
+          <div class="section-header">
+            <h2>Custom Patterns</h2>
+            <p class="subtitle">Add your own site extraction patterns</p>
+          </div>
+
+          <div class="actions">
+            <button id="add-pattern-btn" class="primary-btn">Add New Pattern</button>
+            <button id="import-btn" class="secondary-btn">Import JSON</button>
+            <button id="export-btn" class="secondary-btn">Export JSON</button>
+          </div>
+
+          <div id="custom-list" class="pattern-list">
+            <!-- Populated by JavaScript -->
+          </div>
+
+          <div id="custom-empty" class="empty-state">
+            <p>No custom patterns yet</p>
+            <p class="hint">Click "Add New Pattern" to create one</p>
+          </div>
         </div>
 
-        <div id="supported-list" class="pattern-list">
-          <!-- Populated by JavaScript -->
+        <!-- Help Tab -->
+        <div id="help-tab" class="tab-content">
+          <div class="section-header">
+            <h2>Help & Documentation</h2>
+          </div>
+
+          <section class="help-section">
+            <h3>How to Use</h3>
+            <ol>
+              <li>Navigate to a supported website</li>
+              <li>Click the extension icon in your browser toolbar</li>
+              <li>Click "Extract Board Games"</li>
+              <li>Game names are copied to your clipboard</li>
+            </ol>
+          </section>
+
+          <section class="help-section">
+            <h3>CSS Selector Guide</h3>
+            <p>CSS selectors are patterns used to find elements on a webpage:</p>
+            <ul>
+              <li><code>h3</code> - All h3 elements</li>
+              <li><code>.product-name</code> - Elements with class "product-name"</li>
+              <li><code>#game-title</code> - Element with id "game-title"</li>
+              <li><code>article h3</code> - h3 elements inside article elements</li>
+              <li><code>[data-id]</code> - Elements with data-id attribute</li>
+            </ul>
+          </section>
+
+          <section class="help-section">
+            <h3>Filter Patterns</h3>
+            <p>Use regex patterns to filter results:</p>
+            <ul>
+              <li><code>^Sponsored</code> - Exclude items starting with "Sponsored"</li>
+              <li><code>Advertisement</code> - Exclude items containing "Advertisement"</li>
+              <li><code>.*Game$</code> - Include only items ending with "Game"</li>
+            </ul>
+          </section>
+
+          <section class="help-section">
+            <h3>Need Help?</h3>
+            <p>
+              Visit our
+              <a href="https://github.com/yourusername/bgm-extension" target="_blank"
+                >GitHub repository</a
+              >
+              for more information and to report issues.
+            </p>
+          </section>
         </div>
-      </div>
-
-      <!-- Custom Patterns Tab -->
-      <div id="custom-tab" class="tab-content">
-        <div class="section-header">
-          <h2>Custom Patterns</h2>
-          <p class="subtitle">Add your own site extraction patterns</p>
-        </div>
-
-        <div class="actions">
-          <button id="add-pattern-btn" class="primary-btn">Add New Pattern</button>
-          <button id="import-btn" class="secondary-btn">Import JSON</button>
-          <button id="export-btn" class="secondary-btn">Export JSON</button>
-        </div>
-
-        <div id="custom-list" class="pattern-list">
-          <!-- Populated by JavaScript -->
-        </div>
-
-        <div id="custom-empty" class="empty-state">
-          <p>No custom patterns yet</p>
-          <p class="hint">Click "Add New Pattern" to create one</p>
-        </div>
-      </div>
-
-      <!-- Help Tab -->
-      <div id="help-tab" class="tab-content">
-        <div class="section-header">
-          <h2>Help & Documentation</h2>
-        </div>
-
-        <section class="help-section">
-          <h3>How to Use</h3>
-          <ol>
-            <li>Navigate to a supported website</li>
-            <li>Click the extension icon in your browser toolbar</li>
-            <li>Click "Extract Board Games"</li>
-            <li>Game names are copied to your clipboard</li>
-          </ol>
-        </section>
-
-        <section class="help-section">
-          <h3>CSS Selector Guide</h3>
-          <p>CSS selectors are patterns used to find elements on a webpage:</p>
-          <ul>
-            <li><code>h3</code> - All h3 elements</li>
-            <li><code>.product-name</code> - Elements with class "product-name"</li>
-            <li><code>#game-title</code> - Element with id "game-title"</li>
-            <li><code>article h3</code> - h3 elements inside article elements</li>
-            <li><code>[data-id]</code> - Elements with data-id attribute</li>
-          </ul>
-        </section>
-
-        <section class="help-section">
-          <h3>Filter Patterns</h3>
-          <p>Use regex patterns to filter results:</p>
-          <ul>
-            <li><code>^Sponsored</code> - Exclude items starting with "Sponsored"</li>
-            <li><code>Advertisement</code> - Exclude items containing "Advertisement"</li>
-            <li><code>.*Game$</code> - Include only items ending with "Game"</li>
-          </ul>
-        </section>
-
-        <section class="help-section">
-          <h3>Need Help?</h3>
-          <p>Visit our <a href="https://github.com/yourusername/bgm-extension" target="_blank">GitHub repository</a> for more information and to report issues.</p>
-        </section>
-      </div>
-    </main>
-  </div>
-
-  <!-- Pattern Editor Modal -->
-  <div id="pattern-modal" class="modal hidden">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 id="modal-title">Add Pattern</h2>
-        <button id="modal-close" class="close-btn">&times;</button>
-      </div>
-
-      <form id="pattern-form">
-        <div class="form-group">
-          <label for="domain-input">Domain *</label>
-          <input type="text" id="domain-input" placeholder="example.com" required>
-          <span class="hint">Without http:// or www</span>
-        </div>
-
-        <div class="form-group">
-          <label for="name-input">Display Name *</label>
-          <input type="text" id="name-input" placeholder="Example Site" required>
-        </div>
-
-        <div class="form-group">
-          <label for="selector-input">CSS Selector *</label>
-          <input type="text" id="selector-input" placeholder=".product-name" required>
-          <span class="hint">CSS selector to find game names</span>
-        </div>
-
-        <div class="form-group">
-          <label for="exclude-input">Exclude Patterns (comma-separated)</label>
-          <input type="text" id="exclude-input" placeholder="^Sponsored, ^Ad">
-          <span class="hint">Regex patterns to exclude results</span>
-        </div>
-
-        <div class="form-group">
-          <label for="include-input">Include Patterns (comma-separated)</label>
-          <input type="text" id="include-input" placeholder="Game$, Board">
-          <span class="hint">Regex patterns to include only matching results</span>
-        </div>
-
-        <div class="form-group checkbox-group">
-          <label>
-            <input type="checkbox" id="trim-input" checked>
-            Trim whitespace
-          </label>
-        </div>
-
-        <div class="form-group checkbox-group">
-          <label>
-            <input type="checkbox" id="dedupe-input" checked>
-            Remove duplicates
-          </label>
-        </div>
-
-        <div class="modal-actions">
-          <button type="button" id="cancel-btn" class="secondary-btn">Cancel</button>
-          <button type="submit" class="primary-btn">Save Pattern</button>
-        </div>
-      </form>
+      </main>
     </div>
-  </div>
 
-  <script src="options.js"></script>
-</body>
+    <!-- Pattern Editor Modal -->
+    <div id="pattern-modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="modal-title">Add Pattern</h2>
+          <button id="modal-close" class="close-btn">&times;</button>
+        </div>
+
+        <form id="pattern-form">
+          <div class="form-group">
+            <label for="domain-input">Domain *</label>
+            <input type="text" id="domain-input" placeholder="example.com" required />
+            <span class="hint">Without http:// or www</span>
+          </div>
+
+          <div class="form-group">
+            <label for="name-input">Display Name *</label>
+            <input type="text" id="name-input" placeholder="Example Site" required />
+          </div>
+
+          <div class="form-group">
+            <label for="selector-input">CSS Selector *</label>
+            <input type="text" id="selector-input" placeholder=".product-name" required />
+            <span class="hint">CSS selector to find game names</span>
+          </div>
+
+          <div class="form-group">
+            <label for="exclude-input">Exclude Patterns (comma-separated)</label>
+            <input type="text" id="exclude-input" placeholder="^Sponsored, ^Ad" />
+            <span class="hint">Regex patterns to exclude results</span>
+          </div>
+
+          <div class="form-group">
+            <label for="include-input">Include Patterns (comma-separated)</label>
+            <input type="text" id="include-input" placeholder="Game$, Board" />
+            <span class="hint">Regex patterns to include only matching results</span>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" id="trim-input" checked />
+              Trim whitespace
+            </label>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" id="dedupe-input" checked />
+              Remove duplicates
+            </label>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" id="cancel-btn" class="secondary-btn">Cancel</button>
+            <button type="submit" class="primary-btn">Save Pattern</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="options.js"></script>
+  </body>
 </html>
 ```
 
@@ -1331,6 +1343,7 @@ git commit -m "feat: add options page HTML structure"
 ## Task 12: Options Page Styles
 
 **Files:**
+
 - Create: `src/options/options.css`
 
 **Step 1: Create options.css**
@@ -1345,7 +1358,8 @@ Create `src/options/options.css`:
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-size: 14px;
   color: #333;
   background: #f5f5f5;
@@ -1359,7 +1373,7 @@ body {
 }
 
 header {
-  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
   color: white;
   padding: 24px;
   text-align: center;
@@ -1398,8 +1412,8 @@ header h1 {
 }
 
 .tab-btn.active {
-  color: #4CAF50;
-  border-bottom-color: #4CAF50;
+  color: #4caf50;
+  border-bottom-color: #4caf50;
 }
 
 main {
@@ -1449,7 +1463,7 @@ main {
 
 .primary-btn {
   padding: 10px 20px;
-  background: #4CAF50;
+  background: #4caf50;
   color: white;
   border: none;
   border-radius: 8px;
@@ -1466,8 +1480,8 @@ main {
 .secondary-btn {
   padding: 10px 20px;
   background: white;
-  color: #4CAF50;
-  border: 1px solid #4CAF50;
+  color: #4caf50;
+  border: 1px solid #4caf50;
   border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
@@ -1605,7 +1619,7 @@ main {
 }
 
 .help-section a {
-  color: #4CAF50;
+  color: #4caf50;
   text-decoration: none;
 }
 
@@ -1686,7 +1700,7 @@ main {
   font-size: 13px;
 }
 
-.form-group input[type="text"] {
+.form-group input[type='text'] {
   width: 100%;
   padding: 10px;
   border: 1px solid #ddd;
@@ -1694,9 +1708,9 @@ main {
   font-size: 14px;
 }
 
-.form-group input[type="text"]:focus {
+.form-group input[type='text']:focus {
   outline: none;
-  border-color: #4CAF50;
+  border-color: #4caf50;
 }
 
 .form-group .hint {
@@ -1719,7 +1733,7 @@ main {
   cursor: pointer;
 }
 
-.checkbox-group input[type="checkbox"] {
+.checkbox-group input[type='checkbox'] {
   width: 16px;
   height: 16px;
   cursor: pointer;
@@ -1747,6 +1761,7 @@ git commit -m "feat: add options page styles"
 ## Task 13: Options Page JavaScript - Part 1 (Tab Management & Pattern Loading)
 
 **Files:**
+
 - Create: `src/options/options.js`
 
 **Step 1: Create options.js with tab management**
@@ -1772,13 +1787,13 @@ function setupTabs() {
   const tabButtons = document.querySelectorAll('.tab-btn');
   const tabContents = document.querySelectorAll('.tab-content');
 
-  tabButtons.forEach(button => {
+  tabButtons.forEach((button) => {
     button.addEventListener('click', () => {
       const tabName = button.dataset.tab;
 
       // Update active states
-      tabButtons.forEach(btn => btn.classList.remove('active'));
-      tabContents.forEach(content => content.classList.remove('active'));
+      tabButtons.forEach((btn) => btn.classList.remove('active'));
+      tabContents.forEach((content) => content.classList.remove('active'));
 
       button.classList.add('active');
       document.getElementById(`${tabName}-tab`).classList.add('active');
@@ -1829,13 +1844,14 @@ function renderSupportedPatterns(filter = '') {
   const list = document.getElementById('supported-list');
   list.innerHTML = '';
 
-  const filtered = builtInPatterns.filter(p =>
-    filter === '' ||
-    p.name.toLowerCase().includes(filter.toLowerCase()) ||
-    p.domain.toLowerCase().includes(filter.toLowerCase())
+  const filtered = builtInPatterns.filter(
+    (p) =>
+      filter === '' ||
+      p.name.toLowerCase().includes(filter.toLowerCase()) ||
+      p.domain.toLowerCase().includes(filter.toLowerCase())
   );
 
-  filtered.forEach(pattern => {
+  filtered.forEach((pattern) => {
     const card = createPatternCard(pattern, false);
     list.appendChild(card);
   });
@@ -1946,6 +1962,7 @@ git commit -m "feat: add options page JavaScript (part 1 - tab management)"
 ## Task 14: Options Page JavaScript - Part 2 (CRUD Operations)
 
 **Files:**
+
 - Modify: `src/options/options.js`
 
 **Step 1: Add CRUD operations to options.js**
@@ -2013,8 +2030,8 @@ async function handleFormSubmit(e) {
       exclude: parseCommaSeparated(document.getElementById('exclude-input').value),
       include: parseCommaSeparated(document.getElementById('include-input').value),
       trim: document.getElementById('trim-input').checked,
-      deduplicate: document.getElementById('dedupe-input').checked
-    }
+      deduplicate: document.getElementById('dedupe-input').checked,
+    },
   };
 
   // Set include to null if empty
@@ -2141,7 +2158,10 @@ function handleSearch(e) {
 // Parse comma-separated string to array
 function parseCommaSeparated(str) {
   if (!str || !str.trim()) return [];
-  return str.split(',').map(s => s.trim()).filter(s => s.length > 0);
+  return str
+    .split(',')
+    .map((s) => s.trim())
+    .filter((s) => s.length > 0);
 }
 
 // Escape HTML to prevent XSS
@@ -2164,6 +2184,7 @@ git commit -m "feat: add options page JavaScript (part 2 - CRUD operations)"
 ## Task 15: Testing & Documentation
 
 **Files:**
+
 - Create: `docs/TESTING.md`
 
 **Step 1: Create testing documentation**
@@ -2247,11 +2268,13 @@ Create `docs/TESTING.md`:
 ## Test Sites
 
 ### Knapix.com
+
 - URL: https://www.knapix.com/2025/11/...
 - Selector: `article h3`
 - Expected: List of board game names from article headings
 
 ### Amazon
+
 - URL: https://www.amazon.com/s?k=board+games
 - Selector: `[data-component-type='s-search-result'] h2 a span`
 - Expected: Product names (with ads filtered out)
@@ -2259,6 +2282,7 @@ Create `docs/TESTING.md`:
 ## Debugging Tips
 
 ### Check Console Logs
+
 - Background: `chrome://extensions/` → Inspect views: service worker
 - Content Script: Open DevTools on webpage
 - Popup: Right-click extension icon → Inspect popup
@@ -2266,15 +2290,18 @@ Create `docs/TESTING.md`:
 ### Common Issues
 
 **"No board games found"**
+
 - Check if selector matches elements on page
 - Inspect page HTML structure
 - Verify filters aren't excluding all results
 
 **"Error copying to clipboard"**
+
 - Check clipboardWrite permission in manifest
 - Verify extension has activeTab permission
 
 **Pattern not working after add**
+
 - Check background console for reload confirmation
 - Verify pattern saved in storage (DevTools → Application → Storage)
 
@@ -2304,6 +2331,7 @@ git commit -m "docs: add testing guide"
 ## Task 16: Update README with Usage Instructions
 
 **Files:**
+
 - Modify: `README.md`
 
 **Step 1: Expand README**
@@ -2375,23 +2403,31 @@ A cross-browser extension (Chrome/Firefox) for extracting board game names from 
 
 **Simple selector:**
 ```
+
 Selector: h3
+
 ```
 
 **Class-based selector:**
 ```
+
 Selector: .product-name
+
 ```
 
 **Nested selector:**
 ```
+
 Selector: article .game-title
+
 ```
 
 **With filters:**
 ```
+
 Selector: .product h2
 Exclude: ^Sponsored, ^Advertisement
+
 ```
 
 ### Import/Export Patterns
@@ -2429,17 +2465,19 @@ More sites coming soon! You can add your own via custom patterns.
 ### Project Structure
 
 ```
+
 bgm-extension/
-├── manifest.json          # Extension manifest
+├── manifest.json # Extension manifest
 ├── src/
-│   ├── background/        # Service worker
-│   ├── content/           # Content scripts
-│   ├── popup/             # Extension popup UI
-│   ├── options/           # Settings page
-│   └── lib/               # Shared utilities
-├── patterns/              # Built-in site patterns
-├── icons/                 # Extension icons
-└── docs/                  # Documentation
+│ ├── background/ # Service worker
+│ ├── content/ # Content scripts
+│ ├── popup/ # Extension popup UI
+│ ├── options/ # Settings page
+│ └── lib/ # Shared utilities
+├── patterns/ # Built-in site patterns
+├── icons/ # Extension icons
+└── docs/ # Documentation
+
 ```
 
 ### Tech Stack
@@ -2537,6 +2575,7 @@ git tag -a v1.0.0 -m "Initial release - Board Game Extractor v1.0.0"
 ### Step 3: Test the extension
 
 Follow the manual testing checklist in `docs/TESTING.md` to verify:
+
 1. Extension loads without errors
 2. Basic extraction works on knapix.com
 3. Custom patterns can be added/edited/deleted
@@ -2559,6 +2598,7 @@ This implementation plan creates a fully functional cross-browser extension with
 ✅ Complete documentation
 
 **Next Steps:**
+
 1. Test thoroughly in both browsers
 2. Create proper extension icons (replace SVG placeholders with PNG)
 3. Prepare for store submission (Chrome Web Store, Firefox Add-ons)

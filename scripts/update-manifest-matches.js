@@ -23,10 +23,7 @@ const ROOT = join(__dirname, '..');
 
 // Content-script entries identified by their JS files — these are the two
 // that currently use <all_urls> and need to be restricted.
-const RESTRICTED_SCRIPTS = [
-  'src/lib/pattern-matcher.js',
-  'src/content/wishlist-badge.js',
-];
+const RESTRICTED_SCRIPTS = ['src/lib/pattern-matcher.js', 'src/content/wishlist-badge.js'];
 
 // Domains whose url_pattern covers multiple TLDs or subdomain variants.
 // Derived by reading the url_pattern regex in built-in.json.

@@ -17,7 +17,10 @@ async function openPopupWithStorage(context, extensionId, storageOverlay) {
     const _origGet = chrome.storage.local.get.bind(chrome.storage.local);
     chrome.storage.local.get = (keys, cb) => {
       const p = _origGet(keys).then((real) => ({ ...real, ...overlay }));
-      if (cb) { p.then(cb); return; }
+      if (cb) {
+        p.then(cb);
+        return;
+      }
       return p;
     };
   }, storageOverlay);

@@ -24,29 +24,29 @@ A small set of things that genuinely need a human. **Run these before tagging a 
 
 What's tested, by feature area. Spec column links to the Playwright file under `tests-e2e/`.
 
-| Area | Scenario | Spec |
-|---|---|---|
-| Bootstrap | MV3 service worker registers, no console errors | `extension-load` |
-| Site detection | All 33 built-in profiles match a representative URL | `popup-supported-sites` |
-| Site detection | `example.com`, `google.com`, `wikipedia.org` correctly unsupported | `popup-supported-sites` |
-| Popup UI | Supported shop enables extract button + shows shop name | `popup-supported-sites` |
-| Popup UI | Unsupported page disables extract button | `popup-supported-sites` |
-| Extraction | Knapix end-to-end: extract → review → confirm → success | `popup-knapix-happy-path` |
-| Custom patterns | Create / edit / delete (with confirm) + export → import roundtrip | `options-custom-patterns` |
-| Custom patterns | Cancelling the delete confirm keeps the pattern | `options-custom-patterns` |
-| Custom patterns | Tab is hidden by default and revealed by the Developer mode toggle | `options-custom-patterns` |
-| Wishlist badge | Amazon search — only matching titles get a badge | `wishlist-badge` |
-| Wishlist badge | Philibert category page renders badges | `wishlist-badge` |
-| Wishlist badge | Empty wishlist injects no badges | `wishlist-badge` |
-| Context menus | All 5 items registered | `context-menus` |
-| Context menus | "Search BGM" → `/search?q=<query>` | `context-menus` |
-| Context menus | "Extract from this page" → `/extract?url=<pageUrl>` | `context-menus` |
-| Context menus | "Extract from this link" → `/extract?url=<linkUrl>` | `context-menus` |
-| Context menus | URL-from-selection only fires on `http(s)` text | `context-menus` |
-| Context menus | "Find in BGM extension" stashes query for popup | `context-menus` |
-| Play history | BGA / Yucata / BGG / Tabletopia / Ludopedia panels + import wiring | `popup-play-history` |
-| Philibert overlay (BGM-976) | Product page renders overlay with rating + active collection pills | `philibert-overlay` |
-| Philibert overlay | Hidden on category pages | `philibert-overlay` |
+| Area                        | Scenario                                                           | Spec                      |
+| --------------------------- | ------------------------------------------------------------------ | ------------------------- |
+| Bootstrap                   | MV3 service worker registers, no console errors                    | `extension-load`          |
+| Site detection              | All 33 built-in profiles match a representative URL                | `popup-supported-sites`   |
+| Site detection              | `example.com`, `google.com`, `wikipedia.org` correctly unsupported | `popup-supported-sites`   |
+| Popup UI                    | Supported shop enables extract button + shows shop name            | `popup-supported-sites`   |
+| Popup UI                    | Unsupported page disables extract button                           | `popup-supported-sites`   |
+| Extraction                  | Knapix end-to-end: extract → review → confirm → success            | `popup-knapix-happy-path` |
+| Custom patterns             | Create / edit / delete (with confirm) + export → import roundtrip  | `options-custom-patterns` |
+| Custom patterns             | Cancelling the delete confirm keeps the pattern                    | `options-custom-patterns` |
+| Custom patterns             | Tab is hidden by default and revealed by the Developer mode toggle | `options-custom-patterns` |
+| Wishlist badge              | Amazon search — only matching titles get a badge                   | `wishlist-badge`          |
+| Wishlist badge              | Philibert category page renders badges                             | `wishlist-badge`          |
+| Wishlist badge              | Empty wishlist injects no badges                                   | `wishlist-badge`          |
+| Context menus               | All 5 items registered                                             | `context-menus`           |
+| Context menus               | "Search BGM" → `/search?q=<query>`                                 | `context-menus`           |
+| Context menus               | "Extract from this page" → `/extract?url=<pageUrl>`                | `context-menus`           |
+| Context menus               | "Extract from this link" → `/extract?url=<linkUrl>`                | `context-menus`           |
+| Context menus               | URL-from-selection only fires on `http(s)` text                    | `context-menus`           |
+| Context menus               | "Find in BGM extension" stashes query for popup                    | `context-menus`           |
+| Play history                | BGA / Yucata / BGG / Tabletopia / Ludopedia panels + import wiring | `popup-play-history`      |
+| Philibert overlay (BGM-976) | Product page renders overlay with rating + active collection pills | `philibert-overlay`       |
+| Philibert overlay           | Hidden on category pages                                           | `philibert-overlay`       |
 
 For the full literal list of every Playwright test (including each of the 33 built-in profile URLs and each play-history platform), see [`docs/TESTING-tests.md`](TESTING-tests.md). Refresh it with `npm run test:e2e -- --list`.
 

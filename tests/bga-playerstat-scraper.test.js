@@ -136,7 +136,7 @@ describe('BGAPlayerStatScraper', () => {
 
       expect(calls).toHaveLength(1);
       expect(calls[0].url).toBe(
-        '/playerstat/playerstat/getrankevol.html?player=84147370&game=1845',
+        '/playerstat/playerstat/getrankevol.html?player=84147370&game=1845'
       );
       expect(calls[0].opts.headers['x-request-token']).toBe('tok-abc');
       expect(result.hideY).toBe(false);
@@ -200,7 +200,7 @@ describe('BGAPlayerStatScraper', () => {
       const scraper = BGAPlayerStatScraper(mockFetch, 'tok');
       const news = await scraper.getLastResults('84147370', 1845, 25);
       expect(calls[0]).toBe(
-        '/message/board?type=lastresult&id=1845&arg=84147370&social=false&per_page=25',
+        '/message/board?type=lastresult&id=1845&arg=84147370&social=false&per_page=25'
       );
       expect(news).toHaveLength(1);
     });

@@ -1,173 +1,374 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Mockup 3 — Command Palette</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f0f23; display: flex; justify-content: center; align-items: flex-start; padding: 40px; min-height: 100vh; }
-  .phone-frame { width: 380px; background: #1c1c2e; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); overflow: hidden; color: #e0e0e0; }
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mockup 3 — Command Palette</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #0f0f23;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 40px;
+        min-height: 100vh;
+      }
+      .phone-frame {
+        width: 380px;
+        background: #1c1c2e;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+        color: #e0e0e0;
+      }
 
-  /* Header */
-  .header { padding: 14px 16px 8px; display: flex; align-items: center; justify-content: space-between; }
-  .header h1 { font-size: 16px; font-weight: 800; color: #fff; }
-  .header .status { display: flex; align-items: center; gap: 6px; }
-  .header .status .dot { width: 8px; height: 8px; border-radius: 50%; background: #4caf50; }
-  .header .status span { font-size: 10px; color: #888; }
+      /* Header */
+      .header {
+        padding: 14px 16px 8px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .header h1 {
+        font-size: 16px;
+        font-weight: 800;
+        color: #fff;
+      }
+      .header .status {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .header .status .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #4caf50;
+      }
+      .header .status span {
+        font-size: 10px;
+        color: #888;
+      }
 
-  /* Command input */
-  .cmd-bar { margin: 4px 14px 14px; position: relative; }
-  .cmd-bar input { width: 100%; padding: 12px 14px 12px 36px; background: #2a2a40; border: 1px solid #3a3a55; border-radius: 10px; color: #fff; font-size: 13px; outline: none; }
-  .cmd-bar input::placeholder { color: #666; }
-  .cmd-bar input:focus { border-color: #7c4dff; box-shadow: 0 0 0 2px rgba(124,77,255,0.2); }
-  .cmd-bar .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #666; font-size: 14px; }
-  .cmd-bar .kbd { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: #3a3a55; color: #888; font-size: 9px; padding: 2px 6px; border-radius: 3px; font-family: monospace; }
+      /* Command input */
+      .cmd-bar {
+        margin: 4px 14px 14px;
+        position: relative;
+      }
+      .cmd-bar input {
+        width: 100%;
+        padding: 12px 14px 12px 36px;
+        background: #2a2a40;
+        border: 1px solid #3a3a55;
+        border-radius: 10px;
+        color: #fff;
+        font-size: 13px;
+        outline: none;
+      }
+      .cmd-bar input::placeholder {
+        color: #666;
+      }
+      .cmd-bar input:focus {
+        border-color: #7c4dff;
+        box-shadow: 0 0 0 2px rgba(124, 77, 255, 0.2);
+      }
+      .cmd-bar .search-icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #666;
+        font-size: 14px;
+      }
+      .cmd-bar .kbd {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #3a3a55;
+        color: #888;
+        font-size: 9px;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: monospace;
+      }
 
-  /* Command suggestions */
-  .suggestions { padding: 0 14px; }
-  .suggestion-group { margin-bottom: 14px; }
-  .suggestion-group .group-label { font-size: 9px; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; padding-left: 4px; }
-  .suggestion { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 8px; cursor: pointer; transition: background .1s; }
-  .suggestion:hover { background: #2a2a40; }
-  .suggestion.highlighted { background: #2a2a40; border: 1px solid #7c4dff; }
-  .suggestion .icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
-  .suggestion .icon.green { background: rgba(76,175,80,0.15); }
-  .suggestion .icon.purple { background: rgba(124,77,255,0.15); }
-  .suggestion .icon.orange { background: rgba(255,152,0,0.15); }
-  .suggestion .icon.blue { background: rgba(33,150,243,0.15); }
-  .suggestion .icon.red { background: rgba(244,67,54,0.15); }
-  .suggestion .text { flex: 1; }
-  .suggestion .text strong { font-size: 12px; color: #e0e0e0; display: block; font-weight: 600; }
-  .suggestion .text span { font-size: 10px; color: #666; }
-  .suggestion .shortcut { font-size: 9px; color: #555; font-family: monospace; background: #2a2a40; padding: 2px 6px; border-radius: 3px; }
+      /* Command suggestions */
+      .suggestions {
+        padding: 0 14px;
+      }
+      .suggestion-group {
+        margin-bottom: 14px;
+      }
+      .suggestion-group .group-label {
+        font-size: 9px;
+        font-weight: 700;
+        color: #555;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 6px;
+        padding-left: 4px;
+      }
+      .suggestion {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.1s;
+      }
+      .suggestion:hover {
+        background: #2a2a40;
+      }
+      .suggestion.highlighted {
+        background: #2a2a40;
+        border: 1px solid #7c4dff;
+      }
+      .suggestion .icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        flex-shrink: 0;
+      }
+      .suggestion .icon.green {
+        background: rgba(76, 175, 80, 0.15);
+      }
+      .suggestion .icon.purple {
+        background: rgba(124, 77, 255, 0.15);
+      }
+      .suggestion .icon.orange {
+        background: rgba(255, 152, 0, 0.15);
+      }
+      .suggestion .icon.blue {
+        background: rgba(33, 150, 243, 0.15);
+      }
+      .suggestion .icon.red {
+        background: rgba(244, 67, 54, 0.15);
+      }
+      .suggestion .text {
+        flex: 1;
+      }
+      .suggestion .text strong {
+        font-size: 12px;
+        color: #e0e0e0;
+        display: block;
+        font-weight: 600;
+      }
+      .suggestion .text span {
+        font-size: 10px;
+        color: #666;
+      }
+      .suggestion .shortcut {
+        font-size: 9px;
+        color: #555;
+        font-family: monospace;
+        background: #2a2a40;
+        padding: 2px 6px;
+        border-radius: 3px;
+      }
 
-  /* Contextual banner */
-  .context-banner { margin: 0 14px 12px; background: linear-gradient(135deg, #1a3a1a, #1c2c1c); border: 1px solid #2e5a2e; border-radius: 10px; padding: 12px; display: flex; align-items: center; gap: 10px; }
-  .context-banner .emoji { font-size: 20px; }
-  .context-banner .info { flex: 1; }
-  .context-banner .info strong { font-size: 12px; color: #81c784; display: block; }
-  .context-banner .info span { font-size: 10px; color: #5a8a5a; }
-  .context-banner button { background: #4caf50; color: #fff; border: none; border-radius: 6px; padding: 7px 14px; font-size: 11px; font-weight: 600; cursor: pointer; }
+      /* Contextual banner */
+      .context-banner {
+        margin: 0 14px 12px;
+        background: linear-gradient(135deg, #1a3a1a, #1c2c1c);
+        border: 1px solid #2e5a2e;
+        border-radius: 10px;
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .context-banner .emoji {
+        font-size: 20px;
+      }
+      .context-banner .info {
+        flex: 1;
+      }
+      .context-banner .info strong {
+        font-size: 12px;
+        color: #81c784;
+        display: block;
+      }
+      .context-banner .info span {
+        font-size: 10px;
+        color: #5a8a5a;
+      }
+      .context-banner button {
+        background: #4caf50;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 7px 14px;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+      }
 
-  /* Recent activity */
-  .recent { padding: 0 14px 14px; }
-  .recent .label { font-size: 9px; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-  .activity-item { display: flex; align-items: center; gap: 8px; padding: 6px 0; }
-  .activity-item .time { font-size: 9px; color: #444; width: 40px; flex-shrink: 0; }
-  .activity-item .desc { font-size: 11px; color: #888; }
-  .activity-item .desc b { color: #bbb; font-weight: 500; }
+      /* Recent activity */
+      .recent {
+        padding: 0 14px 14px;
+      }
+      .recent .label {
+        font-size: 9px;
+        font-weight: 700;
+        color: #555;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+      }
+      .activity-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 0;
+      }
+      .activity-item .time {
+        font-size: 9px;
+        color: #444;
+        width: 40px;
+        flex-shrink: 0;
+      }
+      .activity-item .desc {
+        font-size: 11px;
+        color: #888;
+      }
+      .activity-item .desc b {
+        color: #bbb;
+        font-weight: 500;
+      }
 
-  /* Footer */
-  .footer { border-top: 1px solid #2a2a40; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; }
-  .footer span { font-size: 9px; color: #444; }
-  .footer a { font-size: 10px; color: #7c4dff; text-decoration: none; }
-</style>
-</head>
-<body>
-
-<div class="phone-frame">
-  <div class="header">
-    <h1>BGM Toolbox</h1>
-    <div class="status">
-      <div class="dot"></div>
-      <span>Connected to BGM</span>
-    </div>
-  </div>
-
-  <div class="cmd-bar">
-    <span class="search-icon">⌘</span>
-    <input type="text" placeholder="Type a command or search a game...">
-    <span class="kbd">Ctrl+K</span>
-  </div>
-
-  <div class="context-banner">
-    <div class="emoji">🛒</div>
-    <div class="info">
-      <strong>Philibert.net &mdash; 12 games detected</strong>
-      <span>Strategy Games category page</span>
-    </div>
-    <button>Extract</button>
-  </div>
-
-  <div class="suggestions">
-    <div class="suggestion-group">
-      <div class="group-label">Suggested for this page</div>
-      <div class="suggestion highlighted">
-        <div class="icon green">📋</div>
-        <div class="text">
-          <strong>Extract game names</strong>
-          <span>Copy 12 names to clipboard</span>
+      /* Footer */
+      .footer {
+        border-top: 1px solid #2a2a40;
+        padding: 10px 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .footer span {
+        font-size: 9px;
+        color: #444;
+      }
+      .footer a {
+        font-size: 10px;
+        color: #7c4dff;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="phone-frame">
+      <div class="header">
+        <h1>BGM Toolbox</h1>
+        <div class="status">
+          <div class="dot"></div>
+          <span>Connected to BGM</span>
         </div>
-        <span class="shortcut">E</span>
       </div>
-      <div class="suggestion">
-        <div class="icon orange">📊</div>
-        <div class="text">
-          <strong>Compare prices</strong>
-          <span>Check prices across 6 shops</span>
-        </div>
-        <span class="shortcut">C</span>
-      </div>
-    </div>
 
-    <div class="suggestion-group">
-      <div class="group-label">All commands</div>
-      <div class="suggestion">
-        <div class="icon purple">🎮</div>
-        <div class="text">
-          <strong>Log recent plays</strong>
-          <span>3 unlogged plays from BGA + Yucata</span>
-        </div>
-        <span class="shortcut">L</span>
+      <div class="cmd-bar">
+        <span class="search-icon">⌘</span>
+        <input type="text" placeholder="Type a command or search a game..." />
+        <span class="kbd">Ctrl+K</span>
       </div>
-      <div class="suggestion">
-        <div class="icon blue">🔍</div>
-        <div class="text">
-          <strong>Lookup game</strong>
-          <span>Search BGG ratings, weight, your stats</span>
-        </div>
-        <span class="shortcut">G</span>
-      </div>
-      <div class="suggestion">
-        <div class="icon orange">🔔</div>
-        <div class="text">
-          <strong>Price alerts</strong>
-          <span>2 active alerts, 1 triggered</span>
-        </div>
-        <span class="shortcut">A</span>
-      </div>
-      <div class="suggestion">
-        <div class="icon red">♡</div>
-        <div class="text">
-          <strong>Add to wishlist</strong>
-          <span>Quick-add game to your BGM wishlist</span>
-        </div>
-        <span class="shortcut">W</span>
-      </div>
-    </div>
-  </div>
 
-  <div class="recent">
-    <div class="label">Recent activity</div>
-    <div class="activity-item">
-      <span class="time">12m</span>
-      <span class="desc">Logged <b>7 Wonders Duel</b> play on BGM</span>
-    </div>
-    <div class="activity-item">
-      <span class="time">2h</span>
-      <span class="desc">Extracted 8 games from <b>Amazon.fr</b></span>
-    </div>
-    <div class="activity-item">
-      <span class="time">1d</span>
-      <span class="desc">Price drop: <b>Cascadia</b> now 19,99&euro;</span>
-    </div>
-  </div>
+      <div class="context-banner">
+        <div class="emoji">🛒</div>
+        <div class="info">
+          <strong>Philibert.net &mdash; 12 games detected</strong>
+          <span>Strategy Games category page</span>
+        </div>
+        <button>Extract</button>
+      </div>
 
-  <div class="footer">
-    <span>v2.0.0</span>
-    <a href="#">Settings</a>
-  </div>
-</div>
+      <div class="suggestions">
+        <div class="suggestion-group">
+          <div class="group-label">Suggested for this page</div>
+          <div class="suggestion highlighted">
+            <div class="icon green">📋</div>
+            <div class="text">
+              <strong>Extract game names</strong>
+              <span>Copy 12 names to clipboard</span>
+            </div>
+            <span class="shortcut">E</span>
+          </div>
+          <div class="suggestion">
+            <div class="icon orange">📊</div>
+            <div class="text">
+              <strong>Compare prices</strong>
+              <span>Check prices across 6 shops</span>
+            </div>
+            <span class="shortcut">C</span>
+          </div>
+        </div>
 
-</body>
+        <div class="suggestion-group">
+          <div class="group-label">All commands</div>
+          <div class="suggestion">
+            <div class="icon purple">🎮</div>
+            <div class="text">
+              <strong>Log recent plays</strong>
+              <span>3 unlogged plays from BGA + Yucata</span>
+            </div>
+            <span class="shortcut">L</span>
+          </div>
+          <div class="suggestion">
+            <div class="icon blue">🔍</div>
+            <div class="text">
+              <strong>Lookup game</strong>
+              <span>Search BGG ratings, weight, your stats</span>
+            </div>
+            <span class="shortcut">G</span>
+          </div>
+          <div class="suggestion">
+            <div class="icon orange">🔔</div>
+            <div class="text">
+              <strong>Price alerts</strong>
+              <span>2 active alerts, 1 triggered</span>
+            </div>
+            <span class="shortcut">A</span>
+          </div>
+          <div class="suggestion">
+            <div class="icon red">♡</div>
+            <div class="text">
+              <strong>Add to wishlist</strong>
+              <span>Quick-add game to your BGM wishlist</span>
+            </div>
+            <span class="shortcut">W</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="recent">
+        <div class="label">Recent activity</div>
+        <div class="activity-item">
+          <span class="time">12m</span>
+          <span class="desc">Logged <b>7 Wonders Duel</b> play on BGM</span>
+        </div>
+        <div class="activity-item">
+          <span class="time">2h</span>
+          <span class="desc">Extracted 8 games from <b>Amazon.fr</b></span>
+        </div>
+        <div class="activity-item">
+          <span class="time">1d</span>
+          <span class="desc">Price drop: <b>Cascadia</b> now 19,99&euro;</span>
+        </div>
+      </div>
+
+      <div class="footer">
+        <span>v2.0.0</span>
+        <a href="#">Settings</a>
+      </div>
+    </div>
+  </body>
 </html>

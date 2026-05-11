@@ -13,11 +13,11 @@ repos:
     rev: v9.27.0
     hooks:
       - id: eslint
-        args: ["--max-warnings=0"]
+        args: ['--max-warnings=0']
         files: ^src/.*\.js$
         additional_dependencies:
           - eslint@9.27.0
-          - "@eslint/js@9.27.0"
+          - '@eslint/js@9.27.0'
           - globals@16.1.0
 
   - repo: https://github.com/pre-commit/mirrors-prettier

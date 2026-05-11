@@ -20,24 +20,28 @@ A cross-browser extension (Chrome & Firefox) that extracts board game names from
 ### Core Components
 
 **Background Service Worker**
+
 - Manages pattern loading and caching
 - Handles clipboard write operations
 - Coordinates messages between popup and content scripts
 - Maintains extraction statistics
 
 **Content Scripts**
+
 - Injected into webpages to perform DOM extraction
 - Executes CSS selectors based on matched patterns
 - Applies text filters (exclude/include regex, trimming, deduplication)
 - Returns extracted game names to background worker
 
 **Popup UI (Browser Action)**
+
 - Mini dashboard showing current site support status
 - Primary "Extract Board Games" button
 - Last extraction statistics
 - Quick links to settings and site suggestions
 
 **Options Page**
+
 - Full settings interface with tabs
 - View built-in patterns (read-only)
 - Manage custom user patterns (add/edit/delete)
@@ -74,11 +78,13 @@ Each site pattern is defined as:
 ### Two-Tier Configuration
 
 **Built-in Patterns** (`patterns/built-in.json`)
+
 - Shipped with extension
 - Curated and tested site patterns
 - Updated via extension releases
 
 **User Custom Patterns** (browser local storage)
+
 - User-added patterns for unsupported sites
 - Override built-in patterns by domain
 - Stored in `chrome.storage.local`
@@ -108,6 +114,7 @@ Each site pattern is defined as:
 ### Popup Mini Dashboard
 
 **Layout:**
+
 ```
 ┌─────────────────────────────┐
 │  Board Game Extractor       │
@@ -124,6 +131,7 @@ Each site pattern is defined as:
 ```
 
 **States:**
+
 - Supported site: Green badge, button enabled
 - Unsupported site: Gray badge, button disabled
 - No extractions yet: "No extractions yet" message
@@ -150,6 +158,7 @@ Each site pattern is defined as:
    - Link to GitHub repository
 
 **Add/Edit Pattern Form:**
+
 - Domain input (e.g., "example.com")
 - Display name input
 - CSS selector input
@@ -242,21 +251,19 @@ bgm-extension/
   "manifest_version": 3,
   "name": "Board Game Extractor",
   "version": "1.0.0",
-  "permissions": [
-    "activeTab",
-    "clipboardWrite",
-    "storage"
-  ],
+  "permissions": ["activeTab", "clipboardWrite", "storage"],
   "background": {
     "service_worker": "src/background/service-worker.js"
   },
   "action": {
     "default_popup": "src/popup/popup.html"
   },
-  "content_scripts": [{
-    "matches": ["<all_urls>"],
-    "js": ["src/content/content-script.js"]
-  }],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/content/content-script.js"]
+    }
+  ],
   "options_page": "src/options/options.html"
 }
 ```
@@ -264,6 +271,7 @@ bgm-extension/
 ### Message Passing
 
 **Check Site Support:**
+
 ```javascript
 // Popup → Background
 { action: "checkSiteSupport", domain: "knapix.com" }
@@ -272,6 +280,7 @@ bgm-extension/
 ```
 
 **Extract Games:**
+
 ```javascript
 // Popup → Content Script
 { action: "extractGames", pattern: {...} }
@@ -280,14 +289,18 @@ bgm-extension/
 ```
 
 **Pattern Update:**
+
 ```javascript
 // Options → Background
-{ action: "reloadPatterns" }
+{
+  action: 'reloadPatterns';
+}
 ```
 
 ### Storage Schema
 
 **chrome.storage.local:**
+
 ```json
 {
   "customPatterns": [
@@ -306,17 +319,20 @@ bgm-extension/
 ## Future Enhancements
 
 ### Phase 2 (Website Redirect)
+
 - Add "Redirect to website" option
 - POST extracted games to companion website
 - User preference for clipboard vs redirect
 
 ### Phase 3 (Advanced Features)
+
 - Remote pattern updates (auto-fetch new patterns)
 - Pattern testing playground
 - Export extracted games to various formats
 - Browser sync for custom patterns
 
 ### Phase 4 (Community Features)
+
 - Public pattern repository
 - In-extension pattern browsing/installation
 - Pattern rating/voting system
@@ -325,6 +341,7 @@ bgm-extension/
 ## Testing Strategy
 
 ### Manual Testing Checklist
+
 - [ ] Extension loads in Chrome
 - [ ] Extension loads in Firefox
 - [ ] Popup shows correct status on supported sites
@@ -336,11 +353,13 @@ bgm-extension/
 - [ ] Last extraction stats update correctly
 
 ### Initial Test Sites
+
 - knapix.com (h3 tags)
 - amazon.com (product titles)
 - philibert.net (game names)
 
 ### Edge Cases
+
 - Page with no matching elements
 - Very large extractions (1000+ games)
 - Duplicate game names

@@ -29,8 +29,12 @@ describe('getByPath', () => {
   });
 
   test('handles array index notation', () => {
-    expect(getByPath({ items: [{ url: 'first' }, { url: 'second' }] }, 'items[0].url')).toBe('first');
-    expect(getByPath({ items: [{ url: 'first' }, { url: 'second' }] }, 'items[1].url')).toBe('second');
+    expect(getByPath({ items: [{ url: 'first' }, { url: 'second' }] }, 'items[0].url')).toBe(
+      'first'
+    );
+    expect(getByPath({ items: [{ url: 'first' }, { url: 'second' }] }, 'items[1].url')).toBe(
+      'second'
+    );
   });
 
   test('returns undefined when array index is out of range', () => {
@@ -68,12 +72,11 @@ describe('cleanName', () => {
 
   test('strips chained piece + age descriptors', () => {
     const cleanup = {
-      strip_suffix_pattern:
-        '(\\s*[-–]\\s*(?:\\d+\\s*pi[eè]ces?|d[eè]s?\\s+\\d+\\s*ans?))+\\s*$',
+      strip_suffix_pattern: '(\\s*[-–]\\s*(?:\\d+\\s*pi[eè]ces?|d[eè]s?\\s+\\d+\\s*ans?))+\\s*$',
     };
-    expect(
-      cleanName('Schmidt - Puzzle Le panda - 1000 pièces - dès 14 ans', cleanup)
-    ).toBe('Schmidt - Puzzle Le panda');
+    expect(cleanName('Schmidt - Puzzle Le panda - 1000 pièces - dès 14 ans', cleanup)).toBe(
+      'Schmidt - Puzzle Le panda'
+    );
   });
 
   test('does not strip mid-name digits', () => {
@@ -81,9 +84,9 @@ describe('cleanName', () => {
       strip_suffix_pattern: '\\s*-\\s*\\d+\\s*pi[eè]ces?\\s*$',
     };
     // Mid-name "1000 pièces" inside the title is preserved; only trailing matches.
-    expect(
-      cleanName('Trefl - Puzzle 1000 pièces Héros de Marvel', cleanup)
-    ).toBe('Trefl - Puzzle 1000 pièces Héros de Marvel');
+    expect(cleanName('Trefl - Puzzle 1000 pièces Héros de Marvel', cleanup)).toBe(
+      'Trefl - Puzzle 1000 pièces Héros de Marvel'
+    );
   });
 
   test('returns input unchanged when no cleanup config', () => {
@@ -102,8 +105,7 @@ describe('cleanName', () => {
 
   test('strips German/Italian/Spanish piece descriptors', () => {
     const cleanup = {
-      strip_suffix_pattern:
-        '\\s*-\\s*\\d+\\s*(?:pezzi|piezas?|Teile|stuks)\\s*$',
+      strip_suffix_pattern: '\\s*-\\s*\\d+\\s*(?:pezzi|piezas?|Teile|stuks)\\s*$',
     };
     expect(cleanName('Schmidt - Mer - 1000 Teile', cleanup)).toBe('Schmidt - Mer');
     expect(cleanName('Schmidt - Mer - 1000 pezzi', cleanup)).toBe('Schmidt - Mer');
@@ -128,8 +130,7 @@ describe('extractFromNextData', () => {
         image: 'medias[0].url',
       },
       name_cleanup: {
-        strip_suffix_pattern:
-          '(\\s*[-–]\\s*(?:\\d+\\s*pi[eè]ces?|d[eè]s?\\s+\\d+\\s*ans?))+\\s*$',
+        strip_suffix_pattern: '(\\s*[-–]\\s*(?:\\d+\\s*pi[eè]ces?|d[eè]s?\\s+\\d+\\s*ans?))+\\s*$',
       },
     },
     filters: { deduplicate: true },
@@ -238,10 +239,7 @@ describe('extractFromNextData', () => {
         initialState: {
           CatalogItems: {
             result: {
-              items: [
-                { name: 'Schmidt - Puzzle Mer - 1000 pièces' },
-                { name: 'Hasbro - Catan' },
-              ],
+              items: [{ name: 'Schmidt - Puzzle Mer - 1000 pièces' }, { name: 'Hasbro - Catan' }],
             },
           },
         },

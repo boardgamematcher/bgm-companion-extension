@@ -58,9 +58,7 @@ test('Search BGM (selection) opens /search?q=<query>', async ({ context }) => {
     }
     return calls[0];
   });
-  expect(url).toBe(
-    'https://boardgamematcher.com/search?q=Catan'
-  );
+  expect(url).toBe('https://boardgamematcher.com/search?q=Catan');
 });
 
 test('Extract from this page opens /extract?url=<pageUrl>', async ({ context }) => {
@@ -143,8 +141,7 @@ test('Extract URL from selection only fires when the selection looks like a URL'
   });
   expect(result).toHaveLength(1);
   expect(result[0]).toBe(
-    'https://boardgamematcher.com/extract?url=' +
-      encodeURIComponent('https://www.knapix.com/list')
+    'https://boardgamematcher.com/extract?url=' + encodeURIComponent('https://www.knapix.com/list')
   );
 });
 

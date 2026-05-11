@@ -6,7 +6,10 @@ export const SUPPORTED_URLS = [
   { url: 'https://www.philibertnet.com/fr/123/flash-sales', expectedName: /Philibert Flash/ },
   { url: 'https://www.philibertnet.com/fr/123/promotions', expectedName: /Philibert Promotions/ },
   { url: 'https://www.philibertnet.com/fr/', expectedName: /Philibert Homepage/ },
-  { url: 'https://www.philibertnet.com/fr/some-game/12345-some-game.html', expectedName: /Philibert Product Page/ },
+  {
+    url: 'https://www.philibertnet.com/fr/some-game/12345-some-game.html',
+    expectedName: /Philibert Product Page/,
+  },
   { url: 'https://www.philibertnet.com/fr/category/12-strategy', expectedName: /Philibert/ },
   { url: 'https://www.amazon.com/s?k=board+games', expectedName: /Amazon Search/ },
   { url: 'https://www.amazon.com/gp/bestsellers/toys', expectedName: /Amazon Best Sellers/ },
@@ -21,7 +24,10 @@ export const SUPPORTED_URLS = [
   { url: 'https://www.gamersdream.shop/collections/board-games', expectedName: /Gamers Dream/ },
   { url: 'https://www.ludisphere.fr/jeux-de-societe', expectedName: /Ludisphere/ },
   { url: 'https://www.ludifolie.com/jeux-de-societe', expectedName: /Ludifolie/ },
-  { url: 'https://www.coolstuffinc.com/main_browse.php?cat=board-games', expectedName: /CoolStuffInc/ },
+  {
+    url: 'https://www.coolstuffinc.com/main_browse.php?cat=board-games',
+    expectedName: /CoolStuffInc/,
+  },
   { url: 'https://www.miniaturemarket.com/board-games.html', expectedName: /Miniature Market/ },
   { url: 'https://www.boardgamebliss.com/collections/all', expectedName: /BoardGameBliss/ },
   { url: 'https://www.board-game.co.uk/collections/all', expectedName: /Zatu/ },

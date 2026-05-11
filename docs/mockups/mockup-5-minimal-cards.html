@@ -1,166 +1,405 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Mockup 5 — Minimal Stacked Cards</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #1a1a2e; display: flex; justify-content: center; align-items: flex-start; padding: 40px; min-height: 100vh; }
-  .phone-frame { width: 360px; background: #f7f7f7; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); overflow: hidden; }
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mockup 5 — Minimal Stacked Cards</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #1a1a2e;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 40px;
+        min-height: 100vh;
+      }
+      .phone-frame {
+        width: 360px;
+        background: #f7f7f7;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+      }
 
-  /* Minimal header */
-  .header { padding: 14px 16px 6px; display: flex; align-items: center; justify-content: space-between; }
-  .header .logo { font-size: 15px; font-weight: 800; color: #222; }
-  .header .logo span { color: #4caf50; }
-  .header .right { display: flex; align-items: center; gap: 8px; }
-  .header .notif { position: relative; font-size: 16px; cursor: pointer; }
-  .header .notif .dot { position: absolute; top: -2px; right: -2px; width: 7px; height: 7px; background: #e65100; border-radius: 50%; }
-  .header .avatar { width: 24px; height: 24px; border-radius: 50%; background: #4caf50; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; }
+      /* Minimal header */
+      .header {
+        padding: 14px 16px 6px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .header .logo {
+        font-size: 15px;
+        font-weight: 800;
+        color: #222;
+      }
+      .header .logo span {
+        color: #4caf50;
+      }
+      .header .right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .header .notif {
+        position: relative;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      .header .notif .dot {
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        width: 7px;
+        height: 7px;
+        background: #e65100;
+        border-radius: 50%;
+      }
+      .header .avatar {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #4caf50;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        font-weight: 700;
+      }
 
-  /* Cards */
-  .cards { padding: 8px 12px 14px; }
-  .card { background: #fff; border-radius: 12px; padding: 14px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
-  .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-  .card-header .card-title { font-size: 12px; font-weight: 700; color: #333; display: flex; align-items: center; gap: 6px; }
-  .card-header .card-title .emoji { font-size: 14px; }
-  .card-header .card-action { font-size: 10px; color: #4caf50; font-weight: 600; cursor: pointer; }
-  .card-header .card-action:hover { text-decoration: underline; }
-  .card-header .dismiss { font-size: 14px; color: #ccc; cursor: pointer; }
+      /* Cards */
+      .cards {
+        padding: 8px 12px 14px;
+      }
+      .card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 14px;
+        margin-bottom: 10px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      }
+      .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+      .card-header .card-title {
+        font-size: 12px;
+        font-weight: 700;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .card-header .card-title .emoji {
+        font-size: 14px;
+      }
+      .card-header .card-action {
+        font-size: 10px;
+        color: #4caf50;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .card-header .card-action:hover {
+        text-decoration: underline;
+      }
+      .card-header .dismiss {
+        font-size: 14px;
+        color: #ccc;
+        cursor: pointer;
+      }
 
-  /* Site card */
-  .site-pill { display: inline-flex; align-items: center; gap: 4px; background: #e8f5e9; color: #2e7d32; font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 10px; margin-bottom: 8px; }
-  .site-pill .dot { width: 5px; height: 5px; border-radius: 50%; background: #4caf50; }
+      /* Site card */
+      .site-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: #e8f5e9;
+        color: #2e7d32;
+        font-size: 10px;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 10px;
+        margin-bottom: 8px;
+      }
+      .site-pill .dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: #4caf50;
+      }
 
-  .extract-row { display: flex; gap: 8px; }
-  .extract-row button { flex: 1; padding: 10px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
-  .extract-row .primary { background: #4caf50; color: #fff; border: none; }
-  .extract-row .outline { background: #fff; color: #555; border: 1px solid #ddd; }
+      .extract-row {
+        display: flex;
+        gap: 8px;
+      }
+      .extract-row button {
+        flex: 1;
+        padding: 10px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .extract-row .primary {
+        background: #4caf50;
+        color: #fff;
+        border: none;
+      }
+      .extract-row .outline {
+        background: #fff;
+        color: #555;
+        border: 1px solid #ddd;
+      }
 
-  /* Plays card */
-  .play-mini { display: flex; align-items: center; gap: 8px; padding: 6px 0; }
-  .play-mini:not(:last-child) { border-bottom: 1px solid #f5f5f5; }
-  .play-mini .result { font-size: 14px; }
-  .play-mini .pinfo { flex: 1; }
-  .play-mini .pinfo strong { font-size: 11px; color: #333; display: block; }
-  .play-mini .pinfo span { font-size: 9px; color: #aaa; }
-  .play-mini .platform-tag { font-size: 8px; font-weight: 700; padding: 2px 5px; border-radius: 3px; }
-  .play-mini .platform-tag.bga { background: #e3f2fd; color: #1565c0; }
-  .play-mini .platform-tag.yucata { background: #fff3e0; color: #e65100; }
+      /* Plays card */
+      .play-mini {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 0;
+      }
+      .play-mini:not(:last-child) {
+        border-bottom: 1px solid #f5f5f5;
+      }
+      .play-mini .result {
+        font-size: 14px;
+      }
+      .play-mini .pinfo {
+        flex: 1;
+      }
+      .play-mini .pinfo strong {
+        font-size: 11px;
+        color: #333;
+        display: block;
+      }
+      .play-mini .pinfo span {
+        font-size: 9px;
+        color: #aaa;
+      }
+      .play-mini .platform-tag {
+        font-size: 8px;
+        font-weight: 700;
+        padding: 2px 5px;
+        border-radius: 3px;
+      }
+      .play-mini .platform-tag.bga {
+        background: #e3f2fd;
+        color: #1565c0;
+      }
+      .play-mini .platform-tag.yucata {
+        background: #fff3e0;
+        color: #e65100;
+      }
 
-  /* Wishlist card */
-  .wish-item { display: flex; align-items: center; gap: 8px; padding: 5px 0; }
-  .wish-item:not(:last-child) { border-bottom: 1px solid #f5f5f5; }
-  .wish-item .name { flex: 1; font-size: 11px; color: #333; font-weight: 500; }
-  .wish-item .best-price { font-size: 11px; font-weight: 700; color: #2e7d32; }
-  .wish-item .shop { font-size: 9px; color: #999; }
-  .wish-item .add-btn { background: none; border: 1px solid #4caf50; color: #4caf50; border-radius: 4px; font-size: 9px; padding: 3px 7px; cursor: pointer; font-weight: 600; }
+      /* Wishlist card */
+      .wish-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 5px 0;
+      }
+      .wish-item:not(:last-child) {
+        border-bottom: 1px solid #f5f5f5;
+      }
+      .wish-item .name {
+        flex: 1;
+        font-size: 11px;
+        color: #333;
+        font-weight: 500;
+      }
+      .wish-item .best-price {
+        font-size: 11px;
+        font-weight: 700;
+        color: #2e7d32;
+      }
+      .wish-item .shop {
+        font-size: 9px;
+        color: #999;
+      }
+      .wish-item .add-btn {
+        background: none;
+        border: 1px solid #4caf50;
+        color: #4caf50;
+        border-radius: 4px;
+        font-size: 9px;
+        padding: 3px 7px;
+        cursor: pointer;
+        font-weight: 600;
+      }
 
-  /* Quick add bar */
-  .quick-add { display: flex; gap: 6px; margin-top: 8px; }
-  .quick-add input { flex: 1; padding: 8px; border: 1px solid #eee; border-radius: 6px; font-size: 11px; background: #fafafa; }
-  .quick-add button { padding: 8px 12px; background: #4caf50; color: #fff; border: none; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; }
+      /* Quick add bar */
+      .quick-add {
+        display: flex;
+        gap: 6px;
+        margin-top: 8px;
+      }
+      .quick-add input {
+        flex: 1;
+        padding: 8px;
+        border: 1px solid #eee;
+        border-radius: 6px;
+        font-size: 11px;
+        background: #fafafa;
+      }
+      .quick-add button {
+        padding: 8px 12px;
+        background: #4caf50;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+      }
 
-  /* Stats row */
-  .stats-row { display: flex; gap: 6px; }
-  .stat-mini { flex: 1; background: #f9f9f9; border-radius: 8px; padding: 8px; text-align: center; }
-  .stat-mini .val { font-size: 16px; font-weight: 800; color: #333; display: block; }
-  .stat-mini .lbl { font-size: 8px; color: #aaa; text-transform: uppercase; letter-spacing: .4px; }
+      /* Stats row */
+      .stats-row {
+        display: flex;
+        gap: 6px;
+      }
+      .stat-mini {
+        flex: 1;
+        background: #f9f9f9;
+        border-radius: 8px;
+        padding: 8px;
+        text-align: center;
+      }
+      .stat-mini .val {
+        font-size: 16px;
+        font-weight: 800;
+        color: #333;
+        display: block;
+      }
+      .stat-mini .lbl {
+        font-size: 8px;
+        color: #aaa;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+      }
 
-  /* Collapsed card */
-  .card.collapsed { padding: 10px 14px; }
-  .card.collapsed .card-header { margin-bottom: 0; }
+      /* Collapsed card */
+      .card.collapsed {
+        padding: 10px 14px;
+      }
+      .card.collapsed .card-header {
+        margin-bottom: 0;
+      }
 
-  /* Footer */
-  .footer { padding: 6px 12px 10px; text-align: center; }
-  .footer a { font-size: 10px; color: #999; text-decoration: none; }
-</style>
-</head>
-<body>
+      /* Footer */
+      .footer {
+        padding: 6px 12px 10px;
+        text-align: center;
+      }
+      .footer a {
+        font-size: 10px;
+        color: #999;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="phone-frame">
+      <div class="header">
+        <div class="logo">BGM<span>Toolbox</span></div>
+        <div class="right">
+          <div class="notif">
+            🔔
+            <div class="dot"></div>
+          </div>
+          <div class="avatar">J</div>
+        </div>
+      </div>
 
-<div class="phone-frame">
-  <div class="header">
-    <div class="logo">BGM<span>Toolbox</span></div>
-    <div class="right">
-      <div class="notif">🔔<div class="dot"></div></div>
-      <div class="avatar">J</div>
+      <div class="cards">
+        <!-- Context card: Site detected -->
+        <div class="card">
+          <div class="site-pill"><span class="dot"></span> philibert.net detected</div>
+          <div class="card-header">
+            <div class="card-title"><span class="emoji">🛒</span> 12 board games on this page</div>
+            <span class="dismiss">&times;</span>
+          </div>
+          <div class="extract-row">
+            <button class="primary">Extract All</button>
+            <button class="outline">Pick &amp; Choose</button>
+          </div>
+        </div>
+
+        <!-- Plays to log -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="emoji">🎮</span> 3 plays to log</div>
+            <span class="card-action">Log all &rarr;</span>
+          </div>
+          <div class="play-mini">
+            <span class="result">🏆</span>
+            <div class="pinfo">
+              <strong>7 Wonders Duel</strong><span>vs. alice42 &middot; 22min &middot; Today</span>
+            </div>
+            <span class="platform-tag bga">BGA</span>
+          </div>
+          <div class="play-mini">
+            <span class="result">💀</span>
+            <div class="pinfo">
+              <strong>Res Arcana</strong><span>vs. bob99 &middot; 35min &middot; Today</span>
+            </div>
+            <span class="platform-tag bga">BGA</span>
+          </div>
+          <div class="play-mini">
+            <span class="result">🏆</span>
+            <div class="pinfo">
+              <strong>Agricola</strong><span>vs. charlie &middot; 1h12 &middot; Yesterday</span>
+            </div>
+            <span class="platform-tag yucata">YUC</span>
+          </div>
+        </div>
+
+        <!-- Quick add to wishlist -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="emoji">♡</span> Quick add</div>
+          </div>
+          <div class="quick-add">
+            <input type="text" placeholder="Game name..." />
+            <button>+ Wishlist</button>
+          </div>
+        </div>
+
+        <!-- Stats (collapsed) -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="emoji">📊</span> Your stats</div>
+            <span class="card-action">Details &rarr;</span>
+          </div>
+          <div class="stats-row">
+            <div class="stat-mini"><span class="val">147</span><span class="lbl">Plays</span></div>
+            <div class="stat-mini">
+              <span class="val">58%</span><span class="lbl">Win rate</span>
+            </div>
+            <div class="stat-mini"><span class="val">42</span><span class="lbl">Games</span></div>
+            <div class="stat-mini">
+              <span class="val">23</span><span class="lbl">This month</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Collection sync (collapsed) -->
+        <div class="card collapsed">
+          <div class="card-header">
+            <div class="card-title"><span class="emoji">🔄</span> Sync BGG collection</div>
+            <span class="card-action">Sync now</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer"><a href="#">Settings</a> &middot; <a href="#">Help</a></div>
     </div>
-  </div>
-
-  <div class="cards">
-    <!-- Context card: Site detected -->
-    <div class="card">
-      <div class="site-pill"><span class="dot"></span> philibert.net detected</div>
-      <div class="card-header">
-        <div class="card-title"><span class="emoji">🛒</span> 12 board games on this page</div>
-        <span class="dismiss">&times;</span>
-      </div>
-      <div class="extract-row">
-        <button class="primary">Extract All</button>
-        <button class="outline">Pick &amp; Choose</button>
-      </div>
-    </div>
-
-    <!-- Plays to log -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title"><span class="emoji">🎮</span> 3 plays to log</div>
-        <span class="card-action">Log all &rarr;</span>
-      </div>
-      <div class="play-mini">
-        <span class="result">🏆</span>
-        <div class="pinfo"><strong>7 Wonders Duel</strong><span>vs. alice42 &middot; 22min &middot; Today</span></div>
-        <span class="platform-tag bga">BGA</span>
-      </div>
-      <div class="play-mini">
-        <span class="result">💀</span>
-        <div class="pinfo"><strong>Res Arcana</strong><span>vs. bob99 &middot; 35min &middot; Today</span></div>
-        <span class="platform-tag bga">BGA</span>
-      </div>
-      <div class="play-mini">
-        <span class="result">🏆</span>
-        <div class="pinfo"><strong>Agricola</strong><span>vs. charlie &middot; 1h12 &middot; Yesterday</span></div>
-        <span class="platform-tag yucata">YUC</span>
-      </div>
-    </div>
-
-    <!-- Quick add to wishlist -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title"><span class="emoji">♡</span> Quick add</div>
-      </div>
-      <div class="quick-add">
-        <input type="text" placeholder="Game name...">
-        <button>+ Wishlist</button>
-      </div>
-    </div>
-
-    <!-- Stats (collapsed) -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title"><span class="emoji">📊</span> Your stats</div>
-        <span class="card-action">Details &rarr;</span>
-      </div>
-      <div class="stats-row">
-        <div class="stat-mini"><span class="val">147</span><span class="lbl">Plays</span></div>
-        <div class="stat-mini"><span class="val">58%</span><span class="lbl">Win rate</span></div>
-        <div class="stat-mini"><span class="val">42</span><span class="lbl">Games</span></div>
-        <div class="stat-mini"><span class="val">23</span><span class="lbl">This month</span></div>
-      </div>
-    </div>
-
-    <!-- Collection sync (collapsed) -->
-    <div class="card collapsed">
-      <div class="card-header">
-        <div class="card-title"><span class="emoji">🔄</span> Sync BGG collection</div>
-        <span class="card-action">Sync now</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="footer">
-    <a href="#">Settings</a> &middot; <a href="#">Help</a>
-  </div>
-</div>
-
-</body>
+  </body>
 </html>

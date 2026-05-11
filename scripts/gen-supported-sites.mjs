@@ -51,16 +51,14 @@ const SITE_META = {
     pageType: 'Game History',
     exampleUrl: 'https://www.yucata.de/.../GameHistory',
     action: 'Popup → "Import Yucata Plays"',
-    mechanism:
-      'Page-context script needed for DataTable API; mapping via `yucata-mapping.json`',
+    mechanism: 'Page-context script needed for DataTable API; mapping via `yucata-mapping.json`',
   },
   'src/content/tabletopia-scraper.js': {
     site: 'Tabletopia',
     pageType: 'Any page when logged in',
     exampleUrl: 'https://tabletopia.com/...',
     action: 'Popup → "Import Tabletopia Matches"',
-    mechanism:
-      'Calls Tabletopia REST `/api/v2/players/current/matches` with pagination',
+    mechanism: 'Calls Tabletopia REST `/api/v2/players/current/matches` with pagination',
   },
   'src/content/ludopedia-scraper.js': {
     site: 'Ludopedia',
@@ -257,9 +255,7 @@ function hostFromMatch(m) {
 // return the base brand token (`amazon` / `veepee` / `philibertnet`). Strips
 // known TLD families: `.com.<cc>`, `.co.<cc>`, plain ccTLDs, plain `.com`.
 function brandTokenOf(host) {
-  return host
-    .replace(/\.(com\.[a-z]{2}|co\.[a-z]{2}|[a-z]{2,3})$/, '')
-    .split('.')[0];
+  return host.replace(/\.(com\.[a-z]{2}|co\.[a-z]{2}|[a-z]{2,3})$/, '').split('.')[0];
 }
 
 function renderRetailBrands() {
@@ -328,11 +324,7 @@ function renderContextMenus() {
   if (rows.length === 0) {
     throw new Error('No chrome.contextMenus.create calls matched. Regex out of sync?');
   }
-  return [
-    '| Menu item | Visible on | Behavior |',
-    '|---|---|---|',
-    ...rows,
-  ].join('\n');
+  return ['| Menu item | Visible on | Behavior |', '|---|---|---|', ...rows].join('\n');
 }
 
 // Pull the actual fetch URL out of a poll function so a typo at the source

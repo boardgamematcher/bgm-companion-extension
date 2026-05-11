@@ -14,11 +14,11 @@ Recon artefacts (gitignored, local only): `/tmp/bga-recon/`. Recon script:
 Per-game page renders `~2 MB` of HTML. Network traffic is almost entirely
 static assets; only **two** request types carry actual stats data:
 
-| Endpoint | Method | Shape | Purpose |
-|---|---|---|---|
-| `/playerstat/playerstat/getrankevol.html?player=<id>&game=<gid>` | GET → JSON | `{labels: [{value,text}], values: [{x,y}]}` | ELO rating curve over time |
-| `/message/board?type=lastresult&id=<gid>&arg=<player>&per_page=N` | GET → JSON | `{news: [...]}` (same shape as existing `playerresult` scraper, filtered to one game) | Recent results for the game |
-| `<table id="player_stats_table">` (in HTML) | server-rendered | 3-column table | All other stats — game-specific |
+| Endpoint                                                          | Method          | Shape                                                                                 | Purpose                         |
+| ----------------------------------------------------------------- | --------------- | ------------------------------------------------------------------------------------- | ------------------------------- |
+| `/playerstat/playerstat/getrankevol.html?player=<id>&game=<gid>`  | GET → JSON      | `{labels: [{value,text}], values: [{x,y}]}`                                           | ELO rating curve over time      |
+| `/message/board?type=lastresult&id=<gid>&arg=<player>&per_page=N` | GET → JSON      | `{news: [...]}` (same shape as existing `playerresult` scraper, filtered to one game) | Recent results for the game     |
+| `<table id="player_stats_table">` (in HTML)                       | server-rendered | 3-column table                                                                        | All other stats — game-specific |
 
 Auth pattern is identical to the existing `bga-scraper.js` (request token from
 inline script + `x-request-token` header). The same logged-in session works.
@@ -38,14 +38,14 @@ inline script + `x-request-token` header). The same logged-in session works.
 
 **Game-specific:**
 
-| Game | Stat rows | Stat examples |
-|---|---|---|
-| Sky Team (co-op) | **3** | Just the 3 universal time stats. No game-specific data. |
-| 7 Wonders Architects | **13** | Wonders played, victory points by colour, cards drawn from each pile, gold spent. |
-| Sea Salt & Paper | **25** | Cards from deck/discard, Duo card variants, Mermaid wins, "DERNIÈRE CHANCE" calls. |
-| Formula D | **113** | Per-gear lap counts, per-tire-type laps, every wear-point category, qualifying telemetry. |
+| Game                 | Stat rows | Stat examples                                                                             |
+| -------------------- | --------- | ----------------------------------------------------------------------------------------- |
+| Sky Team (co-op)     | **3**     | Just the 3 universal time stats. No game-specific data.                                   |
+| 7 Wonders Architects | **13**    | Wonders played, victory points by colour, cards drawn from each pile, gold spent.         |
+| Sea Salt & Paper     | **25**    | Cards from deck/discard, Duo card variants, Mermaid wins, "DERNIÈRE CHANCE" calls.        |
+| Formula D            | **113**   | Per-gear lap counts, per-tire-type laps, every wear-point category, qualifying telemetry. |
 
-Stat *names* are ad-hoc localized labels — no `data-stat-key` or stable ID
+Stat _names_ are ad-hoc localized labels — no `data-stat-key` or stable ID
 exists. Each game effectively defines its own metric vocabulary.
 
 ## Things that bite

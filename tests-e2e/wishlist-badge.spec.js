@@ -14,10 +14,7 @@ async function seedWishlist(context, extensionId, wishlist) {
   await seedPage.evaluate(
     (wl) =>
       new Promise((r) =>
-        chrome.storage.local.set(
-          { cachedWishlist: { wishlist: wl, timestamp: Date.now() } },
-          r
-        )
+        chrome.storage.local.set({ cachedWishlist: { wishlist: wl, timestamp: Date.now() } }, r)
       ),
     wishlist
   );
