@@ -24,5 +24,4 @@ repos:
     rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
-        types_or: [javascript, css, html, json]
-        files: ^src/
+        types_or: [javascript, css, html, json, yaml, markdown]
