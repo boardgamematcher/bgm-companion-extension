@@ -101,7 +101,6 @@ message, status div reflects the canned success payload.
 - BGG
 - Tabletopia
 - Ludopedia
-- SpielByWeb
 
 ## `tests-e2e/philibert-overlay.spec.js` (2)
 
