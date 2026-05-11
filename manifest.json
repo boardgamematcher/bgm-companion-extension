@@ -19,7 +19,6 @@
     "https://boardgamearena.com/*",
     "https://en.boardgamearena.com/*",
     "https://tabletopia.com/*",
-    "https://www.spielbyweb.de/*",
     "https://ludopedia.com.br/*",
     "https://www.ludopedia.com.br/*",
     "https://www.philibertnet.com/*",
@@ -237,15 +236,6 @@
     },
     {
       "matches": [
-        "https://www.spielbyweb.de/*"
-      ],
-      "js": [
-        "src/content/spielbyweb-scraper.js",
-        "src/content/spielbyweb-listener.js"
-      ]
-    },
-    {
-      "matches": [
         "*://*.philibertnet.com/*"
       ],
       "js": [
@@ -296,14 +286,6 @@
       ],
       "matches": [
         "https://tabletopia.com/*"
-      ]
-    },
-    {
-      "resources": [
-        "patterns/spielbyweb-mapping.json"
-      ],
-      "matches": [
-        "https://www.spielbyweb.de/*"
       ]
     }
   ]

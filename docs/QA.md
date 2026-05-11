@@ -122,8 +122,7 @@
 | H3 | **Yucata**: import plays from Yucata profile | | | | |
 | H4 | **Tabletopia**: import plays from Tabletopia account | | | | |
 | H5 | **Ludopedia**: import plays from Ludopedia account | | | | |
-| H6 | **SpielByWeb**: import plays from SpielByWeb account | | | | |
-| H7 | **All platforms — logged out**: CTA "Sign in to BGM" shown (not an error or blank state) | | | | |
+| H6 | **All platforms — logged out**: CTA "Sign in to BGM" shown (not an error or blank state) | | | | |
 
 ---
 

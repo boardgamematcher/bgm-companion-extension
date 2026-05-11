@@ -1073,22 +1073,6 @@
     "message": "Fetching all plays from Ludopedia… please wait",
     "description": "Status shown immediately after clicking Import Ludopedia Plays."
   },
-  "popupSpielByWebCtx": {
-    "message": "SpielByWeb",
-    "description": "Context pill label on the SpielByWeb import panel."
-  },
-  "popupSpielByWebLead": {
-    "message": "Import your play history to track stats and earn BGM badges",
-    "description": "Lead text on the SpielByWeb import panel."
-  },
-  "popupSpielByWebButton": {
-    "message": "Import SpielByWeb Plays",
-    "description": "Button on the SpielByWeb import panel."
-  },
-  "importSpielByWebFetching": {
-    "message": "Scanning finished games on this page… please wait",
-    "description": "Status shown immediately after clicking Import SpielByWeb Plays."
-  },
   "bnGames": {
     "message": "Games",
     "description": "Bottom nav label for the games/collection tab."

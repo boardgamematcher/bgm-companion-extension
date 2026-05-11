@@ -22,7 +22,6 @@ For each row: "On-page extraction?" means a content script runs in the user's ta
 | BoardGameGeek | User plays / collection / game detail | `https://boardgamegeek.com/user/<u>/plays` | Yes — `src/content/bgg-scraper.js` | Popup → "Import BGG Plays" / "Sync BGG Collection"; on game detail pages popup auto-targets the game (one-click add to BGM collection) | Calls BGG XML2 API `/xmlapi2/user/<u>/{plays,collection}`; on `/boardgame/<id>/<slug>` pages the popup runs `/api/games/search` then `/api/collections/{id}/{type}` |
 | Tabletopia | Any page when logged in | `https://tabletopia.com/...` | Yes — `src/content/tabletopia-scraper.js` | Popup → "Import Tabletopia Matches" | Calls Tabletopia REST `/api/v2/players/current/matches` with pagination |
 | Ludopedia | User history | `https://ludopedia.com.br/usuario/...` | Yes — `src/content/ludopedia-scraper.js` | Popup → "Import Ludopedia Plays" | Calls Ludopedia `/api/v1/plays`; BGG IDs already in payload |
-| SpielByWeb | Finished games list | `https://www.spielbyweb.de/GameList.php` | Yes — `src/content/spielbyweb-scraper.js` | Popup → "Import SpielByWeb Plays" | DOM table parser, mapping via `spielbyweb-mapping.json` |
 | Philibert (game-detail overlay) | Product detail | `https://www.philibertnet.com/{lang}/cat/<id>-<slug>.html` | Yes — `src/content/game-overlay.js` | Inline overlay: BGM card, rating, wishlist status; per-user collection pills when logged in | Reads page metadata, resolves via `resolveOverlayGame` background message, posts to `/api/collections/<id>/<type>` |
 <!-- AUTO:sites-table END -->
 
@@ -121,7 +120,6 @@ All BGM endpoints below are under `https://boardgamematcher.com` (or `chrome.sto
 
 | Action | URL hit | Auth required? |
 |---|---|---|
-| Import BGA / Yucata / Tabletopia / Ludopedia / SpielByWeb / BGG plays | `POST /api/plays/batch` (per-batch, with progress) | Yes |
 | BGA stats summary | `GET /api/plays/summary` | Yes |
 | BGG collection sync | `POST /api/bgg/import-collection` | Yes |
 

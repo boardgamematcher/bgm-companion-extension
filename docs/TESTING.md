@@ -44,7 +44,7 @@ What's tested, by feature area. Spec column links to the Playwright file under `
 | Context menus | "Extract from this link" → `/extract?url=<linkUrl>` | `context-menus` |
 | Context menus | URL-from-selection only fires on `http(s)` text | `context-menus` |
 | Context menus | "Find in BGM extension" stashes query for popup | `context-menus` |
-| Play history | BGA / Yucata / BGG / Tabletopia / Ludopedia / SpielByWeb panels + import wiring | `popup-play-history` |
+| Play history | BGA / Yucata / BGG / Tabletopia / Ludopedia panels + import wiring | `popup-play-history` |
 | Philibert overlay (BGM-976) | Product page renders overlay with rating + active collection pills | `philibert-overlay` |
 | Philibert overlay | Hidden on category pages | `philibert-overlay` |
 

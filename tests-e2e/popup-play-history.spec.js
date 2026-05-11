@@ -42,14 +42,6 @@ const PLATFORMS = [
     statusId: 'ludopediaStatus',
     messageAction: 'import_ludopedia_plays',
   },
-  {
-    name: 'SpielByWeb',
-    fakeUrl: 'https://www.spielbyweb.de/index.php?page=user_profile',
-    panelId: 'spielbywebPanel',
-    importBtnId: 'spielbywebImportBtn',
-    statusId: 'spielbywebStatus',
-    messageAction: 'import_spielbyweb_plays',
-  },
 ];
 
 // Stub chrome.tabs.query to return a fake active tab matching `fakeUrl`, and

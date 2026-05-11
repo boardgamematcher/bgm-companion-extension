@@ -44,7 +44,6 @@ body:
         - label: "**Yucata** — import plays from Yucata profile"
         - label: "**Tabletopia** — import plays from Tabletopia matches page"
         - label: "**Ludopedia** — import plays from Ludopedia"
-        - label: "**SpielByWeb** — import plays from game history"
         - label: "**Logged-out CTA** — on every platform, \"Sign in to BGM\" card shown instead of import button; no import triggered"
 
   - type: checkboxes
@@ -109,4 +108,4 @@ body:
     attributes:
       label: Notes / skipped items
       description: Explain any skipped checkboxes or issues found.
-      placeholder: "e.g. SpielByWeb skipped — no test account available"
+      placeholder: "e.g. Ludopedia skipped — no test account available"
