@@ -7,7 +7,7 @@ body:
     id: version
     attributes:
       label: Version
-      placeholder: 'e.g. 1.0.0'
+      placeholder: 'e.g. 0.7.1'
     validations:
       required: true
 
@@ -28,37 +28,133 @@ body:
   - type: checkboxes
     id: cross-browser
     attributes:
-      label: 'G · Cross-browser'
+      label: 'G · Cross-browser load'
       options:
-        - label: '**Chrome** — install unpacked → popup opens, extract works, options accessible, wishlist badge renders, context menus present, no console errors'
-        - label: '**Firefox** — install as temporary add-on → full smoke test (popup, extract, options, context menus)'
-        - label: '**Edge** — install unpacked → popup + context menu smoke test'
+        - label: '**Chrome** — load unpacked → popup opens, no console errors'
+        - label: '**Firefox** — install as temporary add-on → popup opens, no console errors'
+        - label: '**Edge** — load unpacked → popup opens, no console errors'
 
   - type: checkboxes
-    id: play-imports
+    id: header
     attributes:
-      label: 'H · Play Imports — real accounts'
+      label: 'H · Header'
       options:
-        - label: '**BGA** — navigate to player stats page → import → plays appear in BGM, count matches, no duplicates on re-import'
-        - label: '**BGG** — import plays from BGG profile → count matches BGG XML API'
-        - label: '**Yucata** — import plays from Yucata profile'
-        - label: '**Tabletopia** — import plays from Tabletopia matches page'
-        - label: '**Ludopedia** — import plays from Ludopedia'
-        - label: '**Logged-out CTA** — on every platform, "Sign in to BGM" card shown instead of import button; no import triggered'
+        - label: 'Theme toggle (☽) switches dark ↔ light instantly'
+        - label: 'Settings (⚙) opens the options page'
+        - label: 'User avatar visible when logged in, hidden when logged out'
+        - label: 'Unread-messages banner appears with correct count when messages exist; hidden otherwise'
+        - label: 'Clicking the banner navigates to the BGM messages page'
 
   - type: checkboxes
-    id: auth
+    id: extract-shop
     attributes:
-      label: 'I · Auth Session Lifecycle'
+      label: 'I · Extract tab — Shop scanner'
       options:
-        - label: 'Sign-in CTA opens BGM with `utm_source=extension&utm_medium=popup`'
-        - label: 'Log in on BGM web → reopen popup → logged-in state shown automatically'
-        - label: 'Log out on BGM web → reopen popup → logged-out state shown'
+        - label: 'On an unsupported page: strip shows "Visit a supported shop to activate", Extract button disabled'
+        - label: 'On a supported shop page: shop name shown in strip, Extract button enabled'
+        - label: 'Extract → review card overlays with game list and item count'
+        - label: 'Review card: All / New only / None toggles select/deselect correctly'
+        - label: 'Confirm → success card shows count and "View results on BGM →" link'
+        - label: '"Extract again" button returns to extract tab'
+        - label: 'Back arrow on review card cancels and returns to extract tab'
+        - label: 'Bulk-extract flow (paginated shop): progress bar advances, cancel button stops crawl'
+
+  - type: checkboxes
+    id: extract-plays
+    attributes:
+      label: 'J · Extract tab — Play history (real accounts)'
+      options:
+        - label: '**BGA** — navigate to BGA player stats page → panel appears → Import → plays reach BGM, count matches, no duplicates on re-import'
+        - label: '**BGG** — navigate to BGG profile → panel appears → Import → count matches BGG XML API'
+        - label: '**Yucata** — navigate to Yucata profile → panel appears → Import → status updates'
+        - label: '**Tabletopia** — navigate to Tabletopia matches page → panel appears → Import → status updates'
+        - label: '**Ludopedia** — navigate to Ludopedia → panel appears → Import → status updates'
+        - label: '**Logged-out CTA** — on every platform page, "Sign in to BGM" shown instead of import button; no import triggered'
+
+  - type: checkboxes
+    id: games-tab
+    attributes:
+      label: 'K · Games tab'
+      options:
+        - label: '**Logged out** — login card shown with feature bullets; Sign in + Create account buttons visible; search hidden'
+        - label: '**Logged in, neutral page** — search input visible with correct placeholder; collection chips render'
+        - label: 'Typing a game name → results list appears'
+        - label: 'Clicking a result → game detail card shows: cover, name, year, player count / duration specs, BGM star rating'
+        - label: 'No personal rating → "Rate on BGM →" link shown instead'
+        - label: '"Your stats" block appears when play data exists'
+        - label: 'Arrow nav (← →) between results in detail card'
+        - label: 'Collection chip not active → clicking it fires POST and chip activates'
+        - label: 'Collection chip already active → clicking it fires DELETE and chip deactivates'
+        - label: '"View on BoardGameMatcher →" link present and correct'
+        - label: 'Wishlist count + "View collection →" link shown in footer'
+        - label: '**Logged in, shop page** — shop sign-in nudge hidden; search and chips visible normally'
+
+  - type: checkboxes
+    id: dashboard-tab
+    attributes:
+      label: 'L · Dashboard tab'
+      options:
+        - label: '**Logged out** — signed-out card shown; Sign in + Create account buttons visible'
+        - label: '**Logged in** — Messages row visible; unread badge appears when count > 0'
+        - label: 'Matches row visible with correct sub-text'
+        - label: 'Notifications row visible'
+        - label: 'Quick links — Home, Collections, Wishlist all render and open the correct BGM pages'
+
+  - type: checkboxes
+    id: more-tab
+    attributes:
+      label: 'M · More tab'
+      options:
+        - label: '"Import your plays" → navigates to Extract tab and scrolls to play-history strip'
+        - label: '"Suggest a new shop" → opens BGM contact URL in new tab'
+        - label: '"Rate this extension" → opens Chrome Web Store / Firefox AMO page'
+        - label: '"What''s new" → opens changelog'
+        - label: '"Send feedback" → opens BGM contact URL in new tab'
+        - label: '"Help & documentation" → opens README in new tab'
+        - label: '"Settings" → opens options page'
+        - label: '"Privacy" → opens PRIVACY.md in new tab'
+        - label: 'Version number matches `manifest.json`'
+
+  - type: checkboxes
+    id: options-page
+    attributes:
+      label: 'N · Options page'
+      options:
+        - label: 'Page opens from header ⚙ and from More → Settings'
+        - label: 'Language selector present; selecting a language updates the popup UI immediately'
+        - label: 'Language choice syncs to BGM and persists after browser restart'
+        - label: 'Notification toggles: disabling a type → no browser notification fires for it'
+        - label: 'Custom Patterns tab hidden by default; developer-mode toggle reveals it'
+        - label: 'Custom pattern CRUD: create → edit → delete round-trip works'
+        - label: 'Export / import pattern JSON round-trip works'
+
+  - type: checkboxes
+    id: overlays-badges
+    attributes:
+      label: 'O · Wishlist badges & content overlays'
+      options:
+        - label: '**Amazon** — wishlist badge visible next to wishlisted game titles on search/listing page; absent when wishlist is empty'
+        - label: '**Philibert product page** — BGM overlay renders with correct game info'
+        - label: '**Philibert non-product page** — no overlay rendered'
+        - label: '**Coolshop** — wishlist badge visible on board-games listing'
+        - label: '**Fnac** — badge visible on board-games search results'
+
+  - type: checkboxes
+    id: context-menus
+    attributes:
+      label: 'P · Context menus'
+      options:
+        - label: 'All expected items registered (right-click shows BGM entries)'
+        - label: '"Search BGM" (text selection) → opens /search?q=<query> in BGM'
+        - label: '"Extract from this page" → opens /extract?url=<pageUrl> in BGM'
+        - label: '"Extract from this link" (link right-click) → opens /extract?url=<linkUrl>'
+        - label: '"Find in BGM extension" → stashes query; popup opens with it pre-filled'
+        - label: '"Extract URL from selection" → only fires when selected text looks like a URL'
 
   - type: checkboxes
     id: notifications
     attributes:
-      label: 'J · Background Notifications'
+      label: 'Q · Background notifications'
       options:
         - label: 'Unread message → browser notification fires with sender name'
         - label: 'Friend request → browser notification fires'
@@ -70,7 +166,7 @@ body:
   - type: checkboxes
     id: i18n
     attributes:
-      label: 'K · Internationalisation'
+      label: 'R · Internationalisation'
       options:
         - label: '**French** — entire popup UI translated (all tabs, tooltips, CTAs, error messages)'
         - label: '**German** — spot-check 10+ key strings'
@@ -80,19 +176,9 @@ body:
         - label: 'No raw i18n keys or empty strings visible in any locale'
 
   - type: checkboxes
-    id: real-shops
-    attributes:
-      label: 'L · Real Shop Extraction'
-      options:
-        - label: '**Amazon** — wishlist badge visible on known wishlisted game; extraction picks up titles'
-        - label: '**Fnac** — extraction happy path on board games category page'
-        - label: '**Coolshop** — extraction happy path'
-        - label: '**Next.js shop** (Veepee / Privalia) — `__NEXT_DATA__` strategy extracts clean titles'
-
-  - type: checkboxes
     id: prerelease
     attributes:
-      label: 'M · Pre-Release'
+      label: 'S · Pre-Release'
       options:
         - label: 'Extension zip < 10 MB (Chrome); Firefox zip < 200 MB'
         - label: '`manifest.json` version and `package.json` version match'
