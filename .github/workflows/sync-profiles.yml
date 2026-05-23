@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   sync:
@@ -20,11 +21,12 @@ jobs:
             https://raw.githubusercontent.com/boardgamematcher/site-profiles/main/profiles.json \
             -o patterns/built-in.json
 
-      - name: Commit if changed
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git diff --quiet patterns/built-in.json && echo "No changes" && exit 0
-          git add patterns/built-in.json
-          git commit -m "chore: sync built-in profiles from site-profiles"
-          git push
+      - name: Open PR if changed
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: "chore: sync built-in profiles from site-profiles"
+          title: "chore: sync built-in profiles from site-profiles"
+          body: "Automated sync from [boardgamematcher/site-profiles](https://github.com/boardgamematcher/site-profiles)."
+          branch: chore/sync-built-in-profiles
+          delete-branch: true
+          author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
