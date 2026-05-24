@@ -264,7 +264,7 @@ function renderRetailBrands() {
   );
   if (!catchall) throw new Error('Could not locate the retail catchall content_scripts entry.');
 
-  const hosts = catchall.matches.map(hostFromMatch);
+  const hosts = [...new Set(catchall.matches.map(hostFromMatch))];
 
   // Group hosts by display brand.
   const groups = new Map();
