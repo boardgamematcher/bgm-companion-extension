@@ -118,11 +118,23 @@ function extractStructured(pattern) {
       : null;
     const sale_price = getText(salePriceEl);
 
+    // Extract BGG ID from a BGG link href for unambiguous catalog matching
+    let bgg_id = null;
+    if (pattern.bgg_id_selector) {
+      const bggEl = card.querySelector(pattern.bgg_id_selector);
+      if (bggEl) {
+        const href = bggEl.href || bggEl.getAttribute('href') || '';
+        const m = href.match(/\/boardgame\/(\d+)/);
+        if (m) bgg_id = parseInt(m[1], 10);
+      }
+    }
+
     results.push({
       name,
       image: image || null,
       price: price || null,
       sale_price: sale_price || null,
+      bgg_id: bgg_id || null,
     });
   }
 

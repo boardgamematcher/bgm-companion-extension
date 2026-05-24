@@ -646,6 +646,7 @@ async function showReviewPanel(games) {
     cb.type = 'checkbox';
     cb.className = 'review-game-cb';
     cb.dataset.name = g.name;
+    cb.dataset.slug = g.slug || '';
     cb.checked = g.status === 'new';
     cb.addEventListener('change', updateReviewCount);
 
@@ -798,19 +799,32 @@ function hideBulkProgress() {
 }
 
 function updateReviewCount() {
-  const count = document.querySelectorAll('.review-game-cb:checked').length;
+  const checked = [...document.querySelectorAll('.review-game-cb:checked')];
+  const count = checked.length;
   document.getElementById('review-count').textContent = chrome.i18n.getMessage('popupReviewCount', [
     String(count),
   ]);
-  document.getElementById('review-confirm').disabled = count === 0;
+  const btn = document.getElementById('review-confirm');
+  btn.disabled = count === 0;
+  const singleMatch = count === 1 && checked[0].dataset.slug;
+  btn.textContent = singleMatch
+    ? chrome.i18n.getMessage('popupReviewOpen')
+    : chrome.i18n.getMessage('popupReviewConfirm');
 }
 
 async function confirmExtract() {
-  const checkedNames = new Set(
-    [...document.querySelectorAll('.review-game-cb:checked')].map((cb) => cb.dataset.name)
-  );
+  const checked = [...document.querySelectorAll('.review-game-cb:checked')];
+  const checkedNames = new Set(checked.map((cb) => cb.dataset.name));
   const selected = _reviewGames.filter((g) => checkedNames.has(g.name));
   if (!selected.length) return;
+
+  // Single matched game with a known BGM slug → open its page directly
+  if (checked.length === 1 && checked[0].dataset.slug) {
+    hideReviewPanel();
+    chrome.tabs.update({ url: gameDetailUrl(checked[0].dataset.slug, 'open-on-bgm') });
+    window.close();
+    return;
+  }
 
   const tab = _reviewTab;
   const domain = _reviewDomain;
