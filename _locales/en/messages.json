@@ -71,6 +71,10 @@
     "message": "Add to BGM",
     "description": "Confirm button to send selected games to BGM."
   },
+  "popupReviewOpen": {
+    "message": "Open on BGM",
+    "description": "Confirm button when a single matched game is selected — opens its BGM page directly."
+  },
   "popupReviewCount": {
     "message": "$count$ selected",
     "description": "Count of selected games in the review panel.",

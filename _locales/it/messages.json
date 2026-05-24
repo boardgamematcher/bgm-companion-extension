@@ -62,6 +62,9 @@
   "popupReviewConfirm": {
     "message": "Estrai selezionati"
   },
+  "popupReviewOpen": {
+    "message": "Apri su BGM"
+  },
   "popupReviewCount": {
     "message": "$count$ selezionato/i",
     "placeholders": {
