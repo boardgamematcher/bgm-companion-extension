@@ -483,6 +483,17 @@
       "url_pattern": "fantasywelt\\.de"
     },
     {
+      "domain": "spiele-offensive.de",
+      "image_selector": "#bildwechsel img.abildg",
+      "name": "Spiele-Offensive Product Page",
+      "price_selector": ".preis .red",
+      "primary_selector": "h1#a1",
+      "sale_price_selector": ".preis strike",
+      "selector": "a.alamain font, .cross li a div",
+      "threshold": 0.9,
+      "url_pattern": "spiele-offensive\\.de/Spiel/"
+    },
+    {
       "card_selector": "li.ala",
       "domain": "spiele-offensive.de",
       "filters": {
@@ -554,7 +565,10 @@
       "domain": "bol.com",
       "filters": {
         "deduplicate": true,
-        "exclude": ["^Gesponsord", "^Sponsoris\u00e9"],
+        "exclude": [
+          "^Gesponsord",
+          "^Sponsoris\u00e9"
+        ],
         "trim": true
       },
       "image_selector": "[data-bltgh*=\"ProductImage\"] img",
@@ -579,5 +593,5 @@
       "url_pattern": "coolshop\\.(dk|de|se|no|fi|nl|pl|is|co|com)/"
     }
   ],
-  "version": "1.3.0"
+  "version": "1.3.2"
 }
