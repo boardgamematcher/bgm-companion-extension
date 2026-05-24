@@ -40,7 +40,7 @@ All sites in this group share the same flow:
 3. Matched titles + prices are previewed via `POST /api/extract/preview`, then on confirm sent to `POST /api/extract/extension`. On any failure the popup falls back to opening `boardgamematcher.com/extract?url=<page>` so the BGM web extractor takes over.
 
 <!-- AUTO:retail-brands START -->
-**60 retail domains in `manifest.json`**, grouped by brand:
+**61 retail domains in `manifest.json`**, grouped by brand:
 
 | Brand | Domains | Notes |
 |---|---|---|
@@ -62,6 +62,7 @@ All sites in this group share the same flow:
 | Le Passe-Temps (1) | le-passe-temps.com |  |
 | Le Pion (1) | lepion.com |  |
 | Ludifolie (1) | ludifolie.com |  |
+| ludiprix (1) | ludiprix.fr |  |
 | Ludisphère (1) | ludisphere.fr |  |
 | Ludum (1) | ludum.fr |  |
 | Milan Spiele (1) | milan-spiele.de |  |
