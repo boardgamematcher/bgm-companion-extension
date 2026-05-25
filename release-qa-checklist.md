@@ -1,145 +1,211 @@
-# Release QA — v___________
+# BGM Companion — Release QA v0.7.2
 
-**Date:** ___________
+**Date:** ___________  
+**Tester:** ___________  
+**Score:** _____ / 900 XP
 
-> **Automated tests** (`npm run test:e2e` + `npm test`) must be green before starting this checklist.
-> Check every box or leave a note explaining why it was skipped.
+> Before you roll the dice: **CI must be green** (`npm test` + `npm run test:e2e`).  
+> Each checkbox = 10 XP. Boss fights = 30 XP each. Full clear = 900 XP + achievement unlocked.
 
 ---
 
-## G · Cross-browser load
+## LEVEL 1 · Boot Sequence `[___ / 80 XP]`
 
-- [ ] **Chrome** — load unpacked → popup opens, no console errors
-- [ ] **Firefox** — install as temporary add-on → popup opens, no console errors
-- [ ] **Edge** — load unpacked → popup opens, no console errors
+*The extension wakes up. Make sure it's alive.*
 
-## H · Header
-
+- [ ] Load unpacked in **Chrome** → popup opens, zero console errors
+- [ ] Load unpacked in **Edge** → popup opens, zero console errors
+- [ ] Extension icon is pinned in the toolbar and shows the BGM logo
+- [ ] `manifest.json` version = **0.7.2** and matches `package.json`
+- [ ] Zero `console.error` on popup open (check DevTools)
 - [ ] Theme toggle (☽) switches dark ↔ light instantly
 - [ ] Settings (⚙) opens the options page
 - [ ] User avatar visible when logged in, hidden when logged out
-- [ ] Unread-messages banner appears with correct count when messages exist; hidden otherwise
-- [ ] Clicking the banner navigates to the BGM messages page
 
-## I · Extract tab — Shop scanner
-
-- [ ] On an unsupported page: strip shows "Visit a supported shop to activate", Extract button disabled
-- [ ] On a supported shop page: shop name shown in strip, Extract button enabled
-- [ ] Extract → review card overlays with game list and item count
-- [ ] Review card: All / New only / None toggles select/deselect correctly
-- [ ] Confirm → success card shows count and "View results on BGM →" link
-- [ ] "Extract again" button returns to extract tab
-- [ ] Back arrow on review card cancels and returns to extract tab
-- [ ] Bulk-extract flow (paginated shop): progress bar advances, cancel button stops crawl
-
-## J · Extract tab — Play history (real accounts)
-
-- [ ] **BGA** — navigate to BGA player stats page → panel appears → Import → plays reach BGM, count matches, no duplicates on re-import
-- [ ] **BGG** — navigate to BGG profile → panel appears → Import → count matches BGG XML API
-- [ ] **Yucata** — navigate to Yucata profile → panel appears → Import → status updates
-- [ ] **Tabletopia** — navigate to Tabletopia matches page → panel appears → Import → status updates
-- [ ] **Ludopedia** — navigate to Ludopedia → panel appears → Import → status updates
-- [ ] **Logged-out CTA** — on every platform page, "Sign in to BGM" shown instead of import button; no import triggered
-
-## K · Games tab
-
-- [ ] **Logged out** — login card shown with feature bullets; Sign in + Create account buttons visible; search hidden
-- [ ] **Logged in, neutral page** — search input visible with correct placeholder; collection chips render
-- [ ] Typing a game name → results list appears
-- [ ] Clicking a result → game detail card shows: cover, name, year, player count / duration specs, BGM star rating
-- [ ] No personal rating → "Rate on BGM →" link shown instead
-- [ ] "Your stats" block appears when play data exists
-- [ ] Arrow nav (← →) between results in detail card
-- [ ] Collection chip not active → clicking it fires POST and chip activates
-- [ ] Collection chip already active → clicking it fires DELETE and chip deactivates
-- [ ] "View on BoardGameMatcher →" link present and correct
-- [ ] Wishlist count + "View collection →" link shown in footer
-- [ ] **Logged in, shop page** — shop sign-in nudge hidden; search and chips visible normally
-
-## L · Dashboard tab
-
-- [ ] **Logged out** — signed-out card shown; Sign in + Create account buttons visible
-- [ ] **Logged in** — Messages row visible; unread badge appears when count > 0
-- [ ] Matches row visible with correct sub-text
-- [ ] Notifications row visible
-- [ ] Quick links — Home, Collections, Wishlist all render and open the correct BGM pages
-
-## M · More tab
-
-- [ ] "Import your plays" → navigates to Extract tab and scrolls to play-history strip
-- [ ] "Suggest a new shop" → opens BGM contact URL in new tab
-- [ ] "Rate this extension" → opens Chrome Web Store / Firefox AMO page
-- [ ] "What's new" → opens changelog
-- [ ] "Send feedback" → opens BGM contact URL in new tab
-- [ ] "Help & documentation" → opens README in new tab
-- [ ] "Settings" → opens options page
-- [ ] "Privacy" → opens PRIVACY.md in new tab
-- [ ] Version number matches `manifest.json`
-
-## N · Options page
-
-- [ ] Page opens from header ⚙ and from More → Settings
-- [ ] Language selector present; selecting a language updates the popup UI immediately
-- [ ] Language choice syncs to BGM and persists after browser restart
-- [ ] Notification toggles: disabling a type → no browser notification fires for it
-- [ ] Custom Patterns tab hidden by default; developer-mode toggle reveals it
-- [ ] Custom pattern CRUD: create → edit → delete round-trip works
-- [ ] Export / import pattern JSON round-trip works
-
-## O · Wishlist badges & content overlays
-
-- [ ] **Amazon** — wishlist badge visible next to wishlisted game titles on search/listing page; absent when wishlist is empty
-- [ ] **Philibert product page** — BGM overlay renders with correct game info
-- [ ] **Philibert non-product page** — no overlay rendered
-- [ ] **Coolshop** — wishlist badge visible on board-games listing
-- [ ] **Fnac** — badge visible on board-games search results
-
-## P · Context menus
-
-- [ ] All expected items registered (right-click shows BGM entries)
-- [ ] "Search BGM" (text selection) → opens /search?q=\<query\> in BGM
-- [ ] "Extract from this page" → opens /extract?url=\<pageUrl\> in BGM
-- [ ] "Extract from this link" (link right-click) → opens /extract?url=\<linkUrl\>
-- [ ] "Find in BGM extension" → stashes query; popup opens with it pre-filled
-- [ ] "Extract URL from selection" → only fires when selected text looks like a URL
-
-## Q · Background notifications
-
-- [ ] Unread message → browser notification fires with sender name
-- [ ] Friend request → browser notification fires
-- [ ] New player match → browser notification fires
-- [ ] News / announcement → browser notification fires
-- [ ] Clicking any notification → navigates to the correct BGM page
-- [ ] Disabled notification type (Options toggle off) → no notification fired
-
-## R · Internationalisation
-
-- [ ] **French** — entire popup UI translated (all tabs, tooltips, CTAs, error messages)
-- [ ] **German** — spot-check 10+ key strings
-- [ ] **Spanish** — spot-check 10+ key strings
-- [ ] **Italian** — spot-check 10+ key strings
-- [ ] Language preference persists after browser restart
-- [ ] No raw i18n keys or empty strings visible in any locale
-
-## S · Pre-Release
-
-- [ ] Extension zip < 10 MB (Chrome); Firefox zip < 200 MB
-- [ ] `manifest.json` version and `package.json` version match
-- [ ] `manifest.json` passes Chrome MV3 validator
-- [ ] All declared `permissions` and `host_permissions` are actually used
-- [ ] Zero `console.error` on popup open
-- [ ] `PRIVACY.md` accurately describes all data sent to BGM; no third-party data sharing
-- [ ] **Chrome Web Store** — name ≤ 45 chars, short description ≤ 132 chars, 5 screenshots (1280×800), promo tile (440×280), privacy policy URL, permission justifications
-- [ ] **Firefox AMO** — `gecko.id` + `strict_min_version` set in manifest, `web-ext lint` passes, source zip prepared
+**Level 1 complete → unlock: LEVEL 2** 🔓
 
 ---
 
-## Notes / skipped items
+## LEVEL 2 · Shop Scanner — Search Page `[___ / 150 XP]`
 
-_Explain any skipped checkboxes or issues found._
+*This is the big new feature in this release. Test it first.*
 
-&nbsp;
+URL: `https://ludiprix.fr/item/search/?tags=2`
 
-&nbsp;
+- [ ] Shop name "Ludiprix" shown in the strip, Extract button enabled
+- [ ] Clicking Extract → button shows `…` immediately (loading feedback)
+- [ ] BGM results tab opens automatically — no review panel shown in between
+- [ ] Results page shows **only the results table** — no extraction form, no header
+- [ ] Breadcrumb ("Home / Game Extractor") is hidden on the results page
+- [ ] Count of matched games is reasonable (10–20)
+- [ ] Refreshing the results page does **not** show "No URL or text provided" error
+- [ ] Closing the popup and reopening on the same page → Extract works again
 
-&nbsp;
+> **BOSS FIGHT (30 XP)** — Extract on a search page while **logged out**  
+> Expected: review panel appears as fallback (no auto-extract without auth)
+- [ ] Boss defeated
+
+**Level 2 complete → unlock: LEVEL 3** 🔓
+
+---
+
+## LEVEL 3 · Shop Scanner — Product Page `[___ / 120 XP]`
+
+URL: `https://ludiprix.fr/item/show/55129/hamlet`
+
+- [ ] Shop name shown, Extract enabled
+- [ ] Clicking Extract → popup closes immediately, BGM page for **Hamlet: The Village Building Game** opens in a new tab (no review panel)
+- [ ] The BGM page is the correct Hamlet game (bgg_id 276086), not a different one
+- [ ] Success message reads **"1 game matched"** (not "1 game added to BGM")
+
+> **BOSS FIGHT (30 XP)** — Test a product page **without** a BGG link (paste this into the browser console to simulate: open any non-BGG ludiprix page). Expected: review panel appears with the game name to confirm.
+
+- [ ] Boss defeated
+
+Try a second supported shop (your choice):
+
+- [ ] Shop name detected correctly on a non-ludiprix shop page
+- [ ] Extract → auto-extract or review panel depending on match confidence
+- [ ] Games land correctly on BGM
+
+**Level 3 complete → unlock: LEVEL 4** 🔓
+
+---
+
+## LEVEL 4 · Review Panel (Fallback Mode) `[___ / 80 XP]`
+
+*The review panel still exists for ambiguous cases. Make sure it works.*
+
+- [ ] All / New only / None toggles select/deselect correctly
+- [ ] "Add to BGM" button disabled when 0 games checked, enabled otherwise
+- [ ] Confirming 1 matched game → opens its BGM page directly in a new tab
+- [ ] Confirming multiple games → opens BGM results page directly
+- [ ] Back arrow (←) cancels and returns to extract tab with button re-enabled
+- [ ] "Extract again" button on success card works
+
+**Level 4 complete → unlock: LEVEL 5** 🔓
+
+---
+
+## LEVEL 5 · Play History Import `[___ / 130 XP]`
+
+*Platforms that matter to real users.*
+
+- [ ] **BGA** — navigate to BGA player stats page → panel appears → Import → plays reach BGM, no duplicates on re-import
+- [ ] **BGG** — navigate to BGG profile → panel appears → Import → count matches BGG XML API
+- [ ] **Yucata** — panel appears on Yucata profile → Import → status updates correctly
+- [ ] **Tabletopia** — panel appears → Import → status updates
+- [ ] **Ludopedia** — panel appears → Import → status updates
+- [ ] **Logged-out CTA** — "Sign in to BGM" shown on every platform page instead of import button; no import triggered
+
+> **BONUS (30 XP)** — Re-import BGA with the same account. Confirm no duplicate plays added.
+- [ ] Bonus claimed
+
+**Level 5 complete → unlock: LEVEL 6** 🔓
+
+---
+
+## LEVEL 6 · Games Tab `[___ / 100 XP]`
+
+- [ ] **Logged out** — login card with feature bullets; Sign in + Create account visible
+- [ ] **Logged in** — search input and collection chips visible
+- [ ] Typing a game name → results appear
+- [ ] Clicking a result → game detail card: cover, name, year, specs, BGM rating
+- [ ] No personal rating → "Rate on BGM →" link shown
+- [ ] "Your stats" block appears when play history exists
+- [ ] Arrow nav (← →) between results works
+- [ ] Collection chip click → activates chip and fires correct POST
+- [ ] Already active chip → click deactivates and fires DELETE
+- [ ] "View on BoardGameMatcher →" link present and correct
+
+**Level 6 complete → unlock: LEVEL 7** 🔓
+
+---
+
+## LEVEL 7 · Dashboard + More `[___ / 80 XP]`
+
+- [ ] **Dashboard logged out** — sign-in card with buttons
+- [ ] **Dashboard logged in** — Messages, Matches, Notifications rows with correct counts
+- [ ] Quick links (Home, Collections, Wishlist) open correct BGM pages
+- [ ] More → "Suggest a new shop" → correct URL in new tab
+- [ ] More → "Rate this extension" → Chrome Web Store page
+- [ ] More → "What's new" → changelog opens
+- [ ] More → "Send feedback" → BGM contact URL
+- [ ] Version in More tab = **0.7.2**
+
+**Level 7 complete → unlock: LEVEL 8** 🔓
+
+---
+
+## LEVEL 8 · Wishlist Badges + Overlays `[___ / 70 XP]`
+
+- [ ] **Amazon** — badge visible next to wishlisted game on search/listing page
+- [ ] **Philibert product page** — BGM overlay renders with correct game info
+- [ ] **Philibert non-product page** — no overlay rendered
+- [ ] **Coolshop** — badge visible on board-games listing
+- [ ] **Fnac** — badge visible on board-games search results
+- [ ] No JavaScript errors on badge-injected pages
+
+> **BONUS (20 XP)** — Add a game to wishlist, reload Amazon, confirm badge appears without page refresh
+- [ ] Bonus claimed
+
+**Level 8 complete → unlock: FINAL BOSS** 🔓
+
+---
+
+## FINAL BOSS · Pre-Release Checklist `[___ / 90 XP]`
+
+*You're this close. Don't fumble it.*
+
+- [ ] Extension zip < 10 MB
+- [ ] `manifest.json` version = `package.json` version = **0.7.2**
+- [ ] `manifest.json` passes Chrome MV3 validator (`chrome://extensions` shows no warnings)
+- [ ] All declared `permissions` and `host_permissions` are actually used (check manifest vs code)
+- [ ] `PRIVACY.md` accurately reflects all data sent to BGM; no third-party sharing
+- [ ] **French** UI fully translated (all tabs, tooltips, error messages)
+- [ ] **German** spot-check: 10+ strings correct
+- [ ] Bulk-extract flow (paginated shop): progress bar advances, cancel stops crawl
+- [ ] Context menu "Extract from this page" → opens BGM `/extract?url=…`
+
+> **BOSS FIGHT (30 XP)** — Chrome Web Store checklist  
+> - Name ≤ 45 chars  
+> - Short description ≤ 132 chars  
+> - 5 screenshots (1280×800 or 640×400)  
+> - Promo tile (440×280)  
+> - Privacy policy URL set  
+> - Permission justifications written  
+- [ ] Boss defeated — store listing ready
+
+---
+
+## TOTAL SCORE
+
+| Level | Name | Max XP | Your XP |
+|-------|------|--------|---------|
+| 1 | Boot Sequence | 80 | |
+| 2 | Search Page (new!) | 150 | |
+| 3 | Product Page (new!) | 120 | |
+| 4 | Review Panel | 80 | |
+| 5 | Play History | 130 | |
+| 6 | Games Tab | 100 | |
+| 7 | Dashboard + More | 80 | |
+| 8 | Badges + Overlays | 70 | |
+| Final | Pre-Release | 90 | |
+| **TOTAL** | | **900** | |
+
+### Achievements
+
+- [ ] **Speedrunner** — Complete levels 1–4 in under 20 minutes
+- [ ] **No Bug Left Behind** — Found and reported at least 1 issue
+- [ ] **Polyglot** — Verified French + German + Spanish in one session
+- [ ] **Full Clear** — 900 / 900 XP — you may submit to the Chrome Store
+
+---
+
+## Notes / Issues Found
+
+| # | Level | Description | Severity |
+|---|-------|-------------|----------|
+| 1 | | | |
+| 2 | | | |
+| 3 | | | |
