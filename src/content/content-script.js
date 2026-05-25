@@ -123,8 +123,9 @@ function extractStructured(pattern) {
     // outside the card container (e.g. ludiprix ul.actions outside #main).
     let bgg_id = null;
     if (pattern.bgg_id_selector) {
-      const bggEl = card.querySelector(pattern.bgg_id_selector)
-               || document.querySelector(pattern.bgg_id_selector);
+      const bggEl =
+        card.querySelector(pattern.bgg_id_selector) ||
+        document.querySelector(pattern.bgg_id_selector);
       if (bggEl) {
         const href = bggEl.href || bggEl.getAttribute('href') || '';
         const m = href.match(/\/boardgame\/(\d+)/);
