@@ -568,7 +568,9 @@ async function handleExtract() {
   }
 
   const extractBtn = document.getElementById('extract-btn');
+  const extractBtnOrigLabel = extractBtn.textContent;
   extractBtn.disabled = true;
+  extractBtn.textContent = '…';
 
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -599,6 +601,7 @@ async function handleExtract() {
     await showReviewPanel(response.games);
   } catch (error) {
     extractBtn.disabled = false;
+    extractBtn.textContent = extractBtnOrigLabel;
     console.error('Error extracting:', error);
     showMessage(chrome.i18n.getMessage('popupErrorPrefix', [error.message]), 'error');
   }
@@ -637,6 +640,46 @@ async function showReviewPanel(games) {
   const fallback = games.map((g) => ({ name: g.name, status: 'unrecognised', bgm_name: null }));
   const previewGames = Array.isArray(previewData?.games) ? previewData.games : fallback;
 
+  // Single product-page shortcut: 1 game, confident bgg_id match, slug resolved
+  // → skip the review panel and navigate directly without an extra click.
+  if (games.length === 1 && games[0].bgg_id && previewGames.length === 1 && previewGames[0].slug) {
+    hideReviewPanel();
+    chrome.tabs.create({ url: gameDetailUrl(previewGames[0].slug, 'open-on-bgm') });
+    window.close();
+    return;
+  }
+
+  // Multi-game shortcut: any recognized "new" games → extract immediately, skip review panel.
+  const newNames = new Set(previewGames.filter((pg) => pg.status === 'new').map((pg) => pg.name));
+  if (newNames.size > 0) {
+    const toExtract = games.filter((g) => newNames.has(g.name));
+    const tab = _reviewTab;
+    const domain = _reviewDomain;
+    try {
+      const postResp = await fetch(BGM_BASE_URL + '/api/extract/extension', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ source: domain, url: tab.url, games: toExtract }),
+      });
+      if (postResp.ok) {
+        const result = await postResp.json();
+        if (result?.job_id) {
+          const stats = {
+            lastExtraction: { domain, count: toExtract.length, timestamp: Date.now() },
+          };
+          await chrome.runtime.sendMessage({ action: 'updateStats', stats });
+          chrome.tabs.create({ url: bgmLink(`/extract?job=${result.job_id}`, 'extract-result') });
+          window.close();
+          return;
+        }
+      }
+    } catch (e) {
+      console.warn('Auto-extract failed:', e);
+    }
+    // Auto-extract failed — fall through to review panel
+  }
+
   for (const g of previewGames) {
     const row = document.createElement('label');
     row.className = 'review-game-row';
@@ -666,15 +709,6 @@ async function showReviewPanel(games) {
   }
 
   updateReviewCount();
-
-  // Single product-page shortcut: 1 game, confident bgg_id match, slug resolved
-  // → skip the review panel and navigate directly without an extra click.
-  if (games.length === 1 && games[0].bgg_id && previewGames.length === 1 && previewGames[0].slug) {
-    hideReviewPanel();
-    chrome.tabs.update({ url: gameDetailUrl(previewGames[0].slug, 'open-on-bgm') });
-    window.close();
-    return;
-  }
 }
 
 function hideReviewPanel() {
@@ -830,7 +864,7 @@ async function confirmExtract() {
   // Single matched game with a known BGM slug → open its page directly
   if (checked.length === 1 && checked[0].dataset.slug) {
     hideReviewPanel();
-    chrome.tabs.update({ url: gameDetailUrl(checked[0].dataset.slug, 'open-on-bgm') });
+    chrome.tabs.create({ url: gameDetailUrl(checked[0].dataset.slug, 'open-on-bgm') });
     window.close();
     return;
   }

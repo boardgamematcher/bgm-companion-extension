@@ -1075,7 +1075,7 @@
     "message": "Ver resultados en BGM →"
   },
   "popupSuccessMsg": {
-    "message": "$count$ juegos añadidos a BGM",
+    "message": "$count$ juegos encontrados",
     "placeholders": {
       "count": {
         "content": "$1",

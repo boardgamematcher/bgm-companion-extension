@@ -4,26 +4,20 @@ import { serveFixture, mockJson, pinActiveTab } from './helpers/routes.js';
 const LUDIPRIX_URL = 'https://ludiprix.fr/item/show/55129/hamlet';
 const HAMLET_SLUG = 'hamlet-the-village-building-game';
 
-// Intercept chrome.tabs.update and window.close in an extension page so we
+// Intercept chrome.tabs.create and window.close in an extension page so we
 // can assert the navigation target without the popup actually closing.
-async function captureTabsUpdate(page) {
+async function captureTabsCreate(page) {
   await page.addInitScript(() => {
-    window.__tabsUpdateCalls = [];
-    chrome.tabs.update = (...args) => {
-      window.__tabsUpdateCalls.push(args);
+    window.__tabsCreateCalls = [];
+    chrome.tabs.create = (opts) => {
+      window.__tabsCreateCalls.push(opts);
     };
-    // Prevent window.close() from closing the page so assertions can run after.
     window.close = () => {};
   });
   return {
     async getUrl() {
-      const raw = await page.evaluate(() => window.__tabsUpdateCalls);
-      for (const call of raw) {
-        for (const arg of call) {
-          if (arg && typeof arg === 'object' && arg.url) return arg.url;
-        }
-      }
-      return null;
+      const calls = await page.evaluate(() => window.__tabsCreateCalls);
+      return calls.length > 0 ? calls[0].url : null;
     },
   };
 }
@@ -59,7 +53,7 @@ test('ludiprix product page: extracts bgg_id from ul.actions link outside #main'
 
   const popup = await context.newPage();
   await pinActiveTab(popup, LUDIPRIX_URL);
-  const nav = await captureTabsUpdate(popup);
+  const nav = await captureTabsCreate(popup);
   await popup.goto(`chrome-extension://${extensionId}/src/popup/popup.html`);
 
   await expect(popup.locator('#ctx-shop-name')).toHaveText(/Ludiprix/, { timeout: 5000 });
