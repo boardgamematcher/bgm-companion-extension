@@ -892,7 +892,7 @@
     "description": "Login card feature bullet 4."
   },
   "popupSuccessMsg": {
-    "message": "$count$ games added to BGM",
+    "message": "$count$ games matched",
     "description": "Success card message shown after a successful shop extraction.",
     "placeholders": {
       "count": {
