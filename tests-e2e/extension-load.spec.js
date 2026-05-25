@@ -1,4 +1,5 @@
 import { test, expect } from './fixtures/extension.js';
+import { mockJson } from './helpers/routes.js';
 
 test('extension loads with MV3 service worker and no console errors', async ({
   context,
@@ -10,6 +11,11 @@ test('extension loads with MV3 service worker and no console errors', async ({
   expect(worker).toBeTruthy();
   expect(worker.url()).toContain(extensionId);
   expect(worker.url()).toMatch(/service-worker\.js$/);
+
+  // Mock all BGM API calls so CI never hits the real server (avoids 403s from
+  // rate-limiting or IP blocks that show up as console errors).
+  await mockJson(context, 'https://boardgamematcher.com/api/me', {}, 401);
+  await mockJson(context, 'https://boardgamematcher.com/api/**', {});
 
   const errors = [];
   context.on('weberror', (e) => errors.push(e.error().message));
