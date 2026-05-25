@@ -666,6 +666,15 @@ async function showReviewPanel(games) {
   }
 
   updateReviewCount();
+
+  // Single product-page shortcut: 1 game, confident bgg_id match, slug resolved
+  // → skip the review panel and navigate directly without an extra click.
+  if (games.length === 1 && games[0].bgg_id && previewGames.length === 1 && previewGames[0].slug) {
+    hideReviewPanel();
+    chrome.tabs.update({ url: gameDetailUrl(previewGames[0].slug, 'open-on-bgm') });
+    window.close();
+    return;
+  }
 }
 
 function hideReviewPanel() {
