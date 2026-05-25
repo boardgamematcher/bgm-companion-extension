@@ -118,10 +118,13 @@ function extractStructured(pattern) {
       : null;
     const sale_price = getText(salePriceEl);
 
-    // Extract BGG ID from a BGG link href for unambiguous catalog matching
+    // Extract BGG ID from a BGG link href for unambiguous catalog matching.
+    // Fall back to document scope — on product pages the BGG link may sit
+    // outside the card container (e.g. ludiprix ul.actions outside #main).
     let bgg_id = null;
     if (pattern.bgg_id_selector) {
-      const bggEl = card.querySelector(pattern.bgg_id_selector);
+      const bggEl = card.querySelector(pattern.bgg_id_selector)
+               || document.querySelector(pattern.bgg_id_selector);
       if (bggEl) {
         const href = bggEl.href || bggEl.getAttribute('href') || '';
         const m = href.match(/\/boardgame\/(\d+)/);
