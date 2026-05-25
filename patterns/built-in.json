@@ -349,6 +349,38 @@
       "url_pattern": "ludifolie\\.com"
     },
     {
+      "bgg_id_selector": "a[href*='boardgamegeek.com/boardgame/']",
+      "card_selector": "#main",
+      "domain": "ludiprix.fr",
+      "filters": {
+        "deduplicate": true,
+        "exclude": [],
+        "include": null,
+        "trim": true
+      },
+      "image_selector": "img.product",
+      "name": "Ludiprix Product Page",
+      "price_selector": ".grand-total",
+      "selector": ".productname h1",
+      "threshold": 0.9,
+      "url_pattern": "ludiprix\\.fr/item/show/"
+    },
+    {
+      "card_selector": ".searchinfocontainer",
+      "domain": "ludiprix.fr",
+      "filters": {
+        "deduplicate": true,
+        "exclude": [],
+        "include": null,
+        "trim": true
+      },
+      "name": "Ludiprix Search",
+      "price_selector": ".price",
+      "selector": ".name a",
+      "threshold": 0.8,
+      "url_pattern": "ludiprix\\.fr/item/search"
+    },
+    {
       "card_selector": ".product-search-row",
       "domain": "coolstuffinc.com",
       "filters": {
