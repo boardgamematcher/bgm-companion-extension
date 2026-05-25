@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <title>Hamlet - Ludiprix</title>
+  </head>
+  <body>
+    <!-- card_selector: #main -->
+    <div id="main">
+      <!-- selector: .productname h1 -->
+      <div class="productname sidebarinfo">
+        <h1>Hamlet</h1>
+      </div>
+      <!-- image_selector: img.product -->
+      <img class="product" src="/img/hamlet.jpg" alt="Hamlet" />
+      <!-- price_selector: .grand-total  (full class is "total grand-total") -->
+      <div class="total grand-total">&euro;7,94</div>
+    </div>
+
+    <!--
+      The BGG link lives in ul.actions which is OUTSIDE #main.
+      This is the key structural detail that broke bgg_id extraction before
+      PR #109 (card.querySelector returned null; document fallback now catches it).
+    -->
+    <ul class="actions">
+      <li>
+        <a href="http://www.boardgamegeek.com/boardgame/276086/show">Voir ce jeu sur BoardGameGeek</a>
+      </li>
+    </ul>
+  </body>
+</html>
