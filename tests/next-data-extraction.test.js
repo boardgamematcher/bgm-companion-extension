@@ -5,6 +5,7 @@ const {
   getByPath,
   formatPrice,
   cleanName,
+  getReactReduxState,
 } = require('../src/content/content-script.js');
 
 const { normalizeName } = require('../src/lib/normalize.js');
@@ -331,5 +332,112 @@ describe('extractGames dispatch', () => {
 
   test('returns empty array for pattern with no selector and no data_source', () => {
     expect(extractGames({ name: 'broken' })).toEqual([]);
+  });
+});
+
+describe('getReactReduxState', () => {
+  test('returns null when #__next element is absent', () => {
+    document.body.innerHTML = '';
+    expect(getReactReduxState()).toBeNull();
+  });
+
+  test('returns null when #__next has no React fiber key', () => {
+    document.body.innerHTML = '<div id="__next"></div>';
+    expect(getReactReduxState()).toBeNull();
+  });
+
+  test('reads store from memoizedProps.store on a fiber node', () => {
+    document.body.innerHTML = '<div id="__next"></div>';
+    const root = document.getElementById('__next');
+    const fakeState = { CatalogItems: { result: { items: [{ name: 'Catan' }] } } };
+    const fakeStore = { getState: () => fakeState };
+    // Simulate a React fiber with the store on memoizedProps
+    root.__reactFiber$test = { memoizedProps: { store: fakeStore }, return: null };
+    expect(getReactReduxState()).toBe(fakeState);
+    delete root.__reactFiber$test;
+  });
+
+  test('reads store from memoizedProps.value.store (react-redux context API)', () => {
+    document.body.innerHTML = '<div id="__next"></div>';
+    const root = document.getElementById('__next');
+    const fakeState = { CatalogItems: { result: { items: [{ name: 'Azul' }] } } };
+    const fakeStore = { getState: () => fakeState };
+    root.__reactFiber$test = {
+      memoizedProps: { value: { store: fakeStore } },
+      return: null,
+    };
+    expect(getReactReduxState()).toBe(fakeState);
+    delete root.__reactFiber$test;
+  });
+});
+
+describe('extractFromNextData — SPA navigation fallback', () => {
+  const veepeePattern = {
+    data_source: 'next_data',
+    next_data: {
+      items_path: 'props.initialState.CatalogItems.result.items',
+      fields: { name: 'name' },
+    },
+    filters: { deduplicate: true },
+  };
+
+  beforeEach(() => {
+    document.body.innerHTML = '';
+  });
+
+  test('falls back to Redux store when __NEXT_DATA__ has no items (SPA navigation)', () => {
+    // Simulate stale __NEXT_DATA__ from the homepage (no CatalogItems)
+    const script = document.createElement('script');
+    script.id = '__NEXT_DATA__';
+    script.type = 'application/json';
+    script.textContent = JSON.stringify({ props: { initialState: {} }, buildId: 'abc' });
+    document.body.appendChild(script);
+
+    // Simulate #__next with a Redux fiber holding catalog data
+    const next = document.createElement('div');
+    next.id = '__next';
+    document.body.appendChild(next);
+    const fakeState = { CatalogItems: { result: { items: [{ name: 'Brass Birmingham' }] } } };
+    next.__reactFiber$spa = {
+      memoizedProps: { store: { getState: () => fakeState } },
+      return: null,
+    };
+
+    const games = extractFromNextData(veepeePattern);
+    expect(games).toHaveLength(1);
+    expect(games[0].name).toBe('Brass Birmingham');
+
+    delete next.__reactFiber$spa;
+  });
+
+  test('uses __NEXT_DATA__ when it already has items (direct page load)', () => {
+    // Simulate a direct page load with CatalogItems in __NEXT_DATA__
+    const script = document.createElement('script');
+    script.id = '__NEXT_DATA__';
+    script.type = 'application/json';
+    script.textContent = JSON.stringify({
+      props: {
+        initialState: {
+          CatalogItems: { result: { items: [{ name: 'Wingspan' }] } },
+        },
+      },
+    });
+    document.body.appendChild(script);
+
+    // Even if a Redux store exists it should not be consulted
+    const next = document.createElement('div');
+    next.id = '__next';
+    document.body.appendChild(next);
+    const fakeState = { CatalogItems: { result: { items: [{ name: 'Azul' }] } } };
+    next.__reactFiber$spa = {
+      memoizedProps: { store: { getState: () => fakeState } },
+      return: null,
+    };
+
+    const games = extractFromNextData(veepeePattern);
+    expect(games).toHaveLength(1);
+    expect(games[0].name).toBe('Wingspan');
+
+    delete next.__reactFiber$spa;
   });
 });
