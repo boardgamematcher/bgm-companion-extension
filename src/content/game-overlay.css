@@ -95,6 +95,29 @@
   padding: 10px 12px !important;
 }
 
+/* Cover image row */
+.bgm-overlay-info {
+  display: flex !important;
+  gap: 9px !important;
+  align-items: flex-start !important;
+  margin-bottom: 10px !important;
+}
+
+.bgm-overlay-cover {
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: 5px !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  flex-shrink: 0 !important;
+}
+
+.bgm-overlay-meta {
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
 /* Game name */
 .bgm-overlay-game-name {
   font-size: 13px !important;
@@ -112,8 +135,8 @@
   flex-direction: column !important;
   align-items: flex-start !important;
   gap: 3px !important;
-  margin-bottom: 10px !important;
-  padding: 7px 9px !important;
+  margin-bottom: 0 !important;
+  padding: 5px 7px !important;
   background: rgba(245, 166, 35, 0.06) !important;
   border-left: 2px solid #f5a623 !important;
   border-radius: 4px !important;
@@ -263,4 +286,48 @@
   color: #7b8d9e !important;
   font-size: 12px !important;
   text-align: center !important;
+}
+
+/* Personal star rating */
+.bgm-overlay-my-rating {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-top: 8px !important;
+  padding-top: 8px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.07) !important;
+}
+
+.bgm-my-rating-label {
+  font-size: 11px !important;
+  color: #7b8d9e !important;
+  font-weight: 500 !important;
+}
+
+.bgm-my-stars {
+  display: flex !important;
+  gap: 2px !important;
+}
+
+.bgm-my-star {
+  background: none !important;
+  border: none !important;
+  padding: 0 1px !important;
+  font-size: 18px !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  color: rgba(245, 166, 35, 0.2) !important;
+  transition: color 0.1s !important;
+}
+
+.bgm-my-star.bgm-my-star-on {
+  color: #f5a623 !important;
+}
+
+.bgm-my-star.bgm-my-star-half {
+  background: linear-gradient(to right, #f5a623 50%, rgba(245, 166, 35, 0.2) 50%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
 }

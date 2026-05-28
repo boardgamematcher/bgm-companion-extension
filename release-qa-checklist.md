@@ -137,11 +137,13 @@ Try a second supported shop (your choice):
 
 ---
 
-## LEVEL 8 · Wishlist Badges + Overlays `[___ / 70 XP]`
+## LEVEL 8 · Wishlist Badges + Overlays `[___ / 90 XP]`
 
 - [ ] **Amazon** — badge visible next to wishlisted game on search/listing page
 - [ ] **Philibert product page** — BGM overlay renders with correct game info
 - [ ] **Philibert non-product page** — no overlay rendered
+- [ ] **BGA game panel** (`boardgamearena.com/gamepanel?game=<slug>`) — BGM overlay renders with correct game info
+- [ ] **BGA non-gamepanel page** — no overlay shown on lobby or other BGA pages
 - [ ] **Coolshop** — badge visible on board-games listing
 - [ ] **Fnac** — badge visible on board-games search results
 - [ ] No JavaScript errors on badge-injected pages
@@ -189,9 +191,9 @@ Try a second supported shop (your choice):
 | 5 | Play History | 130 | |
 | 6 | Games Tab | 100 | |
 | 7 | Dashboard + More | 80 | |
-| 8 | Badges + Overlays | 70 | |
+| 8 | Badges + Overlays | 90 | |
 | Final | Pre-Release | 90 | |
-| **TOTAL** | | **900** | |
+| **TOTAL** | | **920** | |
 
 ### Achievements
 
