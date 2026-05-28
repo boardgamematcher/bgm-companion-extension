@@ -182,13 +182,41 @@ function formatPrice(value, currency) {
 function cleanName(name, cleanup) {
   if (!cleanup || typeof name !== 'string') return name;
   let cleaned = name;
-  if (cleanup.strip_prefix_pattern) {
-    cleaned = cleaned.replace(new RegExp(cleanup.strip_prefix_pattern), '');
-  }
+  // Suffix first: strips player-count/age descriptors before prefix so that
+  // "GameName - de 2 à 5 joueurs" doesn't lose the game name to the prefix pass.
   if (cleanup.strip_suffix_pattern) {
     cleaned = cleaned.replace(new RegExp(cleanup.strip_suffix_pattern), '');
   }
+  if (cleanup.strip_prefix_pattern) {
+    cleaned = cleaned.replace(new RegExp(cleanup.strip_prefix_pattern), '');
+  }
   return cleaned.trim();
+}
+
+// Walk the React fiber tree upward from a root element to find a Redux store.
+// React-Redux v7+ passes the store via context; the Provider fiber holds it in
+// memoizedProps.value.store (new context API) or memoizedProps.store (legacy).
+// Returns the store's current state, or null if not found.
+// Used when __NEXT_DATA__ is stale after a Next.js client-side navigation.
+function getReactReduxState() {
+  const root = document.getElementById('__next');
+  if (!root) return null;
+  const fiberKey = Object.keys(root).find(
+    (k) => k.startsWith('__reactFiber') || k.startsWith('__reactInternalInstance')
+  );
+  if (!fiberKey) return null;
+  let fiber = root[fiberKey];
+  for (let i = 0; fiber && i < 200; i++, fiber = fiber.return) {
+    const store =
+      fiber.memoizedProps?.store ||
+      fiber.pendingProps?.store ||
+      fiber.memoizedProps?.value?.store ||
+      fiber.pendingProps?.value?.store;
+    if (store && typeof store.getState === 'function') {
+      return store.getState();
+    }
+  }
+  return null;
 }
 
 // Extract games from a Next.js __NEXT_DATA__ payload.
@@ -218,6 +246,18 @@ function extractFromNextData(pattern) {
   }
 
   const itemsPaths = Array.isArray(cfg.items_path) ? cfg.items_path : [cfg.items_path];
+
+  // On SPA navigation __NEXT_DATA__ is frozen at the first page load and won't
+  // contain catalog items for the current route. Fall back to the live Redux
+  // store that Next.js keeps updated during client-side transitions.
+  const hasItems = itemsPaths.some((p) => Array.isArray(getByPath(data, p)));
+  if (!hasItems) {
+    const reduxState = getReactReduxState();
+    if (reduxState) {
+      // Wrap to preserve the 'props.initialState.*' path convention.
+      data = { props: { initialState: reduxState } };
+    }
+  }
   const fields = cfg.fields || {};
   const filters = pattern.filters || {};
   const seen = new Set();
@@ -287,5 +327,6 @@ if (typeof module !== 'undefined' && module.exports) {
     getByPath,
     formatPrice,
     cleanName,
+    getReactReduxState,
   };
 }
