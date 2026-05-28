@@ -27,9 +27,6 @@ let _reviewTab = null;
 let _reviewGames = null;
 let _reviewDomain = null;
 
-// State for the success card
-let _successTimer = null;
-
 // State for bulk paginated extraction
 let _bulkCancelRequested = false;
 
@@ -114,13 +111,6 @@ function setupEventListeners() {
 
   document.getElementById('gd-prev').addEventListener('click', () => navigateGameDetail(-1));
   document.getElementById('gd-next').addEventListener('click', () => navigateGameDetail(1));
-  document.getElementById('success-extract-again').addEventListener('click', hideSuccessState);
-  document.getElementById('success-link').addEventListener('click', (e) => {
-    e.preventDefault();
-    const href = e.currentTarget.href;
-    if (href && href !== '#') chrome.tabs.create({ url: href });
-  });
-
   document.getElementById('bn-extract').addEventListener('click', () => switchTab('extract'));
   document.getElementById('bn-games').addEventListener('click', () => switchTab('games'));
   document.getElementById('bn-dashboard').addEventListener('click', () => switchTab('dashboard'));
@@ -426,7 +416,6 @@ async function checkSiteSupport() {
           siteContext = 'shop';
           _activeTabId = tab.id;
           document.getElementById('ctx-shop-name').textContent = response.pattern.name;
-          document.getElementById('ctx-success-name').textContent = response.pattern.name;
           applyCardLayout();
           await countGames(tab.id, response.pattern);
         } else {
@@ -829,7 +818,6 @@ function waitForTabLoad(tabId) {
 function showBulkProgress(page, maxPages, statusText) {
   document.getElementById('tab-panes').style.display = 'none';
   document.getElementById('card-review').style.display = 'none';
-  document.getElementById('card-success').style.display = 'none';
   document.getElementById('card-bulk-progress').style.display = '';
   const pct = maxPages > 0 ? Math.round(((page - 1) / maxPages) * 100) : 0;
   document.getElementById('bulk-bar').style.width = pct + '%';
@@ -885,7 +873,13 @@ async function confirmExtract() {
     if (postResponse.ok) {
       const result = await postResponse.json();
       if (result && result.job_id) {
-        showSuccessState(selected.length, domain, result.job_id);
+        const stats = {
+          lastExtraction: { domain, count: selected.length, timestamp: Date.now() },
+        };
+        await chrome.runtime.sendMessage({ action: 'updateStats', stats });
+        chrome.tabs.create({ url: bgmLink(`/extract?job=${result.job_id}`, 'extract-result') });
+        window.close();
+        return;
       } else {
         console.warn('Invalid API response, missing job_id');
         openFallbackExtraction(tab.url);
@@ -901,39 +895,6 @@ async function confirmExtract() {
     openFallbackExtraction(tab.url);
     return;
   }
-
-  const stats = {
-    lastExtraction: { domain, count: selected.length, timestamp: Date.now() },
-  };
-  await chrome.runtime.sendMessage({ action: 'updateStats', stats });
-  updateStatsDisplay(stats);
-}
-
-// ── Success state ──
-
-function showSuccessState(count, domain, jobId) {
-  document.getElementById('tab-panes').style.display = 'none';
-  document.getElementById('card-success').style.display = '';
-  document.getElementById('ctx-success-name').textContent = domain;
-  document.getElementById('success-msg').textContent = chrome.i18n.getMessage('popupSuccessMsg', [
-    String(count),
-  ]);
-  const link = document.getElementById('success-link');
-  link.href = jobId
-    ? bgmLink(`/extract?job=${jobId}`, 'extract-result')
-    : bgmLink('/extract', 'extract-result');
-
-  if (_successTimer) clearTimeout(_successTimer);
-  _successTimer = setTimeout(hideSuccessState, 8000);
-}
-
-function hideSuccessState() {
-  if (_successTimer) {
-    clearTimeout(_successTimer);
-    _successTimer = null;
-  }
-  document.getElementById('card-success').style.display = 'none';
-  document.getElementById('tab-panes').style.display = '';
 }
 
 // ── Stats ──
