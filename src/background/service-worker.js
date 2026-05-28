@@ -306,7 +306,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
               target: { tabId: sender.tab.id },
               css: `#bgm-overlay .bgm-overlay-cover{background-image:url("${data.imageDataUrl}") !important}`,
             });
-          } catch (_) { /* insertCSS can fail if the tab navigated away */ }
+          } catch (_) {
+            /* insertCSS can fail if the tab navigated away */
+          }
         }
         sendResponse({ ...data, imageDataUrl: null, imageFetched: !!data.imageDataUrl });
       } catch (_) {
@@ -766,9 +768,7 @@ async function resolveGameOverlay(title) {
     if (ratingRes.ok) {
       const data = await ratingRes.json();
       if (data.user_score) {
-        userRating = data.user_score > OVERLAY_RATING_MAX
-          ? data.user_score / 2
-          : data.user_score;
+        userRating = data.user_score > OVERLAY_RATING_MAX ? data.user_score / 2 : data.user_score;
       }
     }
   } catch (_) {
@@ -793,7 +793,9 @@ async function resolveGameOverlay(title) {
         }
         imageDataUrl = `data:${ct};base64,${btoa(binary)}`;
       }
-    } catch (_) { /* image fetch failure is non-fatal; overlay renders without cover */ }
+    } catch (_) {
+      /* image fetch failure is non-fatal; overlay renders without cover */
+    }
   }
 
   return { game, collectionTypes, userRating, imageDataUrl };
@@ -810,7 +812,9 @@ async function getCsrfToken() {
     const html = await res.text();
     const m = html.match(/<meta[^>]+name="csrf-token"[^>]+content="([^"]+)"/);
     _csrfToken = m ? m[1] : null;
-  } catch (_) { /* network failure — proceed without CSRF token */ }
+  } catch (_) {
+    /* network failure — proceed without CSRF token */
+  }
   return _csrfToken;
 }
 
@@ -835,7 +839,14 @@ async function setGameRating(gameId, stars) {
     method: stars ? 'POST' : 'DELETE',
     credentials: 'include',
     headers,
-    ...(stars ? { body: JSON.stringify({ score: Math.min(stars, OVERLAY_RATING_MAX), max: OVERLAY_RATING_MAX }) } : {}),
+    ...(stars
+      ? {
+          body: JSON.stringify({
+            score: Math.min(stars, OVERLAY_RATING_MAX),
+            max: OVERLAY_RATING_MAX,
+          }),
+        }
+      : {}),
   });
   if (res.status === 403) {
     // CSRF token expired — clear cache and retry once with a fresh token
@@ -847,7 +858,14 @@ async function setGameRating(gameId, stars) {
         method: stars ? 'POST' : 'DELETE',
         credentials: 'include',
         headers,
-        ...(stars ? { body: JSON.stringify({ score: Math.min(stars, OVERLAY_RATING_MAX), max: OVERLAY_RATING_MAX }) } : {}),
+        ...(stars
+          ? {
+              body: JSON.stringify({
+                score: Math.min(stars, OVERLAY_RATING_MAX),
+                max: OVERLAY_RATING_MAX,
+              }),
+            }
+          : {}),
       });
       if (!retry.ok) return { success: false, status: retry.status };
       return { success: true };

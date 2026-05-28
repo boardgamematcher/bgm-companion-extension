@@ -54,10 +54,7 @@ function showOverlayError(overlay, code) {
 
   const BGA_ADAPTER = {
     isProductPage() {
-      return (
-        location.pathname === '/gamepanel' &&
-        new URLSearchParams(location.search).has('game')
-      );
+      return location.pathname === '/gamepanel' && new URLSearchParams(location.search).has('game');
     },
     extractTitle() {
       // BGA's #game_name anchor is server-rendered and locale-independent
@@ -68,7 +65,8 @@ function showOverlayError(overlay, code) {
       // EN: "Play <Name> online from your browser"
       // FR: "Jouer à <Name> en ligne depuis votre navigateur"
       // DE: "Spielen Sie <Name> online..."  ES: "Jugar a <Name> en línea..."
-      const BGA_TITLE_RE = /^(?:Play|Jouer\s+[aà]|Spielen?\s+(?:Sie\s+)?|Jugar?\s+(?:a\s+)?|Gioca(?:re)?\s+(?:a\s+)?|Speel\s+|Zagraj\s+w\s+|Hrát?\s+)\s*(.+?)\s+(?:online|en\s+ligne|en\s+l[ií]nea|in\s+lijn)\b/i;
+      const BGA_TITLE_RE =
+        /^(?:Play|Jouer\s+[aà]|Spielen?\s+(?:Sie\s+)?|Jugar?\s+(?:a\s+)?|Gioca(?:re)?\s+(?:a\s+)?|Speel\s+|Zagraj\s+w\s+|Hrát?\s+)\s*(.+?)\s+(?:online|en\s+ligne|en\s+l[ií]nea|in\s+lijn)\b/i;
 
       const og = document.querySelector('meta[property="og:title"]');
       if (og?.content) {
@@ -257,11 +255,12 @@ function showOverlayError(overlay, code) {
 
   const myStarsHtml = [1, 2, 3, 4, 5]
     .map((n) => {
-      const cls = userRating >= n
-        ? 'bgm-my-star bgm-my-star-on'
-        : userRating > n - 1
-        ? 'bgm-my-star bgm-my-star-half'
-        : 'bgm-my-star';
+      const cls =
+        userRating >= n
+          ? 'bgm-my-star bgm-my-star-on'
+          : userRating > n - 1
+            ? 'bgm-my-star bgm-my-star-half'
+            : 'bgm-my-star';
       return `<button class="${cls}" data-value="${n}" title="${n} star${n > 1 ? 's' : ''}">★</button>`;
     })
     .join('');
@@ -374,7 +373,9 @@ function showOverlayError(overlay, code) {
           applyStarVisual(prevRating);
           if (res?.status === 401) {
             // Not logged into BGM — open the game page so the user can log in and rate
-            chrome.runtime.sendMessage({ action: 'openTab', url: localizedGameUrl(game.slug) }).catch(() => {});
+            chrome.runtime
+              .sendMessage({ action: 'openTab', url: localizedGameUrl(game.slug) })
+              .catch(() => {});
           }
         }
       } catch (_) {
