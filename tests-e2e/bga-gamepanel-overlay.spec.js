@@ -77,27 +77,6 @@ test('extracts title from document.title when game_name element and og:title are
   await expect(page.locator('#bgm-overlay .bgm-overlay-game-name')).toHaveText('Terraforming Mars');
 });
 
-test('extracts title from document.title when og:title is also absent (title-only fallback)', async ({ context }) => {
-  await serveFixture(
-    context,
-    'https://boardgamearena.com/gamepanel?game=wingspan',
-    'shops/bga-gamepanel-title-only.html'
-  );
-
-  await mockJson(context, 'https://boardgamematcher.com/api/games/search**', {
-    games: [{ id: 77, name: 'Wingspan', slug: 'wingspan', bayes_average: 7.9 }],
-  });
-  await mockJson(context, 'https://boardgamematcher.com/api/collections/77', {
-    collection_types: [],
-  });
-
-  const page = await context.newPage();
-  await page.goto('https://boardgamearena.com/gamepanel?game=wingspan');
-
-  await expect(page.locator('#bgm-overlay')).toBeVisible({ timeout: 8000 });
-  await expect(page.locator('#bgm-overlay .bgm-overlay-game-name')).toHaveText('Wingspan');
-});
-
 // ── Guard: non-gamepanel pages ────────────────────────────────────────────────
 
 test('BGA non-gamepanel page does not render the overlay', async ({ context }) => {

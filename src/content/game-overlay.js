@@ -1,8 +1,6 @@
 // BGM Game Overlay — BGM-976
 // Injects a personal game status card on supported retailer product detail pages.
 
-console.debug('[BGM overlay] script loaded on', location.hostname, location.pathname);
-
 const BGM_BASE_URL = 'https://boardgamematcher.com';
 const GAME_PATH_SEGMENTS = { en: 'game', fr: 'jeu', de: 'spiel', es: 'juego', it: 'gioco' };
 
@@ -143,8 +141,8 @@ function showOverlayError(overlay, code) {
 
   const hostname = location.hostname.replace(/^www\./, '');
   const adapter = ADAPTERS[hostname];
-  if (!adapter) { console.debug('[BGM overlay] no adapter for', hostname); return; }
-  if (!adapter.isProductPage()) { console.debug('[BGM overlay] not a product page', location.href); return; }
+  if (!adapter) return;
+  if (!adapter.isProductPage()) return;
 
   const title = adapter.extractTitleAsync
     ? await adapter.extractTitleAsync()
@@ -218,7 +216,7 @@ function showOverlayError(overlay, code) {
     return;
   }
 
-  const { game, collectionTypes, userRating } = gameData;
+  const { game, collectionTypes, userRating, imageFetched } = gameData;
   // game: { id, name, slug, bayes_average, image_url }
   // collectionTypes: string[] e.g. ['own', 'played']
   // userRating: 1–5 | null
@@ -253,8 +251,9 @@ function showOverlayError(overlay, code) {
                data-type="${type}">${label}</button>`
   ).join('');
 
-  // Cover image is injected as extension CSS by the service worker (bypasses page CSP)
-  const coverHtml = game.image_url ? `<div class="bgm-overlay-cover"></div>` : '';
+  // Cover image is injected as extension CSS by the service worker (bypasses page CSP).
+  // Only render the div when the fetch actually succeeded to avoid an empty block.
+  const coverHtml = imageFetched ? `<div class="bgm-overlay-cover"></div>` : '';
 
   const myStarsHtml = [1, 2, 3, 4, 5]
     .map((n) => {

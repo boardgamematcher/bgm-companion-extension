@@ -306,9 +306,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
               target: { tabId: sender.tab.id },
               css: `#bgm-overlay .bgm-overlay-cover{background-image:url("${data.imageDataUrl}") !important}`,
             });
-          } catch (_) {}
+          } catch (_) { /* insertCSS can fail if the tab navigated away */ }
         }
-        sendResponse({ ...data, imageDataUrl: null });
+        sendResponse({ ...data, imageDataUrl: null, imageFetched: !!data.imageDataUrl });
       } catch (_) {
         sendResponse({ error: 'resolve_failed' });
       }
@@ -793,7 +793,7 @@ async function resolveGameOverlay(title) {
         }
         imageDataUrl = `data:${ct};base64,${btoa(binary)}`;
       }
-    } catch (_) {}
+    } catch (_) { /* image fetch failure is non-fatal; overlay renders without cover */ }
   }
 
   return { game, collectionTypes, userRating, imageDataUrl };
@@ -810,7 +810,7 @@ async function getCsrfToken() {
     const html = await res.text();
     const m = html.match(/<meta[^>]+name="csrf-token"[^>]+content="([^"]+)"/);
     _csrfToken = m ? m[1] : null;
-  } catch (_) {}
+  } catch (_) { /* network failure — proceed without CSRF token */ }
   return _csrfToken;
 }
 
