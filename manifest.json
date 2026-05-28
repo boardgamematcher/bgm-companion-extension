@@ -9,6 +9,7 @@
   "permissions": ["activeTab", "alarms", "contextMenus", "notifications", "storage", "scripting"],
   "host_permissions": [
     "https://boardgamematcher.com/*",
+    "https://images.boardgamematcher.com/*",
     "https://boardgamearena.com/*",
     "https://en.boardgamearena.com/*",
     "https://tabletopia.com/*",
@@ -21,7 +22,8 @@
     "extension_pages": "script-src 'self'; style-src 'self' 'unsafe-inline'"
   },
   "background": {
-    "service_worker": "src/background/service-worker.js"
+    "service_worker": "src/background/service-worker.js",
+    "scripts": ["src/background/service-worker.js"]
   },
   "browser_specific_settings": {
     "gecko": {
@@ -199,7 +201,11 @@
       "js": ["src/content/ludopedia-scraper.js", "src/content/ludopedia-listener.js"]
     },
     {
-      "matches": ["*://*.philibertnet.com/*"],
+      "matches": [
+        "*://*.philibertnet.com/*",
+        "*://boardgamearena.com/gamepanel*",
+        "*://en.boardgamearena.com/gamepanel*"
+      ],
       "js": ["src/content/game-overlay.js"],
       "css": ["src/content/game-overlay.css"],
       "run_at": "document_idle"

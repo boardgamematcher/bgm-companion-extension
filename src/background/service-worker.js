@@ -297,9 +297,24 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 
   if (message.action === 'resolveGameOverlay') {
-    resolveGameOverlay(message.title)
-      .then((data) => sendResponse(data))
-      .catch(() => sendResponse({ error: 'resolve_failed' }));
+    (async () => {
+      try {
+        const data = await resolveGameOverlay(message.title);
+        if (data.imageDataUrl && sender.tab?.id) {
+          try {
+            await chrome.scripting.insertCSS({
+              target: { tabId: sender.tab.id },
+              css: `#bgm-overlay .bgm-overlay-cover{background-image:url("${data.imageDataUrl}") !important}`,
+            });
+          } catch (_) {
+            /* insertCSS can fail if the tab navigated away */
+          }
+        }
+        sendResponse({ ...data, imageDataUrl: null, imageFetched: !!data.imageDataUrl });
+      } catch (_) {
+        sendResponse({ error: 'resolve_failed' });
+      }
+    })();
     return true;
   }
 
@@ -307,6 +322,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     setCollectionType(message.gameId, message.collectionType, message.add)
       .then(() => sendResponse({ success: true }))
       .catch(() => sendResponse({ success: false }));
+    return true;
+  }
+
+  if (message.action === 'setGameRating') {
+    setGameRating(message.gameId, message.rating)
+      .then((result) => sendResponse(result))
+      .catch(() => sendResponse({ success: false, status: 0 }));
     return true;
   }
 
@@ -673,6 +695,7 @@ async function fetchWishlist() {
 // ── Game overlay (BGM-976) ────────────────────────────────────────────────
 
 const OVERLAY_GAME_CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
+const OVERLAY_RATING_MAX = 5; // BGM uses 1–5; BGG uses 1–10 (divide by 2 if score > max)
 
 function normalizeForMatch(name) {
   return String(name || '')
@@ -730,21 +753,69 @@ async function resolveGameOverlay(title) {
     }
   }
 
-  // Fetch the user's collection types for this game (requires login)
+  // Fetch collection types and personal rating in parallel (both require login)
   let collectionTypes = [];
+  let userRating = null;
   try {
-    const res = await fetch(`${BGM_BASE_URL}/api/collections/${game.id}`, {
-      credentials: 'include',
-    });
-    if (res.ok) {
-      const data = await res.json();
+    const [collRes, ratingRes] = await Promise.all([
+      fetch(`${BGM_BASE_URL}/api/collections/${game.id}`, { credentials: 'include' }),
+      fetch(`${BGM_BASE_URL}/api/ratings/${game.id}/summary`, { credentials: 'include' }),
+    ]);
+    if (collRes.ok) {
+      const data = await collRes.json();
       collectionTypes = data.collection_types || [];
+    }
+    if (ratingRes.ok) {
+      const data = await ratingRes.json();
+      if (data.user_score) {
+        userRating = data.user_score > OVERLAY_RATING_MAX ? data.user_score / 2 : data.user_score;
+      }
     }
   } catch (_) {
     // ignore
   }
 
-  return { game, collectionTypes };
+  // Fetch cover as a data URI — the SW has host_permissions for
+  // images.boardgamematcher.com, so the fetch succeeds; the data URI is then
+  // injected via chrome.scripting.insertCSS (which bypasses the page's CSP).
+  let imageDataUrl = null;
+  if (game.image_url) {
+    try {
+      const imgRes = await fetch(game.image_url);
+      if (imgRes.ok) {
+        const buffer = await imgRes.arrayBuffer();
+        const ct = imgRes.headers.get('content-type') || 'image/jpeg';
+        const bytes = new Uint8Array(buffer);
+        let binary = '';
+        const CHUNK = 8192;
+        for (let i = 0; i < bytes.length; i += CHUNK) {
+          binary += String.fromCharCode.apply(null, bytes.subarray(i, i + CHUNK));
+        }
+        imageDataUrl = `data:${ct};base64,${btoa(binary)}`;
+      }
+    } catch (_) {
+      /* image fetch failure is non-fatal; overlay renders without cover */
+    }
+  }
+
+  return { game, collectionTypes, userRating, imageDataUrl };
+}
+
+// Fetch the CSRF token from the BGM homepage (needed for rating POST/DELETE).
+// Cached in-memory for the SW lifetime; cleared on 403 so it refreshes.
+let _csrfToken = null;
+async function getCsrfToken() {
+  if (_csrfToken) return _csrfToken;
+  try {
+    const res = await fetch(`${BGM_BASE_URL}/`, { credentials: 'include' });
+    if (!res.ok) return null;
+    const html = await res.text();
+    const m = html.match(/<meta[^>]+name="csrf-token"[^>]+content="([^"]+)"/);
+    _csrfToken = m ? m[1] : null;
+  } catch (_) {
+    /* network failure — proceed without CSRF token */
+  }
+  return _csrfToken;
 }
 
 // Add or remove a collection type for a game.
@@ -756,4 +827,50 @@ async function setCollectionType(gameId, collectionType, add) {
     headers: { 'X-BGM-Source': 'toolbox' },
   });
   if (!res.ok) throw new Error(`status ${res.status}`);
+}
+
+// Set (or clear) a personal 0.5–5 star rating for a game.
+async function setGameRating(gameId, stars) {
+  const csrfToken = await getCsrfToken();
+  const url = `${BGM_BASE_URL}/api/ratings/${gameId}`;
+  const headers = { 'Content-Type': 'application/json', 'X-BGM-Source': 'toolbox' };
+  if (csrfToken) headers['x-csrftoken'] = csrfToken;
+  const res = await fetch(url, {
+    method: stars ? 'POST' : 'DELETE',
+    credentials: 'include',
+    headers,
+    ...(stars
+      ? {
+          body: JSON.stringify({
+            score: Math.min(stars, OVERLAY_RATING_MAX),
+            max: OVERLAY_RATING_MAX,
+          }),
+        }
+      : {}),
+  });
+  if (res.status === 403) {
+    // CSRF token expired — clear cache and retry once with a fresh token
+    _csrfToken = null;
+    const fresh = await getCsrfToken();
+    if (fresh) {
+      headers['x-csrftoken'] = fresh;
+      const retry = await fetch(url, {
+        method: stars ? 'POST' : 'DELETE',
+        credentials: 'include',
+        headers,
+        ...(stars
+          ? {
+              body: JSON.stringify({
+                score: Math.min(stars, OVERLAY_RATING_MAX),
+                max: OVERLAY_RATING_MAX,
+              }),
+            }
+          : {}),
+      });
+      if (!retry.ok) return { success: false, status: retry.status };
+      return { success: true };
+    }
+  }
+  if (!res.ok) return { success: false, status: res.status };
+  return { success: true };
 }

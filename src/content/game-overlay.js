@@ -52,7 +52,48 @@ function showOverlayError(overlay, code) {
   // ── Per-site adapters ─────────────────────────────────────────────────────
   // Each adapter: { isProductPage(): bool, extractTitle(): string | null }
 
+  const BGA_ADAPTER = {
+    isProductPage() {
+      return location.pathname === '/gamepanel' && new URLSearchParams(location.search).has('game');
+    },
+    extractTitle() {
+      // BGA's #game_name anchor is server-rendered and locale-independent
+      const nameEl = document.querySelector('a#game_name, span#game_name');
+      if (nameEl?.textContent?.trim()) return nameEl.textContent.trim();
+
+      // BGA title pattern varies by locale but always wraps the game name:
+      // EN: "Play <Name> online from your browser"
+      // FR: "Jouer à <Name> en ligne depuis votre navigateur"
+      // DE: "Spielen Sie <Name> online..."  ES: "Jugar a <Name> en línea..."
+      const BGA_TITLE_RE =
+        /^(?:Play|Jouer\s+[aà]|Spielen?\s+(?:Sie\s+)?|Jugar?\s+(?:a\s+)?|Gioca(?:re)?\s+(?:a\s+)?|Speel\s+|Zagraj\s+w\s+|Hrát?\s+)\s*(.+?)\s+(?:online|en\s+ligne|en\s+l[ií]nea|in\s+lijn)\b/i;
+
+      const og = document.querySelector('meta[property="og:title"]');
+      if (og?.content) {
+        const m = og.content.match(BGA_TITLE_RE);
+        if (m) return m[1].trim();
+      }
+
+      const titleMatch = document.title.match(BGA_TITLE_RE);
+      if (titleMatch) return titleMatch[1].trim();
+
+      return null;
+    },
+    // BGA is a SPA — the game name lands in the DOM after JS runs.
+    // Poll for up to 3 s before giving up.
+    async extractTitleAsync() {
+      for (let i = 0; i < 30; i++) {
+        const title = this.extractTitle();
+        if (title) return title;
+        await new Promise((r) => setTimeout(r, 100));
+      }
+      return null;
+    },
+  };
+
   const ADAPTERS = {
+    'boardgamearena.com': BGA_ADAPTER,
+    'en.boardgamearena.com': BGA_ADAPTER,
     'philibertnet.com': {
       isProductPage() {
         // Philibert product URLs: /fr/<publisher>/<id>-<slug>.html
@@ -101,7 +142,9 @@ function showOverlayError(overlay, code) {
   if (!adapter) return;
   if (!adapter.isProductPage()) return;
 
-  const title = adapter.extractTitle();
+  const title = adapter.extractTitleAsync
+    ? await adapter.extractTitleAsync()
+    : adapter.extractTitle();
   if (!title) return;
 
   // ── Deduplication: don't inject twice on the same page ───────────────────
@@ -171,9 +214,10 @@ function showOverlayError(overlay, code) {
     return;
   }
 
-  const { game, collectionTypes } = gameData;
-  // game: { id, name, slug, bayes_average }
+  const { game, collectionTypes, userRating, imageFetched } = gameData;
+  // game: { id, name, slug, bayes_average, image_url }
   // collectionTypes: string[] e.g. ['own', 'played']
+  // userRating: 1–5 | null
 
   // ── Render overlay with real data ─────────────────────────────────────────
 
@@ -205,12 +249,37 @@ function showOverlayError(overlay, code) {
                data-type="${type}">${label}</button>`
   ).join('');
 
+  // Cover image is injected as extension CSS by the service worker (bypasses page CSP).
+  // Only render the div when the fetch actually succeeded to avoid an empty block.
+  const coverHtml = imageFetched ? `<div class="bgm-overlay-cover"></div>` : '';
+
+  const myStarsHtml = [1, 2, 3, 4, 5]
+    .map((n) => {
+      const cls =
+        userRating >= n
+          ? 'bgm-my-star bgm-my-star-on'
+          : userRating > n - 1
+            ? 'bgm-my-star bgm-my-star-half'
+            : 'bgm-my-star';
+      return `<button class="${cls}" data-value="${n}" title="${n} star${n > 1 ? 's' : ''}">★</button>`;
+    })
+    .join('');
+
   const bodyEl = overlay.querySelector('.bgm-overlay-loading');
   bodyEl.outerHTML = `
     <div class="bgm-overlay-body">
-      <p class="bgm-overlay-game-name" title="${escapeAttr(game.name)}">${escapeHtml(game.name)}</p>
-      ${ratingHtml}
+      <div class="bgm-overlay-info">
+        ${coverHtml}
+        <div class="bgm-overlay-meta">
+          <p class="bgm-overlay-game-name" title="${escapeAttr(game.name)}">${escapeHtml(game.name)}</p>
+          ${ratingHtml}
+        </div>
+      </div>
       <div class="bgm-overlay-collection">${pillsHtml}</div>
+      <div class="bgm-overlay-my-rating">
+        <span class="bgm-my-rating-label">Your rating</span>
+        <div class="bgm-my-stars" role="group">${myStarsHtml}</div>
+      </div>
     </div>
     <div class="bgm-overlay-footer">
       <a class="bgm-overlay-open-link"
@@ -264,6 +333,55 @@ function showOverlayError(overlay, code) {
       }
 
       btn.classList.remove('bgm-loading');
+    });
+  });
+
+  // ── Personal star rating ──────────────────────────────────────────────────
+
+  let currentRating = userRating || 0;
+  const starBtns = [...overlay.querySelectorAll('.bgm-my-star')];
+
+  function applyStarVisual(upTo) {
+    starBtns.forEach((s) => {
+      const n = Number(s.dataset.value);
+      s.classList.remove('bgm-my-star-on', 'bgm-my-star-half');
+      if (upTo >= n) s.classList.add('bgm-my-star-on');
+      else if (upTo > n - 1) s.classList.add('bgm-my-star-half');
+    });
+  }
+
+  starBtns.forEach((btn) => {
+    const n = Number(btn.dataset.value);
+    btn.addEventListener('mousemove', (e) => {
+      applyStarVisual(e.offsetX < btn.offsetWidth / 2 ? n - 0.5 : n);
+    });
+    btn.addEventListener('mouseleave', () => applyStarVisual(currentRating));
+    btn.addEventListener('click', async (e) => {
+      const value = e.offsetX < btn.offsetWidth / 2 ? n - 0.5 : n;
+      const prevRating = currentRating;
+      const newRating = value === currentRating ? 0 : value; // toggle off on same half
+      applyStarVisual(newRating);
+      currentRating = newRating;
+      try {
+        const res = await chrome.runtime.sendMessage({
+          action: 'setGameRating',
+          gameId: game.id,
+          rating: newRating || null,
+        });
+        if (!res || !res.success) {
+          currentRating = prevRating;
+          applyStarVisual(prevRating);
+          if (res?.status === 401) {
+            // Not logged into BGM — open the game page so the user can log in and rate
+            chrome.runtime
+              .sendMessage({ action: 'openTab', url: localizedGameUrl(game.slug) })
+              .catch(() => {});
+          }
+        }
+      } catch (_) {
+        currentRating = prevRating;
+        applyStarVisual(prevRating);
+      }
     });
   });
 })();
