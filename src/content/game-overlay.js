@@ -14,22 +14,29 @@ function localizedGameUrl(slug) {
   );
 }
 
-// Map BGG bayes_average (≈4.5–8.5 in practice) to Steam-style sentiment + 5 stars.
+// Normalize a BGG bayes_average to the 0–5 display scale.
+// The API currently returns 0–10; after the DB migration it will return 0–5.
+// Values > 5 are treated as legacy 0–10 and halved.
+function normalizeBgg(rating) {
+  return rating > 5 ? rating / 2 : rating;
+}
+
+// Map a normalized (0–5) rating to a Steam-style sentiment label.
 function ratingTier(rating) {
-  if (rating >= 8.0) return 'Outstanding';
-  if (rating >= 7.5) return 'Excellent';
-  if (rating >= 7.0) return 'Very good';
-  if (rating >= 6.5) return 'Good';
-  if (rating >= 6.0) return 'Solid';
-  if (rating >= 5.5) return 'Mixed';
-  if (rating >= 5.0) return 'Below average';
+  if (rating >= 4.0) return 'Outstanding';
+  if (rating >= 3.75) return 'Excellent';
+  if (rating >= 3.5) return 'Very good';
+  if (rating >= 3.25) return 'Good';
+  if (rating >= 3.0) return 'Solid';
+  if (rating >= 2.75) return 'Mixed';
+  if (rating >= 2.5) return 'Below average';
   return 'Poor';
 }
 
 // Returns the percentage (0–100) of 5 stars that should be visually filled
-// for a /10 rating. e.g. 6.9 → 69, 8.0 → 80.
+// for a normalized 0–5 rating. e.g. 3.5 → 70, 4.0 → 80.
 function ratingFillPercent(rating) {
-  return Math.max(0, Math.min(100, Math.round(rating * 10)));
+  return Math.max(0, Math.min(100, Math.round(rating * 20)));
 }
 
 function escapeHtml(str) {
@@ -230,16 +237,17 @@ function showOverlayError(overlay, code) {
 
   const activeTypes = new Set(collectionTypes);
 
+  const bggRating = normalizeBgg(game.bayes_average);
   const ratingHtml = game.bayes_average
     ? `<div class="bgm-overlay-rating">
         <div class="bgm-rating-row">
-          <div class="bgm-rating-stars" aria-label="${(game.bayes_average / 2).toFixed(1)} out of 5">
+          <div class="bgm-rating-stars" aria-label="${bggRating.toFixed(1)} out of 5">
             <span class="bgm-stars-empty">★★★★★</span>
-            <span class="bgm-stars-fill" style="width:${ratingFillPercent(game.bayes_average)}%">★★★★★</span>
+            <span class="bgm-stars-fill" style="width:${ratingFillPercent(bggRating)}%">★★★★★</span>
           </div>
-          <span class="bgm-rating-value">${(game.bayes_average / 2).toFixed(1)}<span class="bgm-rating-denom">/5</span></span>
+          <span class="bgm-rating-value">${bggRating.toFixed(1)}<span class="bgm-rating-denom">/5</span></span>
         </div>
-        <span class="bgm-rating-label">${escapeHtml(ratingTier(game.bayes_average))}</span>
+        <span class="bgm-rating-label">${escapeHtml(ratingTier(bggRating))}</span>
        </div>`
     : '';
 
