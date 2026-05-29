@@ -46,6 +46,13 @@ const SITE_META = {
     mechanism:
       "Content script calls BGA's internal AJAX with the page's request token; mapping via `patterns/bga-mapping.json`",
   },
+  'src/content/bga-tournament-scraper.js': {
+    site: 'Board Game Arena',
+    pageType: 'Group tournament list',
+    exampleUrl: 'https://boardgamearena.com/group?id=17757439',
+    action: 'Auto-syncs new group tournaments to BGM; triggers Discord webhook on first detection',
+    mechanism: 'Scrapes DOM on /group pages, diffs vs chrome.storage, POSTs to /api/tournaments',
+  },
   'src/content/yucata-scraper.js': {
     site: 'Yucata',
     pageType: 'Game History',
