@@ -695,7 +695,7 @@ async function fetchWishlist() {
 // ── Game overlay (BGM-976) ────────────────────────────────────────────────
 
 const OVERLAY_GAME_CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
-const OVERLAY_RATING_MAX = 5; // BGM uses 1–5; BGG uses 1–10 (divide by 2 if score > max)
+const OVERLAY_RATING_MAX = 5; // all ratings displayed on 0–5 scale
 
 function normalizeForMatch(name) {
   return String(name || '')
