@@ -189,6 +189,14 @@
       "js": ["src/content/bga-scraper.js", "src/content/bga-listener.js"]
     },
     {
+      "matches": [
+        "https://boardgamearena.com/group*",
+        "https://en.boardgamearena.com/group*"
+      ],
+      "js": ["src/content/bga-tournament-scraper.js"],
+      "run_at": "document_idle"
+    },
+    {
       "matches": ["https://boardgamegeek.com/*", "https://www.boardgamegeek.com/*"],
       "js": ["src/content/bgg-scraper.js", "src/content/bgg-listener.js"]
     },
