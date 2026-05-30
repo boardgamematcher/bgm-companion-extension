@@ -9,7 +9,7 @@
   height: 20px !important;
   padding: 0 6px !important;
   border-radius: 5px !important;
-  background: #f5a623 !important;
+  background: var(--bgm-amber) !important;
   border: none !important;
   cursor: pointer !important;
   display: flex !important;
@@ -18,7 +18,7 @@
   font-weight: 800 !important;
   font-size: 9px !important;
   letter-spacing: 0.5px !important;
-  color: #14181c !important;
+  color: var(--bgm-bg-deep) !important;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
   z-index: 100 !important;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35) !important;
@@ -45,14 +45,14 @@
 #bgm-cat-tooltip {
   position: fixed !important;
   z-index: 2147483647 !important;
-  width: 240px !important;
-  background: #1b2028 !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 10px !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+  width: var(--bgm-card-width) !important;
+  background: var(--bgm-bg) !important;
+  border: 1px solid var(--bgm-border) !important;
+  border-radius: var(--bgm-radius) !important;
+  box-shadow: var(--bgm-shadow) !important;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
   font-size: 13px !important;
-  color: #e1e3e5 !important;
+  color: var(--bgm-text) !important;
   box-sizing: border-box !important;
   overflow: hidden !important;
   transition:
@@ -77,22 +77,22 @@
   align-items: center !important;
   gap: 6px !important;
   padding: 8px 10px !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
-  background: rgba(245, 166, 35, 0.08) !important;
+  border-bottom: 1px solid var(--bgm-border-dim) !important;
+  background: var(--bgm-amber-tint) !important;
 }
 
 .bgm-ct-logo {
   height: 16px !important;
   padding: 0 4px !important;
   border-radius: 3px !important;
-  background: #f5a623 !important;
+  background: var(--bgm-amber) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   font-weight: 800 !important;
   font-size: 8px !important;
   letter-spacing: 0.5px !important;
-  color: #14181c !important;
+  color: var(--bgm-bg-deep) !important;
   flex-shrink: 0 !important;
   line-height: 1 !important;
 }
@@ -100,7 +100,7 @@
 .bgm-ct-brand {
   font-size: 10px !important;
   font-weight: 600 !important;
-  color: #a8bcc8 !important;
+  color: var(--bgm-text-muted) !important;
   letter-spacing: 0.3px !important;
 }
 
@@ -119,7 +119,7 @@
   width: 14px !important;
   height: 14px !important;
   border: 2px solid rgba(245, 166, 35, 0.2) !important;
-  border-top-color: #f5a623 !important;
+  border-top-color: var(--bgm-amber) !important;
   border-radius: 50% !important;
   animation: bgm-ct-spin 0.7s linear infinite !important;
 }
@@ -132,7 +132,7 @@
 
 /* Error */
 .bgm-ct-error {
-  color: #7b8d9e !important;
+  color: var(--bgm-text-dim) !important;
   font-size: 12px !important;
   text-align: center !important;
   padding: 10px 0 !important;
@@ -143,7 +143,7 @@
   margin: 0 0 7px !important;
   font-size: 12px !important;
   font-weight: 600 !important;
-  color: #e1e3e5 !important;
+  color: var(--bgm-text) !important;
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
@@ -157,7 +157,7 @@
   margin-bottom: 8px !important;
   padding: 4px 6px !important;
   background: rgba(245, 166, 35, 0.06) !important;
-  border-left: 2px solid #f5a623 !important;
+  border-left: 2px solid var(--bgm-amber) !important;
   border-radius: 3px !important;
   flex-wrap: wrap !important;
 }
@@ -180,26 +180,26 @@
   left: 0 !important;
   overflow: hidden !important;
   white-space: nowrap !important;
-  color: #f5a623 !important;
+  color: var(--bgm-amber) !important;
   pointer-events: none !important;
 }
 
 .bgm-ct-rval {
   font-size: 12px !important;
   font-weight: 700 !important;
-  color: #e1e3e5 !important;
+  color: var(--bgm-text) !important;
 }
 
 .bgm-ct-rval small {
   font-size: 10px !important;
   font-weight: 400 !important;
-  color: #7b8d9e !important;
+  color: var(--bgm-text-dim) !important;
 }
 
 .bgm-ct-rtier {
   font-size: 10px !important;
   font-weight: 600 !important;
-  color: #ffc64d !important;
+  color: var(--bgm-amber-light) !important;
   text-transform: uppercase !important;
   letter-spacing: 0.4px !important;
 }
@@ -214,8 +214,8 @@
 
 .bgm-ct-pill {
   background: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  color: #a8bcc8 !important;
+  border: 1px solid var(--bgm-border) !important;
+  color: var(--bgm-text-muted) !important;
   font-size: 10px !important;
   font-weight: 500 !important;
   padding: 2px 7px !important;
@@ -229,13 +229,13 @@
 
 .bgm-ct-pill:hover {
   border-color: rgba(245, 166, 35, 0.4) !important;
-  color: #e1e3e5 !important;
+  color: var(--bgm-text) !important;
 }
 
 .bgm-ct-pill-on {
-  background: rgba(245, 166, 35, 0.15) !important;
+  background: var(--bgm-amber-tint-mid) !important;
   border-color: rgba(245, 166, 35, 0.5) !important;
-  color: #f5a623 !important;
+  color: var(--bgm-amber) !important;
 }
 
 .bgm-ct-pill.bgm-ct-loading {
@@ -249,16 +249,16 @@
   text-align: center !important;
   font-size: 11px !important;
   font-weight: 600 !important;
-  color: #f5a623 !important;
+  color: var(--bgm-amber) !important;
   text-decoration: none !important;
   padding: 5px 0 3px !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-top: 1px solid var(--bgm-border-dim) !important;
   margin-top: 2px !important;
   transition: color 0.15s !important;
 }
 
 .bgm-ct-link:hover {
-  color: #ffc64d !important;
+  color: var(--bgm-amber-light) !important;
 }
 
 /* Personal star rating */
@@ -268,12 +268,12 @@
   justify-content: space-between !important;
   margin-top: 8px !important;
   padding-top: 8px !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-top: 1px solid var(--bgm-border-dim) !important;
 }
 
 .bgm-ct-my-rating-label {
   font-size: 11px !important;
-  color: #7b8d9e !important;
+  color: var(--bgm-text-dim) !important;
   font-weight: 500 !important;
 }
 
@@ -295,11 +295,15 @@
 }
 
 .bgm-ct-my-star.bgm-ct-my-star-on {
-  color: #f5a623 !important;
+  color: var(--bgm-amber) !important;
 }
 
 .bgm-ct-my-star.bgm-ct-my-star-half {
-  background: linear-gradient(to right, #f5a623 50%, rgba(245, 166, 35, 0.2) 50%) !important;
+  background: linear-gradient(
+    to right,
+    var(--bgm-amber) 50%,
+    rgba(245, 166, 35, 0.2) 50%
+  ) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;

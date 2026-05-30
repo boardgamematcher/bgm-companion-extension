@@ -173,7 +173,7 @@
         "*://*.veepee.nl/*"
       ],
       "js": ["src/lib/normalize.js", "src/content/wishlist-badge.js"],
-      "css": ["src/content/wishlist-badge.css"],
+      "css": ["src/content/bgm-tokens.css", "src/content/wishlist-badge.css"],
       "run_at": "document_idle"
     },
     {
@@ -212,7 +212,7 @@
         "*://en.boardgamearena.com/gamepanel*"
       ],
       "js": ["src/content/game-overlay.js"],
-      "css": ["src/content/game-overlay.css"],
+      "css": ["src/content/bgm-tokens.css", "src/content/game-overlay.css"],
       "run_at": "document_idle"
     },
     {
@@ -228,7 +228,7 @@
         "*://*.privalia.com/*"
       ],
       "js": ["src/content/catalog-badges.js"],
-      "css": ["src/content/catalog-badges.css"],
+      "css": ["src/content/bgm-tokens.css", "src/content/catalog-badges.css"],
       "run_at": "document_idle"
     }
   ],

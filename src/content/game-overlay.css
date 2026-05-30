@@ -5,14 +5,14 @@
   bottom: 20px !important;
   right: 20px !important;
   z-index: 2147483647 !important;
-  width: 240px !important;
-  background: #1b2028 !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 10px !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+  width: var(--bgm-card-width) !important;
+  background: var(--bgm-bg) !important;
+  border: 1px solid var(--bgm-border) !important;
+  border-radius: var(--bgm-radius) !important;
+  box-shadow: var(--bgm-shadow) !important;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
   font-size: 13px !important;
-  color: #e1e3e5 !important;
+  color: var(--bgm-text) !important;
   box-sizing: border-box !important;
   overflow: hidden !important;
   transition:
@@ -37,8 +37,8 @@
   align-items: center !important;
   justify-content: space-between !important;
   padding: 9px 12px 8px !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
-  background: rgba(245, 166, 35, 0.08) !important;
+  border-bottom: 1px solid var(--bgm-border-dim) !important;
+  background: var(--bgm-amber-tint) !important;
 }
 
 .bgm-overlay-brand {
@@ -53,14 +53,14 @@
   height: 18px !important;
   padding: 0 5px !important;
   border-radius: 4px !important;
-  background: #f5a623 !important;
+  background: var(--bgm-amber) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   font-weight: 800 !important;
   font-size: 9px !important;
   letter-spacing: 0.5px !important;
-  color: #14181c !important;
+  color: var(--bgm-bg-deep) !important;
   flex-shrink: 0 !important;
   line-height: 1 !important;
 }
@@ -68,14 +68,14 @@
 .bgm-overlay-title {
   font-size: 11px !important;
   font-weight: 600 !important;
-  color: #a8bcc8 !important;
+  color: var(--bgm-text-muted) !important;
   letter-spacing: 0.3px !important;
 }
 
 .bgm-overlay-dismiss {
   background: none !important;
   border: none !important;
-  color: #7b8d9e !important;
+  color: var(--bgm-text-dim) !important;
   cursor: pointer !important;
   padding: 2px 4px !important;
   font-size: 16px !important;
@@ -88,7 +88,7 @@
 }
 
 .bgm-overlay-dismiss:hover {
-  color: #e1e3e5 !important;
+  color: var(--bgm-text) !important;
 }
 
 /* Body */
@@ -123,7 +123,7 @@
 .bgm-overlay-game-name {
   font-size: 13px !important;
   font-weight: 600 !important;
-  color: #e1e3e5 !important;
+  color: var(--bgm-text) !important;
   margin: 0 0 8px !important;
   white-space: nowrap !important;
   overflow: hidden !important;
@@ -139,7 +139,7 @@
   margin-bottom: 0 !important;
   padding: 5px 7px !important;
   background: rgba(245, 166, 35, 0.06) !important;
-  border-left: 2px solid #f5a623 !important;
+  border-left: 2px solid var(--bgm-amber) !important;
   border-radius: 4px !important;
 }
 
@@ -169,7 +169,7 @@
   left: 0 !important;
   overflow: hidden !important;
   white-space: nowrap !important;
-  color: #f5a623 !important;
+  color: var(--bgm-amber) !important;
   text-shadow: 0 0 4px rgba(245, 166, 35, 0.4) !important;
   pointer-events: none !important;
 }
@@ -177,21 +177,21 @@
 .bgm-rating-value {
   font-size: 13px !important;
   font-weight: 700 !important;
-  color: #e1e3e5 !important;
+  color: var(--bgm-text) !important;
   font-variant-numeric: tabular-nums !important;
 }
 
 .bgm-rating-denom {
   font-size: 10px !important;
   font-weight: 500 !important;
-  color: #7b8d9e !important;
+  color: var(--bgm-text-dim) !important;
   margin-left: 1px !important;
 }
 
 .bgm-rating-label {
   font-size: 11px !important;
   font-weight: 600 !important;
-  color: #ffc64d !important;
+  color: var(--bgm-amber-light) !important;
   text-transform: uppercase !important;
   letter-spacing: 0.4px !important;
 }
@@ -206,8 +206,8 @@
 
 .bgm-collection-pill {
   background: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  color: #a8bcc8 !important;
+  border: 1px solid var(--bgm-border) !important;
+  color: var(--bgm-text-muted) !important;
   font-size: 11px !important;
   font-weight: 500 !important;
   padding: 3px 9px !important;
@@ -220,13 +220,13 @@
 
 .bgm-collection-pill:hover {
   border-color: rgba(245, 166, 35, 0.4) !important;
-  color: #e1e3e5 !important;
+  color: var(--bgm-text) !important;
 }
 
 .bgm-collection-pill.bgm-active {
-  background: rgba(245, 166, 35, 0.15) !important;
+  background: var(--bgm-amber-tint-mid) !important;
   border-color: rgba(245, 166, 35, 0.5) !important;
-  color: #f5a623 !important;
+  color: var(--bgm-amber) !important;
 }
 
 .bgm-collection-pill.bgm-loading {
@@ -236,7 +236,7 @@
 
 /* Footer link */
 .bgm-overlay-footer {
-  border-top: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-top: 1px solid var(--bgm-border-dim) !important;
   padding: 7px 12px !important;
 }
 
@@ -245,14 +245,14 @@
   text-align: center !important;
   font-size: 11px !important;
   font-weight: 600 !important;
-  color: #f5a623 !important;
+  color: var(--bgm-amber) !important;
   text-decoration: none !important;
   padding: 3px 0 !important;
   transition: color 0.15s !important;
 }
 
 .bgm-overlay-open-link:hover {
-  color: #ffc64d !important;
+  color: var(--bgm-amber-light) !important;
 }
 
 /* Loading skeleton */
@@ -261,7 +261,7 @@
   align-items: center !important;
   justify-content: center !important;
   padding: 18px 12px !important;
-  color: #7b8d9e !important;
+  color: var(--bgm-text-dim) !important;
   font-size: 12px !important;
   gap: 6px !important;
 }
@@ -270,7 +270,7 @@
   width: 14px !important;
   height: 14px !important;
   border: 2px solid rgba(245, 166, 35, 0.2) !important;
-  border-top-color: #f5a623 !important;
+  border-top-color: var(--bgm-amber) !important;
   border-radius: 50% !important;
   animation: bgm-spin 0.7s linear infinite !important;
 }
@@ -284,7 +284,7 @@
 /* Error state */
 .bgm-overlay-error {
   padding: 12px !important;
-  color: #7b8d9e !important;
+  color: var(--bgm-text-dim) !important;
   font-size: 12px !important;
   text-align: center !important;
 }
@@ -296,12 +296,12 @@
   justify-content: space-between !important;
   margin-top: 8px !important;
   padding-top: 8px !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-top: 1px solid var(--bgm-border-dim) !important;
 }
 
 .bgm-my-rating-label {
   font-size: 11px !important;
-  color: #7b8d9e !important;
+  color: var(--bgm-text-dim) !important;
   font-weight: 500 !important;
 }
 
@@ -322,11 +322,15 @@
 }
 
 .bgm-my-star.bgm-my-star-on {
-  color: #f5a623 !important;
+  color: var(--bgm-amber) !important;
 }
 
 .bgm-my-star.bgm-my-star-half {
-  background: linear-gradient(to right, #f5a623 50%, rgba(245, 166, 35, 0.2) 50%) !important;
+  background: linear-gradient(
+    to right,
+    var(--bgm-amber) 50%,
+    rgba(245, 166, 35, 0.2) 50%
+  ) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;

@@ -1,10 +1,12 @@
+/* BGM wishlist badge — injected next to game titles on supported shop pages */
+
 .bgm-wishlist-badge {
   display: inline-flex !important;
   align-items: center !important;
   gap: 5px !important;
-  background: #1b2028 !important;
-  color: #f5a623 !important;
-  border: 1px solid rgba(245, 166, 35, 0.3) !important;
+  background: var(--bgm-bg) !important;
+  color: var(--bgm-amber) !important;
+  border: 1px solid var(--bgm-amber-border) !important;
   border-radius: 4px !important;
   padding: 2px 8px 2px 4px !important;
   font-size: 11px !important;
@@ -20,17 +22,17 @@
 }
 
 .bgm-wishlist-badge:hover {
-  background: #242c38 !important;
+  background: var(--bgm-bg-hover) !important;
   border-color: rgba(245, 166, 35, 0.5) !important;
-  color: #ffc64d !important;
+  color: var(--bgm-amber-light) !important;
 }
 
 .bgm-wishlist-mark {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  background: #f5a623 !important;
-  color: #14181c !important;
+  background: var(--bgm-amber) !important;
+  color: var(--bgm-bg-deep) !important;
   font-size: 8px !important;
   font-weight: 800 !important;
   letter-spacing: 0.4px !important;
