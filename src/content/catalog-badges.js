@@ -228,7 +228,7 @@ function setError(tooltip, code) {
   tooltip.querySelector('.bgm-ct-body').innerHTML = `<div class="bgm-ct-error">${esc(code)}</div>`;
 }
 
-function renderGame(tooltip, { game, collectionTypes }) {
+function renderGame(tooltip, { game, collectionTypes, userRating }) {
   const bgg = normBgg(game.bayes_average);
   const PILLS = [
     { type: 'wishlist', label: '★ Wishlist' },
@@ -251,13 +251,29 @@ function renderGame(tooltip, { game, collectionTypes }) {
 
   const pillsHtml = PILLS.map(
     ({ type, label }) =>
-      `<button class="bgm-ct-pill${active.has(type) ? ' bgm-ct-pill-on' : ''}" data-type="${type}" data-game="${game.id}">${label}</button>`
+      `<button class="bgm-ct-pill${active.has(type) ? ' bgm-ct-pill-on' : ''}" data-type="${type}">${label}</button>`
   ).join('');
+
+  const myStarsHtml = [1, 2, 3, 4, 5]
+    .map((n) => {
+      const cls =
+        userRating >= n
+          ? 'bgm-ct-my-star bgm-ct-my-star-on'
+          : userRating > n - 1
+            ? 'bgm-ct-my-star bgm-ct-my-star-half'
+            : 'bgm-ct-my-star';
+      return `<button class="${cls}" data-value="${n}">★</button>`;
+    })
+    .join('');
 
   tooltip.querySelector('.bgm-ct-body').innerHTML = `
     <p class="bgm-ct-name" title="${esc(game.name)}">${esc(game.name)}</p>
     ${starsHtml}
     <div class="bgm-ct-pills">${pillsHtml}</div>
+    <div class="bgm-ct-my-rating">
+      <span class="bgm-ct-my-rating-label">Your rating</span>
+      <div class="bgm-ct-my-stars">${myStarsHtml}</div>
+    </div>
     <a class="bgm-ct-link" href="${esc(localizedGameUrl(game.slug))}" target="_blank" rel="noopener noreferrer">Open on BoardGameMatcher →</a>
   `;
 
@@ -283,7 +299,55 @@ function renderGame(tooltip, { game, collectionTypes }) {
     });
   });
 
-  // Bypass host-page link hijacking (same pattern as game-overlay.js)
+  // Personal star rating — mirrors game-overlay.js interaction
+  let currentRating = userRating || 0;
+  const starBtns = [...tooltip.querySelectorAll('.bgm-ct-my-star')];
+
+  function applyStars(upTo) {
+    starBtns.forEach((s) => {
+      const n = Number(s.dataset.value);
+      s.classList.remove('bgm-ct-my-star-on', 'bgm-ct-my-star-half');
+      if (upTo >= n) s.classList.add('bgm-ct-my-star-on');
+      else if (upTo > n - 1) s.classList.add('bgm-ct-my-star-half');
+    });
+  }
+
+  starBtns.forEach((btn) => {
+    const n = Number(btn.dataset.value);
+    btn.addEventListener('mousemove', (e) => {
+      applyStars(e.offsetX < btn.offsetWidth / 2 ? n - 0.5 : n);
+    });
+    btn.addEventListener('mouseleave', () => applyStars(currentRating));
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const value = e.offsetX < btn.offsetWidth / 2 ? n - 0.5 : n;
+      const prev = currentRating;
+      const next = value === currentRating ? 0 : value;
+      applyStars(next);
+      currentRating = next;
+      try {
+        const res = await chrome.runtime.sendMessage({
+          action: 'setGameRating',
+          gameId: game.id,
+          rating: next || null,
+        });
+        if (!res?.success) {
+          currentRating = prev;
+          applyStars(prev);
+          if (res?.status === 401) {
+            chrome.runtime
+              .sendMessage({ action: 'openTab', url: localizedGameUrl(game.slug) })
+              .catch(() => {});
+          }
+        }
+      } catch {
+        currentRating = prev;
+        applyStars(prev);
+      }
+    });
+  });
+
+  // Bypass host-page link hijacking
   tooltip.querySelectorAll('a[href]').forEach((a) => {
     a.addEventListener(
       'click',
