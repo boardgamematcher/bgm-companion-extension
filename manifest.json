@@ -189,10 +189,7 @@
       "js": ["src/content/bga-scraper.js", "src/content/bga-listener.js"]
     },
     {
-      "matches": [
-        "https://boardgamearena.com/group*",
-        "https://en.boardgamearena.com/group*"
-      ],
+      "matches": ["https://boardgamearena.com/group*", "https://en.boardgamearena.com/group*"],
       "js": ["src/content/bga-tournament-scraper.js"],
       "run_at": "document_idle"
     },

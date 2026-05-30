@@ -43,7 +43,7 @@ function getPath(obj, path) {
     if (!m) return undefined;
     obj = obj[m[1]];
     if (obj == null) return undefined;
-    for (const idx of (m[2].match(/\d+/g) || [])) {
+    for (const idx of m[2].match(/\d+/g) || []) {
       if (!Array.isArray(obj)) return undefined;
       obj = obj[parseInt(idx, 10)];
     }
