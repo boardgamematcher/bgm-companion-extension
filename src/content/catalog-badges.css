@@ -1,9 +1,49 @@
-/* BGM game overlay — injected on retailer product detail pages */
+/* BGM Catalog Badges — badge + tooltip injected on Veepee catalog pages */
 
-#bgm-overlay {
+/* ── Badge (positioned in top-right corner of each game image) ─────────── */
+
+.bgm-cat-badge {
+  position: absolute !important;
+  top: 6px !important;
+  right: 6px !important;
+  height: 20px !important;
+  padding: 0 6px !important;
+  border-radius: 5px !important;
+  background: var(--bgm-amber) !important;
+  border: none !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: 800 !important;
+  font-size: 9px !important;
+  letter-spacing: 0.5px !important;
+  color: var(--bgm-bg-deep) !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  z-index: 100 !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35) !important;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease !important;
+  line-height: 1 !important;
+  user-select: none !important;
+}
+
+.bgm-cat-badge:hover {
+  transform: scale(1.12) !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45) !important;
+}
+
+.bgm-cat-badge span {
+  pointer-events: none !important;
+  line-height: 1 !important;
+  display: block !important;
+}
+
+/* ── Tooltip ───────────────────────────────────────────────────────────── */
+
+#bgm-cat-tooltip {
   position: fixed !important;
-  bottom: 20px !important;
-  right: 20px !important;
   z-index: 2147483647 !important;
   width: var(--bgm-card-width) !important;
   background: var(--bgm-bg) !important;
@@ -16,180 +56,148 @@
   box-sizing: border-box !important;
   overflow: hidden !important;
   transition:
-    opacity 0.2s ease,
-    transform 0.2s ease !important;
+    opacity 0.15s ease,
+    transform 0.15s ease !important;
+  pointer-events: auto !important;
 }
 
-#bgm-overlay.bgm-hidden {
+#bgm-cat-tooltip.bgm-ct-hidden {
   opacity: 0 !important;
   pointer-events: none !important;
-  transform: translateY(8px) !important;
+  transform: translateY(4px) !important;
 }
 
-#bgm-overlay * {
+#bgm-cat-tooltip * {
   box-sizing: border-box !important;
   font-family: inherit !important;
 }
 
-/* Header */
-.bgm-overlay-header {
+.bgm-ct-header {
   display: flex !important;
   align-items: center !important;
-  justify-content: space-between !important;
-  padding: 9px 12px 8px !important;
+  gap: 6px !important;
+  padding: 8px 10px !important;
   border-bottom: 1px solid var(--bgm-border-dim) !important;
   background: var(--bgm-amber-tint) !important;
 }
 
-.bgm-overlay-brand {
-  display: flex !important;
-  align-items: center !important;
-  gap: 6px !important;
-  text-decoration: none !important;
-  color: inherit !important;
-}
-
-.bgm-overlay-logo {
-  height: 18px !important;
-  padding: 0 5px !important;
-  border-radius: 4px !important;
+.bgm-ct-logo {
+  height: 16px !important;
+  padding: 0 4px !important;
+  border-radius: 3px !important;
   background: var(--bgm-amber) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   font-weight: 800 !important;
-  font-size: 9px !important;
+  font-size: 8px !important;
   letter-spacing: 0.5px !important;
   color: var(--bgm-bg-deep) !important;
   flex-shrink: 0 !important;
   line-height: 1 !important;
 }
 
-.bgm-overlay-title {
-  font-size: 11px !important;
+.bgm-ct-brand {
+  font-size: 10px !important;
   font-weight: 600 !important;
   color: var(--bgm-text-muted) !important;
   letter-spacing: 0.3px !important;
 }
 
-.bgm-overlay-dismiss {
-  background: none !important;
-  border: none !important;
-  color: var(--bgm-text-dim) !important;
-  cursor: pointer !important;
-  padding: 2px 4px !important;
-  font-size: 16px !important;
-  line-height: 1 !important;
-  border-radius: 4px !important;
+.bgm-ct-body {
+  padding: 9px 10px !important;
+}
+
+/* Loading */
+.bgm-ct-loading {
   display: flex !important;
-  align-items: center !important;
   justify-content: center !important;
-  transition: color 0.15s !important;
+  padding: 14px 0 !important;
 }
 
-.bgm-overlay-dismiss:hover {
-  color: var(--bgm-text) !important;
+.bgm-ct-spinner {
+  width: 14px !important;
+  height: 14px !important;
+  border: 2px solid rgba(245, 166, 35, 0.2) !important;
+  border-top-color: var(--bgm-amber) !important;
+  border-radius: 50% !important;
+  animation: bgm-ct-spin 0.7s linear infinite !important;
 }
 
-/* Body */
-.bgm-overlay-body {
-  padding: 10px 12px !important;
+@keyframes bgm-ct-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-/* Cover image row */
-.bgm-overlay-info {
-  display: flex !important;
-  gap: 9px !important;
-  align-items: flex-start !important;
-  margin-bottom: 10px !important;
-}
-
-.bgm-overlay-cover {
-  width: 56px !important;
-  height: 56px !important;
-  border-radius: 5px !important;
-  background-size: cover !important;
-  background-position: center !important;
-  background-repeat: no-repeat !important;
-  flex-shrink: 0 !important;
-}
-
-.bgm-overlay-meta {
-  flex: 1 !important;
-  min-width: 0 !important;
+/* Error */
+.bgm-ct-error {
+  color: var(--bgm-text-dim) !important;
+  font-size: 12px !important;
+  text-align: center !important;
+  padding: 10px 0 !important;
 }
 
 /* Game name */
-.bgm-overlay-game-name {
-  font-size: 13px !important;
+.bgm-ct-name {
+  margin: 0 0 7px !important;
+  font-size: 12px !important;
   font-weight: 600 !important;
   color: var(--bgm-text) !important;
-  margin: 0 0 8px !important;
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
 }
 
-/* Rating */
-.bgm-overlay-rating {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: flex-start !important;
-  gap: 3px !important;
-  margin-bottom: 0 !important;
-  padding: 5px 7px !important;
-  background: rgba(245, 166, 35, 0.06) !important;
-  border-left: 2px solid var(--bgm-amber) !important;
-  border-radius: 4px !important;
-}
-
-.bgm-rating-row {
+/* Rating row */
+.bgm-ct-rating {
   display: flex !important;
   align-items: center !important;
-  gap: 8px !important;
+  gap: 6px !important;
+  margin-bottom: 8px !important;
+  padding: 4px 6px !important;
+  background: rgba(245, 166, 35, 0.06) !important;
+  border-left: 2px solid var(--bgm-amber) !important;
+  border-radius: 3px !important;
+  flex-wrap: wrap !important;
 }
 
-/* Two-layer star rendering: empty layer underneath, amber-filled layer on top
-   clipped by % width to give precise (sub-half) fill levels. */
-.bgm-rating-stars {
+.bgm-ct-stars {
   position: relative !important;
   display: inline-block !important;
-  font-size: 18px !important;
-  letter-spacing: 2px !important;
+  font-size: 14px !important;
+  letter-spacing: 1px !important;
   line-height: 1 !important;
 }
 
-.bgm-stars-empty {
+.bgm-ct-s-empty {
   color: rgba(245, 166, 35, 0.22) !important;
 }
 
-.bgm-stars-fill {
+.bgm-ct-s-fill {
   position: absolute !important;
   top: 0 !important;
   left: 0 !important;
   overflow: hidden !important;
   white-space: nowrap !important;
   color: var(--bgm-amber) !important;
-  text-shadow: 0 0 4px rgba(245, 166, 35, 0.4) !important;
   pointer-events: none !important;
 }
 
-.bgm-rating-value {
-  font-size: 13px !important;
+.bgm-ct-rval {
+  font-size: 12px !important;
   font-weight: 700 !important;
   color: var(--bgm-text) !important;
-  font-variant-numeric: tabular-nums !important;
 }
 
-.bgm-rating-denom {
+.bgm-ct-rval small {
   font-size: 10px !important;
-  font-weight: 500 !important;
+  font-weight: 400 !important;
   color: var(--bgm-text-dim) !important;
-  margin-left: 1px !important;
 }
 
-.bgm-rating-label {
-  font-size: 11px !important;
+.bgm-ct-rtier {
+  font-size: 10px !important;
   font-weight: 600 !important;
   color: var(--bgm-amber-light) !important;
   text-transform: uppercase !important;
@@ -197,100 +205,64 @@
 }
 
 /* Collection pills */
-.bgm-overlay-collection {
+.bgm-ct-pills {
   display: flex !important;
   flex-wrap: wrap !important;
-  gap: 5px !important;
-  margin-bottom: 10px !important;
+  gap: 4px !important;
+  margin-bottom: 8px !important;
 }
 
-.bgm-collection-pill {
+.bgm-ct-pill {
   background: rgba(255, 255, 255, 0.05) !important;
   border: 1px solid var(--bgm-border) !important;
   color: var(--bgm-text-muted) !important;
-  font-size: 11px !important;
+  font-size: 10px !important;
   font-weight: 500 !important;
-  padding: 3px 9px !important;
+  padding: 2px 7px !important;
   border-radius: 20px !important;
   cursor: pointer !important;
   transition: all 0.15s !important;
-  user-select: none !important;
   white-space: nowrap !important;
+  font-family: inherit !important;
+  line-height: 1.5 !important;
 }
 
-.bgm-collection-pill:hover {
+.bgm-ct-pill:hover {
   border-color: rgba(245, 166, 35, 0.4) !important;
   color: var(--bgm-text) !important;
 }
 
-.bgm-collection-pill.bgm-active {
+.bgm-ct-pill-on {
   background: var(--bgm-amber-tint-mid) !important;
   border-color: rgba(245, 166, 35, 0.5) !important;
   color: var(--bgm-amber) !important;
 }
 
-.bgm-collection-pill.bgm-loading {
+.bgm-ct-pill.bgm-ct-loading {
   opacity: 0.5 !important;
   pointer-events: none !important;
 }
 
 /* Footer link */
-.bgm-overlay-footer {
-  border-top: 1px solid var(--bgm-border-dim) !important;
-  padding: 7px 12px !important;
-}
-
-.bgm-overlay-open-link {
+.bgm-ct-link {
   display: block !important;
   text-align: center !important;
   font-size: 11px !important;
   font-weight: 600 !important;
   color: var(--bgm-amber) !important;
   text-decoration: none !important;
-  padding: 3px 0 !important;
+  padding: 5px 0 3px !important;
+  border-top: 1px solid var(--bgm-border-dim) !important;
+  margin-top: 2px !important;
   transition: color 0.15s !important;
 }
 
-.bgm-overlay-open-link:hover {
+.bgm-ct-link:hover {
   color: var(--bgm-amber-light) !important;
 }
 
-/* Loading skeleton */
-.bgm-overlay-loading {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 18px 12px !important;
-  color: var(--bgm-text-dim) !important;
-  font-size: 12px !important;
-  gap: 6px !important;
-}
-
-.bgm-spinner {
-  width: 14px !important;
-  height: 14px !important;
-  border: 2px solid rgba(245, 166, 35, 0.2) !important;
-  border-top-color: var(--bgm-amber) !important;
-  border-radius: 50% !important;
-  animation: bgm-spin 0.7s linear infinite !important;
-}
-
-@keyframes bgm-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Error state */
-.bgm-overlay-error {
-  padding: 12px !important;
-  color: var(--bgm-text-dim) !important;
-  font-size: 12px !important;
-  text-align: center !important;
-}
-
 /* Personal star rating */
-.bgm-overlay-my-rating {
+.bgm-ct-my-rating {
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
@@ -299,18 +271,18 @@
   border-top: 1px solid var(--bgm-border-dim) !important;
 }
 
-.bgm-my-rating-label {
+.bgm-ct-my-rating-label {
   font-size: 11px !important;
   color: var(--bgm-text-dim) !important;
   font-weight: 500 !important;
 }
 
-.bgm-my-stars {
+.bgm-ct-my-stars {
   display: flex !important;
   gap: 2px !important;
 }
 
-.bgm-my-star {
+.bgm-ct-my-star {
   background: none !important;
   border: none !important;
   padding: 0 1px !important;
@@ -319,13 +291,14 @@
   cursor: pointer !important;
   color: rgba(245, 166, 35, 0.2) !important;
   transition: color 0.1s !important;
+  font-family: inherit !important;
 }
 
-.bgm-my-star.bgm-my-star-on {
+.bgm-ct-my-star.bgm-ct-my-star-on {
   color: var(--bgm-amber) !important;
 }
 
-.bgm-my-star.bgm-my-star-half {
+.bgm-ct-my-star.bgm-ct-my-star-half {
   background: linear-gradient(
     to right,
     var(--bgm-amber) 50%,

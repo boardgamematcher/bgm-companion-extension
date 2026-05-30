@@ -65,7 +65,7 @@
       badge.href = `https://boardgamematcher.com/boardgames/${match.slug}`;
       badge.target = '_blank';
       badge.rel = 'noopener noreferrer';
-      badge.textContent = badgeLabel;
+      badge.innerHTML = `<span class="bgm-wishlist-mark">BGM</span>${badgeLabel}`;
 
       el.insertAdjacentElement('afterend', badge);
     }

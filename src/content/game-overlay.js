@@ -175,7 +175,7 @@ function showOverlayError(overlay, code) {
   overlay.innerHTML = `
     <div class="bgm-overlay-header">
       <a class="bgm-overlay-brand" href="https://boardgamematcher.com" target="_blank" rel="noopener noreferrer">
-        <div class="bgm-overlay-logo">B</div>
+        <div class="bgm-overlay-logo">BGM</div>
         <span class="bgm-overlay-title">BoardGameMatcher</span>
       </a>
       <button class="bgm-overlay-dismiss" title="Dismiss" aria-label="Dismiss">×</button>

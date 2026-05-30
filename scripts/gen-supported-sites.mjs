@@ -99,6 +99,15 @@ const SITE_META = {
     mechanism:
       'Reads page metadata, resolves via `resolveOverlayGame` background message, posts to `/api/collections/<id>/<type>`',
   },
+  'src/content/catalog-badges.js': {
+    site: 'Veepee / Privalia (catalog badge)',
+    pageType: 'Catalog grid',
+    exampleUrl: 'https://www.veepee.fr/*/catalog/',
+    action:
+      'Injects a BGM badge on each game image; hover shows rating, collection pills, and personal star rating',
+    mechanism:
+      'Reads game list from __NEXT_DATA__ (+ Redux fallback), matches images by URL path, resolves via `resolveGameOverlay` SW message',
+  },
 };
 
 // Brand grouping for the retail catchall content script. Keyed by the base

@@ -1,0 +1,19 @@
+/* BGM shared design tokens — injected before all other BGM content CSS */
+:root {
+  --bgm-bg: #1b2028;
+  --bgm-bg-deep: #14181c;
+  --bgm-bg-hover: #242c38;
+  --bgm-border: rgba(255, 255, 255, 0.1);
+  --bgm-border-dim: rgba(255, 255, 255, 0.07);
+  --bgm-amber: #f5a623;
+  --bgm-amber-light: #ffc64d;
+  --bgm-amber-tint: rgba(245, 166, 35, 0.08);
+  --bgm-amber-tint-mid: rgba(245, 166, 35, 0.15);
+  --bgm-amber-border: rgba(245, 166, 35, 0.3);
+  --bgm-text: #e1e3e5;
+  --bgm-text-muted: #a8bcc8;
+  --bgm-text-dim: #7b8d9e;
+  --bgm-radius: 10px;
+  --bgm-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --bgm-card-width: 240px;
+}

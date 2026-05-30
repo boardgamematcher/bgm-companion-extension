@@ -24,6 +24,7 @@ For each row: "On-page extraction?" means a content script runs in the user's ta
 | Tabletopia | Any page when logged in | `https://tabletopia.com/...` | Yes — `src/content/tabletopia-scraper.js` | Popup → "Import Tabletopia Matches" | Calls Tabletopia REST `/api/v2/players/current/matches` with pagination |
 | Ludopedia | User history | `https://ludopedia.com.br/usuario/...` | Yes — `src/content/ludopedia-scraper.js` | Popup → "Import Ludopedia Plays" | Calls Ludopedia `/api/v1/plays`; BGG IDs already in payload |
 | Philibert (game-detail overlay) | Product detail | `https://www.philibertnet.com/{lang}/cat/<id>-<slug>.html` | Yes — `src/content/game-overlay.js` | Inline overlay: BGM card, rating, wishlist status; per-user collection pills when logged in | Reads page metadata, resolves via `resolveOverlayGame` background message, posts to `/api/collections/<id>/<type>` |
+| Veepee / Privalia (catalog badge) | Catalog grid | `https://www.veepee.fr/*/catalog/` | Yes — `src/content/catalog-badges.js` | Injects a BGM badge on each game image; hover shows rating, collection pills, and personal star rating | Reads game list from __NEXT_DATA__ (+ Redux fallback), matches images by URL path, resolves via `resolveGameOverlay` SW message |
 <!-- AUTO:sites-table END -->
 
 Notes:
