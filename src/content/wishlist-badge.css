@@ -1,11 +1,12 @@
 .bgm-wishlist-badge {
   display: inline-flex !important;
   align-items: center !important;
-  background: rgba(245, 158, 11, 0.12) !important;
-  color: #92400e !important;
-  border: 1px solid rgba(245, 158, 11, 0.4) !important;
+  gap: 5px !important;
+  background: #1b2028 !important;
+  color: #f5a623 !important;
+  border: 1px solid rgba(245, 166, 35, 0.3) !important;
   border-radius: 4px !important;
-  padding: 1px 7px !important;
+  padding: 2px 8px 2px 4px !important;
   font-size: 11px !important;
   font-weight: 600 !important;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
@@ -19,6 +20,22 @@
 }
 
 .bgm-wishlist-badge:hover {
-  background: rgba(245, 158, 11, 0.22) !important;
-  color: #78350f !important;
+  background: #242c38 !important;
+  border-color: rgba(245, 166, 35, 0.5) !important;
+  color: #ffc64d !important;
+}
+
+.bgm-wishlist-mark {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: #f5a623 !important;
+  color: #14181c !important;
+  font-size: 8px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.4px !important;
+  padding: 1px 4px !important;
+  border-radius: 3px !important;
+  line-height: 1.4 !important;
+  flex-shrink: 0 !important;
 }

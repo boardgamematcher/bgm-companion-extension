@@ -50,15 +50,16 @@
 }
 
 .bgm-overlay-logo {
-  width: 18px !important;
   height: 18px !important;
+  padding: 0 5px !important;
   border-radius: 4px !important;
   background: #f5a623 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   font-weight: 800 !important;
-  font-size: 11px !important;
+  font-size: 9px !important;
+  letter-spacing: 0.5px !important;
   color: #14181c !important;
   flex-shrink: 0 !important;
   line-height: 1 !important;

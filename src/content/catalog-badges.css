@@ -1,0 +1,262 @@
+/* BGM Catalog Badges — badge + tooltip injected on Veepee catalog pages */
+
+/* ── Badge (positioned in top-right corner of each game image) ─────────── */
+
+.bgm-cat-badge {
+  position: absolute !important;
+  top: 6px !important;
+  right: 6px !important;
+  height: 20px !important;
+  padding: 0 6px !important;
+  border-radius: 5px !important;
+  background: #f5a623 !important;
+  border: none !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: 800 !important;
+  font-size: 9px !important;
+  letter-spacing: 0.5px !important;
+  color: #14181c !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  z-index: 100 !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35) !important;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease !important;
+  line-height: 1 !important;
+  user-select: none !important;
+}
+
+.bgm-cat-badge:hover {
+  transform: scale(1.12) !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45) !important;
+}
+
+.bgm-cat-badge span {
+  pointer-events: none !important;
+  line-height: 1 !important;
+  display: block !important;
+}
+
+/* ── Tooltip ───────────────────────────────────────────────────────────── */
+
+#bgm-cat-tooltip {
+  position: fixed !important;
+  z-index: 2147483647 !important;
+  width: 240px !important;
+  background: #1b2028 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-size: 13px !important;
+  color: #e1e3e5 !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease !important;
+  pointer-events: auto !important;
+}
+
+#bgm-cat-tooltip.bgm-ct-hidden {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translateY(4px) !important;
+}
+
+#bgm-cat-tooltip * {
+  box-sizing: border-box !important;
+  font-family: inherit !important;
+}
+
+.bgm-ct-header {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 8px 10px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+  background: rgba(245, 166, 35, 0.08) !important;
+}
+
+.bgm-ct-logo {
+  height: 16px !important;
+  padding: 0 4px !important;
+  border-radius: 3px !important;
+  background: #f5a623 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: 800 !important;
+  font-size: 8px !important;
+  letter-spacing: 0.5px !important;
+  color: #14181c !important;
+  flex-shrink: 0 !important;
+  line-height: 1 !important;
+}
+
+.bgm-ct-brand {
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  color: #a8bcc8 !important;
+  letter-spacing: 0.3px !important;
+}
+
+.bgm-ct-body {
+  padding: 9px 10px !important;
+}
+
+/* Loading */
+.bgm-ct-loading {
+  display: flex !important;
+  justify-content: center !important;
+  padding: 14px 0 !important;
+}
+
+.bgm-ct-spinner {
+  width: 14px !important;
+  height: 14px !important;
+  border: 2px solid rgba(245, 166, 35, 0.2) !important;
+  border-top-color: #f5a623 !important;
+  border-radius: 50% !important;
+  animation: bgm-ct-spin 0.7s linear infinite !important;
+}
+
+@keyframes bgm-ct-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error */
+.bgm-ct-error {
+  color: #7b8d9e !important;
+  font-size: 12px !important;
+  text-align: center !important;
+  padding: 10px 0 !important;
+}
+
+/* Game name */
+.bgm-ct-name {
+  margin: 0 0 7px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #e1e3e5 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Rating row */
+.bgm-ct-rating {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin-bottom: 8px !important;
+  padding: 4px 6px !important;
+  background: rgba(245, 166, 35, 0.06) !important;
+  border-left: 2px solid #f5a623 !important;
+  border-radius: 3px !important;
+  flex-wrap: wrap !important;
+}
+
+.bgm-ct-stars {
+  position: relative !important;
+  display: inline-block !important;
+  font-size: 14px !important;
+  letter-spacing: 1px !important;
+  line-height: 1 !important;
+}
+
+.bgm-ct-s-empty {
+  color: rgba(245, 166, 35, 0.22) !important;
+}
+
+.bgm-ct-s-fill {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  color: #f5a623 !important;
+  pointer-events: none !important;
+}
+
+.bgm-ct-rval {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: #e1e3e5 !important;
+}
+
+.bgm-ct-rval small {
+  font-size: 10px !important;
+  font-weight: 400 !important;
+  color: #7b8d9e !important;
+}
+
+.bgm-ct-rtier {
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  color: #ffc64d !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.4px !important;
+}
+
+/* Collection pills */
+.bgm-ct-pills {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 4px !important;
+  margin-bottom: 8px !important;
+}
+
+.bgm-ct-pill {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #a8bcc8 !important;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  padding: 2px 7px !important;
+  border-radius: 20px !important;
+  cursor: pointer !important;
+  transition: all 0.15s !important;
+  white-space: nowrap !important;
+  font-family: inherit !important;
+  line-height: 1.5 !important;
+}
+
+.bgm-ct-pill:hover {
+  border-color: rgba(245, 166, 35, 0.4) !important;
+  color: #e1e3e5 !important;
+}
+
+.bgm-ct-pill-on {
+  background: rgba(245, 166, 35, 0.15) !important;
+  border-color: rgba(245, 166, 35, 0.5) !important;
+  color: #f5a623 !important;
+}
+
+.bgm-ct-pill.bgm-ct-loading {
+  opacity: 0.5 !important;
+  pointer-events: none !important;
+}
+
+/* Footer link */
+.bgm-ct-link {
+  display: block !important;
+  text-align: center !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: #f5a623 !important;
+  text-decoration: none !important;
+  padding: 5px 0 3px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.07) !important;
+  margin-top: 2px !important;
+  transition: color 0.15s !important;
+}
+
+.bgm-ct-link:hover {
+  color: #ffc64d !important;
+}

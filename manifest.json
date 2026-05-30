@@ -217,6 +217,22 @@
       "js": ["src/content/game-overlay.js"],
       "css": ["src/content/game-overlay.css"],
       "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "*://*.veepee.at/*",
+        "*://*.veepee.be/*",
+        "*://*.veepee.de/*",
+        "*://*.veepee.es/*",
+        "*://*.veepee.fr/*",
+        "*://*.veepee.it/*",
+        "*://*.veepee.lu/*",
+        "*://*.veepee.nl/*",
+        "*://*.privalia.com/*"
+      ],
+      "js": ["src/content/catalog-badges.js"],
+      "css": ["src/content/catalog-badges.css"],
+      "run_at": "document_idle"
     }
   ],
   "options_page": "src/options/options.html",
