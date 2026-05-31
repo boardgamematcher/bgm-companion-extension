@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Alexia Tournaments — Board Game Arena</title>
+  </head>
+  <body>
+    <!-- Minimal stand-in for a BGA group page tournament list.
+       Mirrors the markup bga-tournament-scraper.js targets:
+       table.tournament_list > tr[id^="tournament_"] with a
+       /tournament?id= link, a game-name link, and "filled / total" spots. -->
+    <h1>Alexia Tournaments</h1>
+    <table class="tournament_list">
+      <tbody>
+        <tr id="tournament_11111">
+          <td><a href="/tournament?id=11111" class="tournament_name">Wingspan Weekly</a></td>
+          <td><a href="/gamepanel?game=wingspan" class="gamename">Wingspan</a></td>
+          <td class="players">12 / 24</td>
+          <td class="status">Registration open</td>
+        </tr>
+        <tr id="tournament_22222">
+          <td><a href="/tournament?id=22222" class="tournament_name">Catan Cup</a></td>
+          <td><a href="/gamepanel?game=catan" class="gamename">Catan</a></td>
+          <td class="players">24 / 24</td>
+          <td class="status">Registration open</td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>
