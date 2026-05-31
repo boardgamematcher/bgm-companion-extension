@@ -1735,15 +1735,41 @@ body {
   color: var(--amber-bright);
 }
 
-.gd-rating-star {
-  color: var(--amber);
+/* Two-layer star bar: empty underneath, amber-filled on top clipped by
+   % width — matches the game overlay + catalog badges. */
+.gd-rating-stars {
+  position: relative;
+  display: inline-block;
   font-size: 14px;
+  letter-spacing: 1px;
   line-height: 1;
+}
+
+.gd-rating-stars-empty {
+  color: rgba(245, 166, 35, 0.22);
+}
+
+.gd-rating-stars-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  color: var(--amber);
+  pointer-events: none;
 }
 
 .gd-rating-val {
   font-size: 13px;
   font-weight: 700;
+}
+
+.gd-rating-denom {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-left: 1px;
 }
 
 .gd-rating-label {
