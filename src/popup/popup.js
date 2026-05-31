@@ -1467,15 +1467,20 @@ async function renderGameDetail(game) {
   // Specs — players · playtime · weight (BGM-776)
   renderGameSpecs(game);
 
-  // Rating — BGM is on a 0–5 stars scale. The bayes_average column today is
-  // imported from BGG (0–10), so divide by 2 for display until BGM has its
-  // own community votes.
+  // Rating — Bayesian community rating on the 0–5 scale, rendered identically
+  // to the game overlay + catalog badges via the shared lib/rating.js helpers.
+  // normalizeBgg stays resilient if the API ever returns a legacy 0–10 value.
   const ratingWrap = document.getElementById('gd-rating');
   const noRatingWrap = document.getElementById('gd-no-rating');
   const gameUrl = gameDetailUrl(game.slug, 'game-detail-card');
   if (game.bayes_average) {
-    const stars5 = (Number(game.bayes_average) / 2).toFixed(1);
-    document.getElementById('gd-rating-val').textContent = stars5;
+    const r = normalizeBgg(Number(game.bayes_average));
+    document.getElementById('gd-rating-val').textContent = r.toFixed(1);
+    document.getElementById('gd-rating-stars-fill').style.width = `${ratingFillPercent(r)}%`;
+    document
+      .getElementById('gd-rating-stars')
+      .setAttribute('aria-label', `${r.toFixed(1)} out of 5`);
+    document.getElementById('gd-rating-tier').textContent = ratingTier(r);
     ratingWrap.style.display = '';
     noRatingWrap.style.display = 'none';
   } else {
