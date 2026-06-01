@@ -254,6 +254,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true;
   }
 
+  if (message.action === 'syncTournament') {
+    postTournament(message.tournament)
+      .then((inserted) => sendResponse({ success: true, inserted }))
+      .catch((error) => sendResponse({ success: false, error: error.message }));
+    return true;
+  }
+
   if (message.action === 'getStats') {
     getStats().then((stats) => {
       sendResponse({ success: true, stats });
@@ -426,6 +433,28 @@ async function postPlays(plays, { platformSlug } = {}) {
     skipped: allSkipped,
     duplicates: allSkipped.length,
   };
+}
+
+// POST a scraped BGA tournament to BGM. Runs in the service worker (not the BGA
+// content script) so the request is first-party to BGM and carries the session
+// cookie: a POST from the content script is cross-origin, so the cross-site
+// session cookie isn't attached and the sync 401s. With host_permissions for
+// BGM, the worker's fetch authenticates — same path as postPlays. See BGM-1233.
+async function postTournament(tournament) {
+  const storage = await chrome.storage.local.get('apiUrl');
+  const apiUrl = storage.apiUrl || BGM_BASE_URL;
+  const response = await fetch(`${apiUrl}/api/tournaments`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(tournament),
+  });
+  if (!response.ok) {
+    const text = await response.text().catch(() => '');
+    throw new Error(`API error ${response.status}: ${text}`);
+  }
+  const data = await response.json();
+  return data.inserted === true;
 }
 
 // Get extraction stats

@@ -22,7 +22,6 @@
 
 'use strict';
 
-const BGM_BASE_URL = 'https://boardgamematcher.com';
 const BGA_ORIGIN = 'https://en.boardgamearena.com';
 const STORAGE_KEY = 'bga_known_tournaments';
 const GAME_MAP_KEY = 'bga_game_map';
@@ -176,26 +175,20 @@ async function saveKnownIds(ids) {
 
 // ── BGM API ─────────────────────────────────────────────────────────────────
 
-async function getBgmBaseUrl() {
-  const result = await chrome.storage.local.get('apiUrl');
-  return result.apiUrl || BGM_BASE_URL;
-}
-
-async function postTournament(baseUrl, tournament) {
+// The POST runs in the service worker, not here. A POST straight from this BGA
+// content script is cross-origin (BGA → BGM): the BGM session cookie is then a
+// cross-site cookie the browser won't attach, so the sync arrives unauthenticated
+// (401) and fails silently. The service worker holds host_permissions for BGM, so
+// its fetch is first-party and carries the session cookie — the same path the
+// plays import (postPlays) already uses. See BGM-1233.
+async function postTournament(tournament) {
   try {
-    const res = await fetch(`${baseUrl}/api/tournaments`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(tournament),
-    });
-    if (!res.ok) {
-      const text = await res.text().catch(() => '');
-      console.warn('[BGM] tournament sync failed', res.status, text);
+    const res = await chrome.runtime.sendMessage({ action: 'syncTournament', tournament });
+    if (!res || !res.success) {
+      console.warn('[BGM] tournament sync failed', res && res.error);
       return false;
     }
-    const data = await res.json();
-    return data.inserted === true;
+    return res.inserted === true;
   } catch (err) {
     console.warn('[BGM] tournament sync error', err);
     return false;
@@ -229,7 +222,6 @@ async function scrapeAndSync() {
   const newIds = ids.filter((id) => !knownIds.has(id));
   if (newIds.length === 0) return;
 
-  const baseUrl = await getBgmBaseUrl();
   const gameMap = await getGameMap();
   const updatedIds = new Set(knownIds);
 
@@ -241,7 +233,7 @@ async function scrapeAndSync() {
     // the id unknown lets a later visit retry once the game map is healthy.
     if (!payload || !payload.game_name) continue;
 
-    const inserted = await postTournament(baseUrl, payload);
+    const inserted = await postTournament(payload);
     if (inserted) console.info(`[BGM] new tournament synced: ${payload.title}`);
     updatedIds.add(id);
   }
