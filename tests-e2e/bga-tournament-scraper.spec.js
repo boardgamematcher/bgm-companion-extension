@@ -11,18 +11,9 @@ import { serveFixture } from './helpers/routes.js';
 // endpoints — no real BGA / BGM needed.
 //
 // The group page is served on en.boardgamearena.com so the BGA API fetches are
-// same-origin; only the BGM POST is cross-origin and needs CORS.
+// same-origin. The BGM POST is sent from the extension service worker (BGM-1233),
+// which holds host_permissions for BGM — first-party, no CORS preflight.
 const BASE = 'https://en.boardgamearena.com';
-
-// The scraper fetches cross-origin (boardgamearena.com → boardgamematcher.com)
-// straight from the content script, so the browser sends a CORS preflight; the
-// mock must answer OPTIONS + echo CORS headers or the POST never reaches us.
-const CORS = {
-  'Access-Control-Allow-Origin': BASE,
-  'Access-Control-Allow-Credentials': 'true',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-};
 
 // getTournament.html?id=<id> → BGA's tournament-detail JSON, keyed by id.
 const TOURNAMENTS = {
@@ -55,13 +46,14 @@ var completeGameList = [
 ];
 </script></body></html>`;
 
-/** Route /api/tournaments, pushing each POST body into `sink`. */
+/**
+ * Route /api/tournaments, pushing each POST body into `sink`. The POST is sent
+ * by the extension service worker (BGM-1233), not the content script; Playwright
+ * still intercepts it through the persistent context's route.
+ */
 async function captureTournamentPosts(context, sink) {
   await context.route('**/api/tournaments', async (route) => {
     const req = route.request();
-    if (req.method() === 'OPTIONS') {
-      return route.fulfill({ status: 204, headers: CORS });
-    }
     if (req.method() === 'POST') {
       try {
         sink.push(req.postDataJSON());
@@ -71,7 +63,6 @@ async function captureTournamentPosts(context, sink) {
     }
     await route.fulfill({
       status: 200,
-      headers: CORS,
       contentType: 'application/json',
       body: JSON.stringify({ inserted: true }),
     });
