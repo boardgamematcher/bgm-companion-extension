@@ -2,11 +2,11 @@
  * bga-tournament-scraper.js
  *
  * Runs on BGA group pages (/group?id=*). Collects the tournament IDs linked on
- * the page, fetches each tournament's detail from BGA's own JSON API, resolves
- * the game name + BGG id from a cached game-list lookup, diffs against
- * locally-stored known IDs, and POSTs to the BGM API. The BGM endpoint is
- * idempotent on bga_tournament_id, so concurrent visitors only fire the Discord
- * webhook once.
+ * the page, skips the ones already synced (tracked in chrome.storage), fetches
+ * each remaining tournament's detail from BGA's own JSON API, resolves the game
+ * name + BGG id from a cached game-list lookup, and POSTs to the BGM API. The
+ * BGM endpoint is idempotent on bga_tournament_id, so concurrent visitors only
+ * fire the Discord webhook once.
  *
  * Why the API and not the DOM: the /group page only carries bare tournament
  * links (no game/seats/dates), and /tournament?id=X is a client-rendered SPA
@@ -153,7 +153,7 @@ async function buildPayload(tournamentId, groupId, gameMap) {
     bga_group_id: groupId,
     title: t.name || `Tournoi ${game?.name || t.id}`,
     game_name: game?.name || null,
-    bgg_id: game?.bggId || null,
+    bgg_id: game?.bggId ?? null,
     bga_url: `${BGA_ORIGIN}/tournament?id=${t.id}`,
     status: normalizeStatus(t.status, spotsFilled, spotsTotal),
     spots_total: spotsTotal,
@@ -204,21 +204,42 @@ async function postTournament(baseUrl, tournament) {
 
 // ── Main ─────────────────────────────────────────────────────────────────────
 
-async function runTournamentScraper() {
-  if (!isGroupPage()) return;
+// Guard against the initial document_idle run and the MutationObserver fallback
+// overlapping — without it both could fetch + POST the same tournaments.
+let running = false;
 
+async function runTournamentScraper() {
+  if (running || !isGroupPage()) return;
+  running = true;
+  try {
+    await scrapeAndSync();
+  } finally {
+    running = false;
+  }
+}
+
+async function scrapeAndSync() {
   const groupId = getGroupId();
   const ids = scrapeTournamentIds();
   if (ids.length === 0) return;
 
+  const knownIds = await getKnownIds();
+  // Known tournaments are skipped: their spots/status won't refresh, but we
+  // avoid N getTournament fetches + N POSTs on every single group-page visit.
+  const newIds = ids.filter((id) => !knownIds.has(id));
+  if (newIds.length === 0) return;
+
   const baseUrl = await getBgmBaseUrl();
   const gameMap = await getGameMap();
-  const knownIds = await getKnownIds();
   const updatedIds = new Set(knownIds);
 
-  for (const id of ids) {
+  for (const id of newIds) {
     const payload = await buildPayload(id, groupId, gameMap);
-    if (!payload) continue;
+    // Skip (and don't mark known) when the tournament couldn't be loaded or its
+    // game name couldn't be resolved — game_name is NOT NULL on the BGM side,
+    // and the upsert never refreshes it, so a blank would be permanent. Leaving
+    // the id unknown lets a later visit retry once the game map is healthy.
+    if (!payload || !payload.game_name) continue;
 
     const inserted = await postTournament(baseUrl, payload);
     if (inserted) console.info(`[BGM] new tournament synced: ${payload.title}`);

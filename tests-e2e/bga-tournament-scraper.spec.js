@@ -78,8 +78,11 @@ async function captureTournamentPosts(context, sink) {
   });
 }
 
-/** Mock BGA's getTournament + gamelist endpoints. */
-async function mockBgaApi(context) {
+/**
+ * Mock BGA's getTournament + gamelist endpoints.
+ * Pass { gamelistStatus } to simulate a failed game-list fetch.
+ */
+async function mockBgaApi(context, { gamelistStatus = 200 } = {}) {
   await context.route('**/tournament/view/getTournament.html**', async (route) => {
     const id = new URL(route.request().url()).searchParams.get('id');
     const tournament = TOURNAMENTS[id];
@@ -91,9 +94,9 @@ async function mockBgaApi(context) {
   });
   await context.route(/\/gamelist\?section=all/, async (route) => {
     await route.fulfill({
-      status: 200,
+      status: gamelistStatus,
       contentType: 'text/html; charset=utf-8',
-      body: GAMELIST_HTML,
+      body: gamelistStatus === 200 ? GAMELIST_HTML : '',
     });
   });
 }
@@ -138,6 +141,54 @@ test('reads tournament IDs and POSTs each tournament from the BGA API', async ({
     spots_total: 24,
     status: 'full',
   });
+});
+
+test('skips tournaments whose game name cannot be resolved', async ({ context }) => {
+  // game_name is NOT NULL on the BGM side, so a tournament we cannot map to a
+  // game must not be POSTed (and must stay unknown so a later visit retries).
+  const posted = [];
+  await captureTournamentPosts(context, posted);
+  await mockBgaApi(context, { gamelistStatus: 500 });
+  await serveFixture(context, `${BASE}/group**`, 'shops/bga-group.html');
+
+  const page = await context.newPage();
+  await page.goto(`${BASE}/group?id=99999`);
+
+  await page.waitForTimeout(2000); // give the scraper time to fetch + (not) POST
+  expect(posted.length).toBe(0);
+});
+
+test('skips tournaments the BGA API cannot load', async ({ context }) => {
+  // getTournament returns {status:0} for unknown ids → buildPayload returns
+  // null → the tournament is skipped, not POSTed.
+  const posted = [];
+  await captureTournamentPosts(context, posted);
+  await mockBgaApi(context);
+  await serveFixture(context, `${BASE}/group**`, 'shops/bga-group-unknown.html');
+
+  const page = await context.newPage();
+  await page.goto(`${BASE}/group?id=99999`);
+
+  await page.waitForTimeout(2000);
+  expect(posted.length).toBe(0);
+});
+
+test('does not re-POST tournaments already known', async ({ context }) => {
+  const posted = [];
+  await captureTournamentPosts(context, posted);
+  await mockBgaApi(context);
+  await serveFixture(context, `${BASE}/group**`, 'shops/bga-group.html');
+
+  // First visit syncs both tournaments.
+  const page = await context.newPage();
+  await page.goto(`${BASE}/group?id=99999`);
+  await expect.poll(() => posted.length, { timeout: 10000 }).toBeGreaterThanOrEqual(2);
+
+  // Second visit: both ids are now known → no further POSTs.
+  posted.length = 0;
+  await page.reload();
+  await page.waitForTimeout(2000);
+  expect(posted.length).toBe(0);
 });
 
 test('does not run on non-group BGA pages', async ({ context }) => {
