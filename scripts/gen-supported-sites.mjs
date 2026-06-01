@@ -51,7 +51,8 @@ const SITE_META = {
     pageType: 'Group tournament list',
     exampleUrl: 'https://boardgamearena.com/group?id=17757439',
     action: 'Auto-syncs new group tournaments to BGM; triggers Discord webhook on first detection',
-    mechanism: 'Scrapes DOM on /group pages, diffs vs chrome.storage, POSTs to /api/tournaments',
+    mechanism:
+      "Reads tournament IDs from /group links, fetches each via BGA's getTournament.html API, resolves game name + BGG id from a weekly-cached /gamelist map, diffs vs chrome.storage, POSTs to /api/tournaments",
   },
   'src/content/yucata-scraper.js': {
     site: 'Yucata',

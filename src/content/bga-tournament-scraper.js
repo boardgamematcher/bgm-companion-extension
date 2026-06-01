@@ -1,41 +1,37 @@
 /**
  * bga-tournament-scraper.js
  *
- * Runs on BGA group pages (/group?id=*). Detects new tournaments,
- * diffs against locally-stored known IDs, and POSTs new ones to
- * the BGM API. The API endpoint is idempotent, so concurrent visitors
- * triggering the scraper only fire the Discord webhook once.
+ * Runs on BGA group pages (/group?id=*). Collects the tournament IDs linked on
+ * the page, fetches each tournament's detail from BGA's own JSON API, resolves
+ * the game name + BGG id from a cached game-list lookup, diffs against
+ * locally-stored known IDs, and POSTs to the BGM API. The BGM endpoint is
+ * idempotent on bga_tournament_id, so concurrent visitors only fire the Discord
+ * webhook once.
  *
- * ⚠️  DOM SELECTORS NOTE
- * BGA's group tournament list is rendered by their frontend framework.
- * The selectors below are best-effort based on BGA's known HTML patterns
- * as of mid-2025. If nothing is detected, open DevTools on the group page
- * and look for the container holding the tournament rows, then update
- * TOURNAMENT_ROW_SELECTOR and the helper functions below.
+ * Why the API and not the DOM: the /group page only carries bare tournament
+ * links (no game/seats/dates), and /tournament?id=X is a client-rendered SPA
+ * shell whose HTML has none of the data. The data comes from BGA's own calls:
+ *   GET /tournament/view/getTournament.html?id=<id>  → name, gameId, status,
+ *       baseDate, maxPlayers, registeredPlayers (but NOT the game name)
+ *   GET /gamelist?section=all                         → page embedding a JSON
+ *       array of every game: { id, display_name_en, bgg_id }. We map the
+ *       numeric gameId → name + BGG id from it (gameDetails.html only accepts
+ *       the game *tag*, not the numeric id). Cached weekly — it's ~2 MB.
+ * Both are public GETs (no auth/token) returning {status:1, data} / HTML.
  */
 
 'use strict';
 
 const BGM_BASE_URL = 'https://boardgamematcher.com';
+const BGA_ORIGIN = 'https://en.boardgamearena.com';
 const STORAGE_KEY = 'bga_known_tournaments';
+const GAME_MAP_KEY = 'bga_game_map';
+const GAME_MAP_TTL_MS = 7 * 24 * 60 * 60 * 1000; // refresh the game list weekly
 
-// ── DOM selectors — adjust here if BGA changes its markup ───────────────────
-//
-// Priority: try each in order until one returns results.
-const TOURNAMENT_ROW_SELECTORS = [
-  // BGA group page tournament table rows (observed pattern)
-  'table.tournament_list tr[id^="tournament_"]',
-  // Alternate list-item pattern
-  '.tournament_item',
-  // Generic fallback: any link pointing to /tournament?id=
-  'a[href*="/tournament?id="]',
-];
-
-// ── Helpers ─────────────────────────────────────────────────────────────────
+// ── Page detection ────────────────────────────────────────────────────────
 
 function getGroupId() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get('id');
+  return new URLSearchParams(window.location.search).get('id');
 }
 
 function isGroupPage() {
@@ -48,118 +44,122 @@ function isGroupPage() {
 }
 
 /**
- * Extract tournament ID from a BGA tournament URL or element ID.
- * Handles:
- *   /tournament?id=12345  →  "12345"
- *   id="tournament_12345" →  "12345"
+ * Collect the distinct tournament IDs linked anywhere on the group page.
+ * BGA renders these as `<a href="/tournament?id=12345&token=...">`.
  */
-function extractTournamentId(el) {
-  // From element id="tournament_12345"
-  const idAttr = el.id || '';
-  const idMatch = idAttr.match(/tournament_(\d+)/);
-  if (idMatch) return idMatch[1];
-
-  // From a link href="/tournament?id=12345"
-  const link = el.tagName === 'A' ? el : el.querySelector('a[href*="/tournament?id="]');
-  if (link) {
-    const href = link.getAttribute('href') || '';
-    const hrefMatch = href.match(/[?&]id=(\d+)/);
-    if (hrefMatch) return hrefMatch[1];
+function scrapeTournamentIds() {
+  const links = document.querySelectorAll('a[href*="/tournament?id="]');
+  const ids = new Set();
+  for (const link of links) {
+    const m = (link.getAttribute('href') || '').match(/[?&]id=(\d+)/);
+    if (m) ids.add(m[1]);
   }
-  return null;
+  return Array.from(ids);
 }
 
+// ── BGA game-id → { name, bggId } map (cached) ──────────────────────────────
+
 /**
- * Extract game name from a tournament row element.
- *
- * BGA typically shows the game name in a link or span inside the row.
- * Adjust the selector list if the game name isn't being picked up.
+ * Parse BGA's game-list page into a { [gameId]: { name, bggId } } map. The page
+ * embeds each game as a JSON object carrying `id`, `display_name_en`, and
+ * `bgg_id`; we pull those out with a tolerant regex rather than trying to
+ * recover the whole array.
  */
-function extractGameName(el) {
-  // Try common BGA patterns for game name
-  const candidates = [
-    el.querySelector('.gamename'),
-    el.querySelector('[class*="game_name"]'),
-    el.querySelector('[class*="game-name"]'),
-    el.querySelector('a[href*="/gamepanel"]'),
-    el.querySelector('a[href*="/game/"]'),
-  ];
-  for (const c of candidates) {
-    if (c && c.textContent.trim()) return c.textContent.trim();
+function parseGameList(html) {
+  const map = {};
+  const re =
+    /"id":(\d+),"name":"[^"]*","display_name_en":"([^"]*)"([\s\S]{0,1500}?)(?="id":\d+,"name"|$)/g;
+  let m;
+  while ((m = re.exec(html)) !== null) {
+    const id = m[1];
+    const name = m[2];
+    const bggMatch = m[3].match(/"bgg_id":(\d+)/);
+    map[id] = { name, bggId: bggMatch ? Number(bggMatch[1]) : null };
   }
-  // Last resort: look for any text that doesn't look like a date or count
-  return '';
+  return map;
 }
 
 /**
- * Extract spots filled/total from text like "12/24" or "12 / 24".
+ * Return the cached game map, refreshing from /gamelist at most weekly. Falls
+ * back to any stale cache (or {}) if the fetch fails.
  */
-function extractSpots(el) {
-  const text = el.textContent || '';
-  const match = text.match(/(\d+)\s*\/\s*(\d+)/);
-  if (match) return { filled: parseInt(match[1], 10), total: parseInt(match[2], 10) };
-  return { filled: 0, total: 24 };
+async function getGameMap() {
+  const cached = (await chrome.storage.local.get(GAME_MAP_KEY))[GAME_MAP_KEY];
+  if (cached && cached.map && Date.now() - cached.fetchedAt < GAME_MAP_TTL_MS) {
+    return cached.map;
+  }
+
+  try {
+    const res = await fetch(`${BGA_ORIGIN}/gamelist?section=all`, { credentials: 'include' });
+    if (!res.ok) throw new Error(`gamelist → ${res.status}`);
+    const map = parseGameList(await res.text());
+    if (Object.keys(map).length > 0) {
+      await chrome.storage.local.set({ [GAME_MAP_KEY]: { map, fetchedAt: Date.now() } });
+      return map;
+    }
+  } catch (err) {
+    console.warn('[BGM] could not load BGA game list', err);
+  }
+  return cached?.map || {};
+}
+
+// ── BGA tournament API ──────────────────────────────────────────────────────
+
+async function getTournamentDetail(tournamentId) {
+  const res = await fetch(`${BGA_ORIGIN}/tournament/view/getTournament.html?id=${tournamentId}`, {
+    credentials: 'include',
+    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+  });
+  if (!res.ok) throw new Error(`getTournament ${tournamentId} → ${res.status}`);
+  const json = await res.json();
+  if (json.status !== 1 || !json.data?.tournament) {
+    throw new Error(`getTournament ${tournamentId} → status ${json.status}`);
+  }
+  return json.data.tournament;
 }
 
 /**
- * Parse the tournament status from class names or text.
- * Returns 'open' | 'full' | 'ongoing' | 'finished'.
+ * Map BGA's tournament status to BGM's allowed set:
+ * 'open' | 'full' | 'ongoing' | 'finished'.
  */
-function extractStatus(el) {
-  const cls = (el.className || '') + ' ' + (el.querySelector('[class]')?.className || '');
-  if (/finish|terminé|ended|completed/i.test(cls)) return 'finished';
-  if (/ongoing|en cours|started/i.test(cls)) return 'ongoing';
-  const { filled, total } = extractSpots(el);
-  if (filled >= total && total > 0) return 'full';
+function normalizeStatus(bgaStatus, filled, total) {
+  const s = (bgaStatus || '').toLowerCase();
+  if (/archive|ended|finished|closed/.test(s)) return 'finished';
+  if (/running|playing|launch|progress/.test(s)) return 'ongoing';
+  // register / ready → open, unless every seat is taken
+  if (total > 0 && filled >= total) return 'full';
   return 'open';
 }
 
 /**
- * Scrape the tournament list from the current group page DOM.
- * Returns an array of tournament objects (partial — no bgg_id/start_date).
+ * Fetch one tournament and shape it into the BGM ingest payload. Returns null
+ * if the tournament can't be loaded.
  */
-function scrapeTournaments(groupId) {
-  let rows = [];
-
-  for (const selector of TOURNAMENT_ROW_SELECTORS) {
-    const found = Array.from(document.querySelectorAll(selector));
-    if (found.length > 0) {
-      rows = found;
-      break;
-    }
+async function buildPayload(tournamentId, groupId, gameMap) {
+  let t;
+  try {
+    t = await getTournamentDetail(tournamentId);
+  } catch (err) {
+    console.warn(`[BGM] could not load tournament ${tournamentId}`, err);
+    return null;
   }
 
-  if (rows.length === 0) return [];
+  const game = gameMap[String(t.gameId)] || null;
+  const spotsTotal = t.maxPlayers ?? null;
+  const spotsFilled = t.registeredPlayers ?? null;
 
-  const tournaments = [];
-  for (const row of rows) {
-    const tournamentId = extractTournamentId(row);
-    if (!tournamentId) continue;
-
-    const gameName = extractGameName(row);
-    const { filled, total } = extractSpots(row);
-    const status = extractStatus(row);
-
-    // Tournament title: prefer an explicit title element, fall back to game name
-    const titleEl =
-      row.querySelector('[class*="tournament_name"]') ||
-      row.querySelector('[class*="tournamentname"]') ||
-      row.querySelector('a[href*="/tournament?id="]');
-    const title = titleEl ? titleEl.textContent.trim() : gameName;
-
-    tournaments.push({
-      bga_tournament_id: tournamentId,
-      bga_group_id: groupId,
-      title: title || `Tournoi ${gameName || tournamentId}`,
-      game_name: gameName,
-      bga_url: `https://en.boardgamearena.com/tournament?id=${tournamentId}`,
-      spots_total: total,
-      spots_filled: filled,
-      status,
-    });
-  }
-
-  return tournaments;
+  return {
+    bga_tournament_id: String(t.id),
+    bga_group_id: groupId,
+    title: t.name || `Tournoi ${game?.name || t.id}`,
+    game_name: game?.name || null,
+    bgg_id: game?.bggId || null,
+    bga_url: `${BGA_ORIGIN}/tournament?id=${t.id}`,
+    status: normalizeStatus(t.status, spotsFilled, spotsTotal),
+    spots_total: spotsTotal,
+    spots_filled: spotsFilled,
+    start_date: t.baseDate || null,
+  };
 }
 
 // ── Storage ─────────────────────────────────────────────────────────────────
@@ -208,50 +208,40 @@ async function runTournamentScraper() {
   if (!isGroupPage()) return;
 
   const groupId = getGroupId();
-  const tournaments = scrapeTournaments(groupId);
-
-  if (tournaments.length === 0) return;
-
-  const knownIds = await getKnownIds();
-  const newTournaments = tournaments.filter((t) => !knownIds.has(t.bga_tournament_id));
-
-  if (newTournaments.length === 0) {
-    // Still update spots/status for all tournaments (idempotent upsert)
-    const baseUrl = await getBgmBaseUrl();
-    for (const t of tournaments) {
-      await postTournament(baseUrl, t);
-    }
-    return;
-  }
+  const ids = scrapeTournamentIds();
+  if (ids.length === 0) return;
 
   const baseUrl = await getBgmBaseUrl();
+  const gameMap = await getGameMap();
+  const knownIds = await getKnownIds();
   const updatedIds = new Set(knownIds);
 
-  for (const t of tournaments) {
-    const inserted = await postTournament(baseUrl, t);
-    if (inserted) {
-      console.info(`[BGM] new tournament synced: ${t.title}`);
-    }
-    updatedIds.add(t.bga_tournament_id);
+  for (const id of ids) {
+    const payload = await buildPayload(id, groupId, gameMap);
+    if (!payload) continue;
+
+    const inserted = await postTournament(baseUrl, payload);
+    if (inserted) console.info(`[BGM] new tournament synced: ${payload.title}`);
+    updatedIds.add(id);
   }
 
   await saveKnownIds(updatedIds);
 }
 
-// Run after DOM is ready. BGA is an SPA, so also observe DOM mutations
-// in case the tournament list is injected after initial load.
+// Run after DOM is ready. BGA is an SPA, so also observe DOM mutations in case
+// the tournament links are injected after initial load.
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', runTournamentScraper);
 } else {
   runTournamentScraper();
 }
 
-// MutationObserver fallback: re-run once when the main content area changes,
+// MutationObserver fallback: re-run once when tournament links first appear,
 // capped to a single additional pass to avoid infinite loops.
 let observerFired = false;
 const observer = new MutationObserver(() => {
   if (observerFired) return;
-  if (document.querySelectorAll(TOURNAMENT_ROW_SELECTORS[0]).length > 0) {
+  if (document.querySelector('a[href*="/tournament?id="]')) {
     observerFired = true;
     observer.disconnect();
     runTournamentScraper();
