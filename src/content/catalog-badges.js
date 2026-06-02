@@ -173,6 +173,26 @@ function localizedGameUrl(slug) {
 function normBgg(r) {
   return r > 5 ? r / 2 : r;
 }
+
+// BGM-1231: prefer soft Bayesian display_rating, fall back to legacy
+// bayes_average. Returns null when both are absent.
+function pickDisplayRating(game) {
+  if (!game) return null;
+  const raw = game.display_rating ?? game.bayes_average ?? null;
+  return raw == null ? null : normBgg(Number(raw));
+}
+
+// Compact vote-count formatter: 12,345 → "12K", 1,234,000 → "1.2M",
+// < 10,000 → locale-grouped integer; empty when there are no votes.
+function formatVotes(n) {
+  if (n == null) return '';
+  const c = Number(n);
+  if (!Number.isFinite(c) || c <= 0) return '';
+  if (c >= 1_000_000) return `${(c / 1_000_000).toFixed(1)}M`;
+  if (c >= 10_000) return `${Math.round(c / 1000)}K`;
+  return c.toLocaleString();
+}
+
 function ratingPct(r) {
   return Math.round(Math.min(5, Math.max(0, r)) * 20);
 }
@@ -229,7 +249,10 @@ function setError(tooltip, code) {
 }
 
 function renderGame(tooltip, { game, collectionTypes, userRating }) {
-  const bgg = normBgg(game.bayes_average);
+  // BGM-1231: headline uses soft Bayesian display_rating when present, else
+  // legacy bayes_average. Vote count surfaces the confidence signal.
+  const bgg = pickDisplayRating(game);
+  const votesLabel = formatVotes(game.users_rated);
   const PILLS = [
     { type: 'wishlist', label: '★ Wishlist' },
     { type: 'wanttoplay', label: '▷ Want to play' },
@@ -238,14 +261,14 @@ function renderGame(tooltip, { game, collectionTypes, userRating }) {
   ];
   const active = new Set(collectionTypes || []);
 
-  const starsHtml = game.bayes_average
+  const starsHtml = bgg != null
     ? `<div class="bgm-ct-rating">
         <div class="bgm-ct-stars">
           <span class="bgm-ct-s-empty">★★★★★</span>
           <span class="bgm-ct-s-fill" style="width:${ratingPct(bgg)}%">★★★★★</span>
         </div>
         <span class="bgm-ct-rval">${bgg.toFixed(1)}<small>/5</small></span>
-        <span class="bgm-ct-rtier">${esc(ratingTier(bgg))}</span>
+        <span class="bgm-ct-rtier">${esc(ratingTier(bgg))}${votesLabel ? ` · ${votesLabel} votes` : ''}</span>
       </div>`
     : '';
 

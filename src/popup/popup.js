@@ -1467,20 +1467,23 @@ async function renderGameDetail(game) {
   // Specs — players · playtime · weight (BGM-776)
   renderGameSpecs(game);
 
-  // Rating — Bayesian community rating on the 0–5 scale, rendered identically
-  // to the game overlay + catalog badges via the shared lib/rating.js helpers.
-  // normalizeBgg stays resilient if the API ever returns a legacy 0–10 value.
+  // Rating — soft Bayesian display_rating on the 0–5 scale (BGM-1231),
+  // falling back to legacy bayes_average. Same helpers as the game overlay
+  // and catalog badges via shared lib/rating.js. Vote count surfaces the
+  // confidence signal alongside the tier label.
   const ratingWrap = document.getElementById('gd-rating');
   const noRatingWrap = document.getElementById('gd-no-rating');
   const gameUrl = gameDetailUrl(game.slug, 'game-detail-card');
-  if (game.bayes_average) {
-    const r = normalizeBgg(Number(game.bayes_average));
+  const r = pickDisplayRating(game);
+  if (r != null) {
     document.getElementById('gd-rating-val').textContent = r.toFixed(1);
     document.getElementById('gd-rating-stars-fill').style.width = `${ratingFillPercent(r)}%`;
     document
       .getElementById('gd-rating-stars')
       .setAttribute('aria-label', `${r.toFixed(1)} out of 5`);
-    document.getElementById('gd-rating-tier').textContent = ratingTier(r);
+    const votesLabel = formatVoteCount(game.users_rated);
+    document.getElementById('gd-rating-tier').textContent =
+      ratingTier(r) + (votesLabel ? ` · ${votesLabel} votes` : '');
     ratingWrap.style.display = '';
     noRatingWrap.style.display = 'none';
   } else {
