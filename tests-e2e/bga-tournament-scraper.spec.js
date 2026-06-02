@@ -192,3 +192,79 @@ test('does not run on non-group BGA pages', async ({ context }) => {
   await page.waitForTimeout(1500); // give the scraper a chance to (not) fire
   expect(posted.length).toBe(0);
 });
+
+test('echoes the TournoiEnLigneidt cookie as X-Request-Token on BGA fetches', async ({
+  context,
+}) => {
+  // BGA's ajaxcall endpoints reject requests (code 806) unless the caller
+  // mirrors the HttpOnly TournoiEnLigneidt cookie as X-Request-Token. Since
+  // the cookie is HttpOnly, the content script asks the service worker for it
+  // via chrome.cookies (action: 'getCookie'). This test asserts the header is
+  // attached to every getTournament.html call when the cookie is set.
+  const tokenValue = 'oL1oNPFUUYvkwgg';
+  await context.addCookies([
+    {
+      name: 'TournoiEnLigneidt',
+      value: tokenValue,
+      domain: 'en.boardgamearena.com',
+      path: '/',
+      httpOnly: true,
+      secure: true,
+    },
+  ]);
+
+  const receivedTokens = [];
+  await context.route('**/tournament/view/getTournament.html**', async (route) => {
+    receivedTokens.push(route.request().headers()['x-request-token'] || null);
+    const id = new URL(route.request().url()).searchParams.get('id');
+    const tournament = TOURNAMENTS[id];
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(tournament ? { status: 1, data: { tournament } } : { status: 0 }),
+    });
+  });
+  await context.route(/\/gamelist\?section=all/, (route) =>
+    route.fulfill({ status: 200, contentType: 'text/html; charset=utf-8', body: GAMELIST_HTML }),
+  );
+  const posted = [];
+  await captureTournamentPosts(context, posted);
+  await serveFixture(context, `${BASE}/group**`, 'shops/bga-group.html');
+
+  const page = await context.newPage();
+  await page.goto(`${BASE}/group?id=99999`);
+  await expect.poll(() => posted.length, { timeout: 10000 }).toBeGreaterThanOrEqual(2);
+
+  expect(receivedTokens.length).toBeGreaterThanOrEqual(2);
+  for (const t of receivedTokens) expect(t).toBe(tokenValue);
+});
+
+test('still fetches BGA when the TournoiEnLigneidt cookie is missing', async ({ context }) => {
+  // No cookie set: the SW returns null, getBgaRequestToken yields null, and
+  // the scraper omits the X-Request-Token header. In production BGA would 806
+  // back, but our mock answers — the goal here is that the cookie absence
+  // never throws and the scrape pipeline still runs.
+  const receivedTokens = [];
+  await context.route('**/tournament/view/getTournament.html**', async (route) => {
+    receivedTokens.push(route.request().headers()['x-request-token'] || null);
+    const id = new URL(route.request().url()).searchParams.get('id');
+    const tournament = TOURNAMENTS[id];
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(tournament ? { status: 1, data: { tournament } } : { status: 0 }),
+    });
+  });
+  await context.route(/\/gamelist\?section=all/, (route) =>
+    route.fulfill({ status: 200, contentType: 'text/html; charset=utf-8', body: GAMELIST_HTML }),
+  );
+  const posted = [];
+  await captureTournamentPosts(context, posted);
+  await serveFixture(context, `${BASE}/group**`, 'shops/bga-group.html');
+
+  const page = await context.newPage();
+  await page.goto(`${BASE}/group?id=99999`);
+  await expect.poll(() => posted.length, { timeout: 10000 }).toBeGreaterThanOrEqual(2);
+
+  for (const t of receivedTokens) expect(t).toBeNull();
+});

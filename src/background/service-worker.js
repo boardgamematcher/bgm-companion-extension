@@ -348,6 +348,18 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     sendResponse({ success: true });
     return false;
   }
+
+  // Read a cookie value on behalf of a content script. BGA's ajaxcall CSRF
+  // token (TournoiEnLigneidt) is HttpOnly, so document.cookie can't see it —
+  // the SW reads it via chrome.cookies and the content script echoes it back
+  // as the X-Request-Token header.
+  if (message.action === 'getCookie' && message.url && message.name) {
+    chrome.cookies
+      .get({ url: message.url, name: message.name })
+      .then((c) => sendResponse({ value: c?.value || null }))
+      .catch(() => sendResponse({ value: null }));
+    return true;
+  }
 });
 
 // Update extraction stats

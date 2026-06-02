@@ -22,7 +22,10 @@
 
 'use strict';
 
-const BGA_ORIGIN = 'https://en.boardgamearena.com';
+// Use the current page's origin so cross-subdomain CORS never kicks in:
+// BGA redirects users between boardgamearena.com and en.boardgamearena.com
+// based on account locale, and the en. host doesn't send CORS headers.
+const BGA_ORIGIN = window.location.origin;
 const STORAGE_KEY = 'bga_known_tournaments';
 const GAME_MAP_KEY = 'bga_game_map';
 const GAME_MAP_TTL_MS = 7 * 24 * 60 * 60 * 1000; // refresh the game list weekly
@@ -104,10 +107,30 @@ async function getGameMap() {
 
 // ── BGA tournament API ──────────────────────────────────────────────────────
 
-async function getTournamentDetail(tournamentId) {
+// BGA's ajaxcall endpoints (anything served from /tournament/view/*.html and
+// friends) reject requests with code 806 unless the caller echoes the value
+// of the HttpOnly TournoiEnLigneidt cookie as an X-Request-Token header
+// (double-submit-cookie CSRF). document.cookie can't see HttpOnly cookies,
+// so the service worker reads it via chrome.cookies and sends it back.
+async function getBgaRequestToken() {
+  try {
+    const res = await chrome.runtime.sendMessage({
+      action: 'getCookie',
+      url: BGA_ORIGIN,
+      name: 'TournoiEnLigneidt',
+    });
+    return res?.value || null;
+  } catch (_) {
+    return null;
+  }
+}
+
+async function getTournamentDetail(tournamentId, requestToken) {
+  const headers = { 'X-Requested-With': 'XMLHttpRequest' };
+  if (requestToken) headers['X-Request-Token'] = requestToken;
   const res = await fetch(`${BGA_ORIGIN}/tournament/view/getTournament.html?id=${tournamentId}`, {
     credentials: 'include',
-    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+    headers,
   });
   if (!res.ok) throw new Error(`getTournament ${tournamentId} → ${res.status}`);
   const json = await res.json();
@@ -134,10 +157,10 @@ function normalizeStatus(bgaStatus, filled, total) {
  * Fetch one tournament and shape it into the BGM ingest payload. Returns null
  * if the tournament can't be loaded.
  */
-async function buildPayload(tournamentId, groupId, gameMap) {
+async function buildPayload(tournamentId, groupId, gameMap, requestToken) {
   let t;
   try {
-    t = await getTournamentDetail(tournamentId);
+    t = await getTournamentDetail(tournamentId, requestToken);
   } catch (err) {
     console.warn(`[BGM] could not load tournament ${tournamentId}`, err);
     return null;
@@ -223,10 +246,11 @@ async function scrapeAndSync() {
   if (newIds.length === 0) return;
 
   const gameMap = await getGameMap();
+  const requestToken = await getBgaRequestToken();
   const updatedIds = new Set(knownIds);
 
   for (const id of newIds) {
-    const payload = await buildPayload(id, groupId, gameMap);
+    const payload = await buildPayload(id, groupId, gameMap, requestToken);
     // Skip (and don't mark known) when the tournament couldn't be loaded or its
     // game name couldn't be resolved — game_name is NOT NULL on the BGM side,
     // and the upsert never refreshes it, so a blank would be permanent. Leaving
