@@ -14,11 +14,33 @@ function localizedGameUrl(slug) {
   );
 }
 
-// Normalize a BGG bayes_average to the 0–5 display scale.
-// The API currently returns 0–10; after the DB migration it will return 0–5.
-// Values > 5 are treated as legacy 0–10 and halved.
+// Normalize a community rating to the 0–5 display scale. Values > 5 are
+// treated as legacy 0–10 and halved (resilient if the API ever returns
+// the pre-BGM-1200 scale).
 function normalizeBgg(rating) {
   return rating > 5 ? rating / 2 : rating;
+}
+
+// Pick the best community-rating value to display from a game payload.
+// BGM-1231: prefer ``display_rating`` (soft Bayesian, honest for low-N
+// games) and fall back to legacy ``bayes_average``. Returns null when
+// both are absent.
+function pickDisplayRating(game) {
+  if (!game) return null;
+  const raw = game.display_rating ?? game.bayes_average ?? null;
+  return raw == null ? null : normalizeBgg(Number(raw));
+}
+
+// Format a vote count for compact display: 12,345 → "12K", 1,234,000 →
+// "1.2M", < 10,000 → "1,234" with locale grouping. Empty string when the
+// game has no votes (caller should hide the surface).
+function formatVoteCount(n) {
+  if (n == null) return '';
+  const count = Number(n);
+  if (!Number.isFinite(count) || count <= 0) return '';
+  if (count >= 1_000_000) return `${(count / 1_000_000).toFixed(1)}M`;
+  if (count >= 10_000) return `${Math.round(count / 1000)}K`;
+  return count.toLocaleString();
 }
 
 // Map a normalized (0–5) rating to a Steam-style sentiment label.
@@ -222,7 +244,7 @@ function showOverlayError(overlay, code) {
   }
 
   const { game, collectionTypes, userRating, imageFetched } = gameData;
-  // game: { id, name, slug, bayes_average, image_url }
+  // game: { id, name, slug, display_rating, bayes_average, users_rated, image_url }
   // collectionTypes: string[] e.g. ['own', 'played']
   // userRating: 1–5 | null
 
@@ -237,9 +259,14 @@ function showOverlayError(overlay, code) {
 
   const activeTypes = new Set(collectionTypes);
 
-  const bggRating = normalizeBgg(game.bayes_average);
-  const ratingHtml = game.bayes_average
-    ? `<div class="bgm-overlay-rating">
+  // BGM-1231: headline uses soft Bayesian display_rating when present, else
+  // legacy bayes_average. Vote count surfaces the confidence signal so users
+  // can judge how much to trust the score.
+  const bggRating = pickDisplayRating(game);
+  const votesLabel = formatVoteCount(game.users_rated);
+  const ratingHtml =
+    bggRating != null
+      ? `<div class="bgm-overlay-rating">
         <div class="bgm-rating-row">
           <div class="bgm-rating-stars" aria-label="${bggRating.toFixed(1)} out of 5">
             <span class="bgm-stars-empty">★★★★★</span>
@@ -247,9 +274,9 @@ function showOverlayError(overlay, code) {
           </div>
           <span class="bgm-rating-value">${bggRating.toFixed(1)}<span class="bgm-rating-denom">/5</span></span>
         </div>
-        <span class="bgm-rating-label">${escapeHtml(ratingTier(bggRating))}</span>
+        <span class="bgm-rating-label">${escapeHtml(ratingTier(bggRating))}${votesLabel ? ` · ${votesLabel} votes` : ''}</span>
        </div>`
-    : '';
+      : '';
 
   const pillsHtml = PILLS.map(
     ({ type, label }) =>

@@ -748,7 +748,10 @@ function normalizeForMatch(name) {
 }
 
 // Resolve a retailer page title to a BGM game + the user's collection types.
-// Returns { game: {id, name, slug, bayes_average}, collectionTypes: [] } or { error }.
+// Returns { game: {id, name, slug, display_rating, bayes_average, users_rated,
+//   image_url}, collectionTypes: [], userRating } or { error }. The web API
+// exposes display_rating + users_rated since BGM-1230; legacy bayes_average
+// is kept on the contract so older overlay versions still render.
 async function resolveGameOverlay(title) {
   if (!title || typeof title !== 'string') return { error: 'invalid_title' };
 
