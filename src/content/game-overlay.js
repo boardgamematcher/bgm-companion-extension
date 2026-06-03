@@ -322,6 +322,11 @@ function showOverlayError(overlay, code) {
          target="_blank" rel="noopener noreferrer">
         Open on BoardGameMatcher →
       </a>
+      <a class="bgm-overlay-write-review"
+         href="${localizedGameUrl(game.slug)}#write-review"
+         target="_blank" rel="noopener noreferrer">
+        Write a review
+      </a>
     </div>
   `;
 
