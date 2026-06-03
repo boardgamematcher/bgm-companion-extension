@@ -61,6 +61,11 @@ describe('pickDisplayRating', () => {
     expect(pickDisplayRating({ display_rating: null, bayes_average: null })).toBeNull();
   });
 
+  test('treats bayes_average: 0 as no-rating (API sentinel for unrated games)', () => {
+    expect(pickDisplayRating({ bayes_average: 0 })).toBeNull();
+    expect(pickDisplayRating({ display_rating: null, bayes_average: 0 })).toBeNull();
+  });
+
   test('halves legacy 0–10 values', () => {
     expect(pickDisplayRating({ display_rating: 7.6 })).toBeCloseTo(3.8);
   });

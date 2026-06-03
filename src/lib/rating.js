@@ -15,7 +15,7 @@ function normalizeBgg(rating) {
 // average since BGM-1235). Returns null when both are absent.
 function pickDisplayRating(game) {
   if (!game) return null;
-  const raw = game.display_rating ?? game.bayes_average ?? null;
+  const raw = game.display_rating || game.bayes_average || null;
   return raw == null ? null : normalizeBgg(Number(raw));
 }
 

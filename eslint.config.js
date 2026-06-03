@@ -15,6 +15,8 @@ export default [
         normalizeBgg: 'readonly',
         ratingTier: 'readonly',
         ratingFillPercent: 'readonly',
+        pickDisplayRating: 'readonly',
+        formatVoteCount: 'readonly',
         PatternMatcher: 'writable',
         Storage: 'writable',
         YucataMapper: 'writable',
