@@ -204,17 +204,23 @@ async function saveKnownIds(ids) {
 // (401) and fails silently. The service worker holds host_permissions for BGM, so
 // its fetch is first-party and carries the session cookie — the same path the
 // plays import (postPlays) already uses. See BGM-1233.
+// Returns { success, inserted }:
+//   success  — the POST round-trip itself worked (HTTP 2xx, body parsed). A
+//              false here means the tournament was NOT synced; the caller must
+//              leave the id un-known so the next visit retries.
+//   inserted — true only on first INSERT (xmax = 0 server-side). Upsert
+//              updates of an existing row are { success: true, inserted: false }.
 async function postTournament(tournament) {
   try {
     const res = await chrome.runtime.sendMessage({ action: 'syncTournament', tournament });
     if (!res || !res.success) {
       console.warn('[BGM] tournament sync failed', res && res.error);
-      return false;
+      return { success: false, inserted: false };
     }
-    return res.inserted === true;
+    return { success: true, inserted: res.inserted === true };
   } catch (err) {
     console.warn('[BGM] tournament sync error', err);
-    return false;
+    return { success: false, inserted: false };
   }
 }
 
@@ -257,9 +263,13 @@ async function scrapeAndSync() {
     // the id unknown lets a later visit retry once the game map is healthy.
     if (!payload || !payload.game_name) continue;
 
-    const inserted = await postTournament(payload);
+    const { success, inserted } = await postTournament(payload);
     if (inserted) console.info(`[BGM] new tournament synced: ${payload.title}`);
-    updatedIds.add(id);
+    // Only mark as known when the POST actually reached BGM and was accepted.
+    // A failed POST (network blip, server 5xx, auth lapse) must stay un-known
+    // so the next group-page visit retries — otherwise a single bad sync
+    // permanently hides the tournament from BGM.
+    if (success) updatedIds.add(id);
   }
 
   await saveKnownIds(updatedIds);

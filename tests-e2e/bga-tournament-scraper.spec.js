@@ -182,6 +182,57 @@ test('does not re-POST tournaments already known', async ({ context }) => {
   expect(posted.length).toBe(0);
 });
 
+test('failed POST does not pollute the known cache (retries on next visit)', async ({
+  context,
+}) => {
+  // Regression: scrapeAndSync used to mark an id as known regardless of
+  // postTournament's outcome. One 500 / network blip then permanently hid the
+  // tournament from BGM. With the fix, only successful POSTs gate the cache,
+  // so the next visit retries.
+  const posted = [];
+  let serverShouldFail = true;
+  await context.route('**/api/tournaments', async (route) => {
+    if (route.request().method() !== 'POST') {
+      await route.fallback();
+      return;
+    }
+    if (serverShouldFail) {
+      await route.fulfill({
+        status: 500,
+        contentType: 'application/json',
+        body: JSON.stringify({ error: 'simulated outage' }),
+      });
+    } else {
+      try {
+        posted.push(route.request().postDataJSON());
+      } catch {
+        posted.push(null);
+      }
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ inserted: true }),
+      });
+    }
+  });
+  await mockBgaApi(context);
+  await serveFixture(context, `${BASE}/group**`, 'shops/bga-group.html');
+
+  const page = await context.newPage();
+
+  // First visit: server is down → both POSTs 500. Nothing in `posted` (we only
+  // record success-path bodies), and crucially nothing should be marked known.
+  await page.goto(`${BASE}/group?id=99999`);
+  await page.waitForTimeout(2000);
+  expect(posted.length).toBe(0);
+
+  // Bring the server back. Reload: the scraper must retry the same ids.
+  serverShouldFail = false;
+  await page.reload();
+  await expect.poll(() => posted.length, { timeout: 10000 }).toBeGreaterThanOrEqual(2);
+  expect(posted.map((t) => t.bga_tournament_id).sort()).toEqual(['11111', '22222']);
+});
+
 test('does not run on non-group BGA pages', async ({ context }) => {
   const posted = [];
   await captureTournamentPosts(context, posted);
