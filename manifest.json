@@ -27,7 +27,7 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "bgm-toolbox@boardgamematcher.com",
-      "strict_min_version": "109.0"
+      "strict_min_version": "121.0"
     }
   },
   "action": {
