@@ -264,8 +264,9 @@ function showOverlayError(overlay, code) {
   // can judge how much to trust the score.
   const bggRating = pickDisplayRating(game);
   const votesLabel = formatVoteCount(game.users_rated);
-  const ratingHtml = bggRating != null
-    ? `<div class="bgm-overlay-rating">
+  const ratingHtml =
+    bggRating != null
+      ? `<div class="bgm-overlay-rating">
         <div class="bgm-rating-row">
           <div class="bgm-rating-stars" aria-label="${bggRating.toFixed(1)} out of 5">
             <span class="bgm-stars-empty">★★★★★</span>
@@ -275,7 +276,7 @@ function showOverlayError(overlay, code) {
         </div>
         <span class="bgm-rating-label">${escapeHtml(ratingTier(bggRating))}${votesLabel ? ` · ${votesLabel} votes` : ''}</span>
        </div>`
-    : '';
+      : '';
 
   const pillsHtml = PILLS.map(
     ({ type, label }) =>

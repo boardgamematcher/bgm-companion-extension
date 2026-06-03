@@ -261,8 +261,9 @@ function renderGame(tooltip, { game, collectionTypes, userRating }) {
   ];
   const active = new Set(collectionTypes || []);
 
-  const starsHtml = bgg != null
-    ? `<div class="bgm-ct-rating">
+  const starsHtml =
+    bgg != null
+      ? `<div class="bgm-ct-rating">
         <div class="bgm-ct-stars">
           <span class="bgm-ct-s-empty">★★★★★</span>
           <span class="bgm-ct-s-fill" style="width:${ratingPct(bgg)}%">★★★★★</span>
@@ -270,7 +271,7 @@ function renderGame(tooltip, { game, collectionTypes, userRating }) {
         <span class="bgm-ct-rval">${bgg.toFixed(1)}<small>/5</small></span>
         <span class="bgm-ct-rtier">${esc(ratingTier(bgg))}${votesLabel ? ` · ${votesLabel} votes` : ''}</span>
       </div>`
-    : '';
+      : '';
 
   const pillsHtml = PILLS.map(
     ({ type, label }) =>
