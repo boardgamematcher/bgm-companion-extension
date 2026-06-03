@@ -255,6 +255,22 @@
   color: var(--bgm-amber-light) !important;
 }
 
+.bgm-overlay-write-review {
+  display: block !important;
+  text-align: center !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  color: var(--bgm-text-secondary) !important;
+  text-decoration: none !important;
+  padding: 3px 0 !important;
+  margin-top: 2px !important;
+  transition: color 0.15s !important;
+}
+
+.bgm-overlay-write-review:hover {
+  color: var(--bgm-text-primary) !important;
+}
+
 /* Loading skeleton */
 .bgm-overlay-loading {
   display: flex !important;
