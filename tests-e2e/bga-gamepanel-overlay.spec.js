@@ -23,12 +23,10 @@ test('BGA game panel renders the BGM overlay', async ({ context }) => {
   const overlay = page.locator('#bgm-overlay');
   await expect(overlay).toBeVisible({ timeout: 8000 });
   await expect(overlay.locator('.bgm-overlay-game-name')).toHaveText('Café');
-  await expect(
-    overlay.locator('.bgm-collection-pill[data-type="played"].bgm-active')
-  ).toHaveCount(1);
-  await expect(
-    overlay.locator('.bgm-collection-pill[data-type="own"].bgm-active')
-  ).toHaveCount(0);
+  await expect(overlay.locator('.bgm-collection-pill[data-type="played"].bgm-active')).toHaveCount(
+    1
+  );
+  await expect(overlay.locator('.bgm-collection-pill[data-type="own"].bgm-active')).toHaveCount(0);
 });
 
 // ── Subdomain variant ─────────────────────────────────────────────────────────
@@ -56,7 +54,9 @@ test('en.boardgamearena.com gamepanel renders the BGM overlay', async ({ context
 
 // ── Title extraction fallbacks ────────────────────────────────────────────────
 
-test('extracts title from document.title when game_name element and og:title are absent', async ({ context }) => {
+test('extracts title from document.title when game_name element and og:title are absent', async ({
+  context,
+}) => {
   await serveFixture(
     context,
     'https://boardgamearena.com/gamepanel?game=terraformingmars',

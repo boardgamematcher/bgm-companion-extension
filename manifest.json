@@ -6,7 +6,15 @@
   "default_locale": "en",
   "author": "BoardGameMatcher",
   "homepage_url": "https://boardgamematcher.com",
-  "permissions": ["activeTab", "alarms", "contextMenus", "cookies", "notifications", "storage", "scripting"],
+  "permissions": [
+    "activeTab",
+    "alarms",
+    "contextMenus",
+    "cookies",
+    "notifications",
+    "storage",
+    "scripting"
+  ],
   "host_permissions": [
     "https://boardgamematcher.com/*",
     "https://images.boardgamematcher.com/*",
