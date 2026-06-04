@@ -262,7 +262,11 @@ async function scrapeAndSync() {
   const requestToken = await getBgaRequestToken();
   const updatedIds = new Set(knownIds);
 
-  for (const id of newIds) {
+  for (const [i, id] of newIds.entries()) {
+    // Stagger POSTs by 500 ms after the first one so a bulk initial sync
+    // (e.g. 11 tournaments on first run) doesn't trigger Cloudflare rate limiting.
+    if (i > 0) await new Promise((r) => setTimeout(r, 500));
+
     const payload = await buildPayload(id, groupId, gameMap, requestToken);
     // Skip (and don't mark known) when the tournament couldn't be loaded or its
     // game name couldn't be resolved — game_name is NOT NULL on the BGM side,
