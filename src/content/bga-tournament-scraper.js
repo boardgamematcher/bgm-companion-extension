@@ -169,7 +169,10 @@ async function buildPayload(tournamentId, groupId, gameMap, requestToken) {
   }
 
   const game = gameMap[String(t.gameId)] || null;
-  if (!game) console.warn(`[BGM] tournament ${tournamentId}: gameId ${t.gameId} not in game map — will skip`);
+  if (!game)
+    console.warn(
+      `[BGM] tournament ${tournamentId}: gameId ${t.gameId} not in game map — will skip`
+    );
   const spotsTotal = t.maxPlayers ?? null;
   const spotsFilled = t.registeredPlayers ?? null;
 
