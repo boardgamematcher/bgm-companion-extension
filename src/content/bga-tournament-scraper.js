@@ -88,6 +88,7 @@ function parseGameList(html) {
 async function getGameMap() {
   const cached = (await chrome.storage.local.get(GAME_MAP_KEY))[GAME_MAP_KEY];
   if (cached && cached.map && Date.now() - cached.fetchedAt < GAME_MAP_TTL_MS) {
+    console.info(`[BGM] game map: ${Object.keys(cached.map).length} games (cached)`);
     return cached.map;
   }
 
@@ -96,6 +97,7 @@ async function getGameMap() {
     if (!res.ok) throw new Error(`gamelist → ${res.status}`);
     const map = parseGameList(await res.text());
     if (Object.keys(map).length > 0) {
+      console.info(`[BGM] game map: ${Object.keys(map).length} games (fetched)`);
       await chrome.storage.local.set({ [GAME_MAP_KEY]: { map, fetchedAt: Date.now() } });
       return map;
     }
@@ -167,6 +169,7 @@ async function buildPayload(tournamentId, groupId, gameMap, requestToken) {
   }
 
   const game = gameMap[String(t.gameId)] || null;
+  if (!game) console.warn(`[BGM] tournament ${tournamentId}: gameId ${t.gameId} not in game map — will skip`);
   const spotsTotal = t.maxPlayers ?? null;
   const spotsFilled = t.registeredPlayers ?? null;
 
@@ -249,6 +252,7 @@ async function scrapeAndSync() {
   // Known tournaments are skipped: their spots/status won't refresh, but we
   // avoid N getTournament fetches + N POSTs on every single group-page visit.
   const newIds = ids.filter((id) => !knownIds.has(id));
+  console.info(`[BGM] group ${groupId}: ${ids.length} tournament(s) on page, ${newIds.length} new`);
   if (newIds.length === 0) return;
 
   const gameMap = await getGameMap();
