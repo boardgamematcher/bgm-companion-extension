@@ -36,7 +36,9 @@ async function captureTabsCreate(page) {
     // that have no handler registered in the test environment.
     const origSend = chrome.runtime.sendMessage.bind(chrome.runtime);
     chrome.runtime.sendMessage = (...args) => {
-      try { origSend(...args); } catch (_) {}
+      try {
+        origSend(...args);
+      } catch (_) {}
       return Promise.resolve({});
     };
     window.close = () => {};
@@ -82,9 +84,7 @@ test('auto-extract: opens BGM results page and skips review panel', async ({
   // Auto-extract fires chrome.tabs.create with the BGM results URL and then
   // calls window.close() (no-op in tests). The review game list should be
   // empty — the early return prevented it from being populated.
-  await expect
-    .poll(() => nav.getUrl(), { timeout: 5000 })
-    .toMatch(/\/extract\?job=/);
+  await expect.poll(() => nav.getUrl(), { timeout: 5000 }).toMatch(/\/extract\?job=/);
 
   await expect(popup.locator('.review-game-row')).toHaveCount(0);
 });

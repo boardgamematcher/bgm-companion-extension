@@ -85,7 +85,7 @@ await sw.evaluate(async () => {
   await reloadPatterns(); // eslint-disable-line no-undef
 });
 
-const page = context.pages()[0] ?? await context.newPage();
+const page = context.pages()[0] ?? (await context.newPage());
 await page.goto(DEFAULT_URL);
 
 console.log(`BGM test browser ready → ${DEFAULT_URL}`);
@@ -93,5 +93,8 @@ console.log('Ctrl+C to quit.\n');
 
 await new Promise((resolve) => {
   context.on('close', resolve);
-  process.on('SIGINT', async () => { await context.close(); resolve(); });
+  process.on('SIGINT', async () => {
+    await context.close();
+    resolve();
+  });
 });

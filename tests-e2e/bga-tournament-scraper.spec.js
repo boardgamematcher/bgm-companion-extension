@@ -276,7 +276,7 @@ test('echoes the TournoiEnLigneidt cookie as X-Request-Token on BGA fetches', as
     });
   });
   await context.route(/\/gamelist\?section=all/, (route) =>
-    route.fulfill({ status: 200, contentType: 'text/html; charset=utf-8', body: GAMELIST_HTML }),
+    route.fulfill({ status: 200, contentType: 'text/html; charset=utf-8', body: GAMELIST_HTML })
   );
   const posted = [];
   await captureTournamentPosts(context, posted);
@@ -307,7 +307,7 @@ test('still fetches BGA when the TournoiEnLigneidt cookie is missing', async ({ 
     });
   });
   await context.route(/\/gamelist\?section=all/, (route) =>
-    route.fulfill({ status: 200, contentType: 'text/html; charset=utf-8', body: GAMELIST_HTML }),
+    route.fulfill({ status: 200, contentType: 'text/html; charset=utf-8', body: GAMELIST_HTML })
   );
   const posted = [];
   await captureTournamentPosts(context, posted);

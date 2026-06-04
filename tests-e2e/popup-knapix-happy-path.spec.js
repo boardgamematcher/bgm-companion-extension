@@ -14,7 +14,9 @@ async function captureTabsCreate(page) {
     // that have no handler registered in the test environment.
     const origSend = chrome.runtime.sendMessage.bind(chrome.runtime);
     chrome.runtime.sendMessage = (...args) => {
-      try { origSend(...args); } catch (_) {}
+      try {
+        origSend(...args);
+      } catch (_) {}
       return Promise.resolve({});
     };
     window.close = () => {};
@@ -27,10 +29,7 @@ async function captureTabsCreate(page) {
   };
 }
 
-test('Knapix happy path: auto-extract opens BGM results page', async ({
-  context,
-  extensionId,
-}) => {
+test('Knapix happy path: auto-extract opens BGM results page', async ({ context, extensionId }) => {
   await serveFixture(context, 'https://www.knapix.com/**', 'shops/knapix.html');
 
   await mockJson(context, 'https://boardgamematcher.com/api/extract/preview', {
@@ -67,9 +66,7 @@ test('Knapix happy path: auto-extract opens BGM results page', async ({
   // calls window.close() (no-op in tests). The card-review is briefly made
   // visible by showReviewPanel before the early return — assert on the
   // navigation, not the panel visibility.
-  await expect
-    .poll(() => nav.getUrl(), { timeout: 5000 })
-    .toMatch(/\/extract\?job=/);
+  await expect.poll(() => nav.getUrl(), { timeout: 5000 }).toMatch(/\/extract\?job=/);
 
   // The review game list should be empty — the early return prevented it from
   // being populated with game rows.

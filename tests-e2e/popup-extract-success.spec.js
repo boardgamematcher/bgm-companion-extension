@@ -29,7 +29,9 @@ async function captureTabsCreate(page) {
     };
     const origSend = chrome.runtime.sendMessage.bind(chrome.runtime);
     chrome.runtime.sendMessage = (...args) => {
-      try { origSend(...args); } catch (_) {}
+      try {
+        origSend(...args);
+      } catch (_) {}
       return Promise.resolve({});
     };
     window.close = () => {};
