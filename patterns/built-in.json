@@ -597,7 +597,10 @@
       "domain": "bol.com",
       "filters": {
         "deduplicate": true,
-        "exclude": ["^Gesponsord", "^Sponsorisé"],
+        "exclude": [
+          "^Gesponsord",
+          "^Sponsorisé"
+        ],
         "trim": true
       },
       "image_selector": "[data-bltgh*=\"ProductImage\"] img",
