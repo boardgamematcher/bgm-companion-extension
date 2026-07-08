@@ -24,6 +24,7 @@ jobs:
       - name: Open PR if changed
         uses: peter-evans/create-pull-request@v7
         with:
+          token: ${{ secrets.SYNC_PAT }}
           commit-message: 'chore: sync built-in profiles from site-profiles'
           title: 'chore: sync built-in profiles from site-profiles'
           body: 'Automated sync from [boardgamematcher/site-profiles](https://github.com/boardgamematcher/site-profiles).'
