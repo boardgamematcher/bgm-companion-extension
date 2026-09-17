@@ -92,9 +92,10 @@ const SITE_META = {
       'Calls BGG XML2 API `/xmlapi2/user/<u>/{plays,collection}`; on `/boardgame/<id>/<slug>` pages the popup runs `/api/games/search` then `/api/collections/{id}/{type}`',
   },
   'src/content/game-overlay.js': {
-    site: 'Philibert (game-detail overlay)',
+    site: 'Philibert / Ludiprix (game-detail overlay)',
     pageType: 'Product detail',
-    exampleUrl: 'https://www.philibertnet.com/{lang}/cat/<id>-<slug>.html',
+    exampleUrl:
+      'https://www.philibertnet.com/{lang}/cat/<id>-<slug>.html or https://ludiprix.fr/item/show/<id>/<slug>',
     action:
       'Inline overlay: BGM card, rating, wishlist status; per-user collection pills when logged in',
     mechanism:
@@ -136,6 +137,7 @@ const BRAND_DISPLAY = {
   'le-passe-temps': 'Le Passe-Temps',
   lepion: 'Le Pion',
   ludifolie: 'Ludifolie',
+  ludiprix: 'Ludiprix',
   ludisphere: 'Ludisphère',
   ludum: 'Ludum',
   'milan-spiele': 'Milan Spiele',
@@ -153,6 +155,8 @@ const BRAND_NOTES = {
     'Reads `__NEXT_DATA__` JSON; Privalia (`.es`, `.it`) shares the same Veepee back-end and is grouped here',
   Philibert:
     '**Plus** a separate game-detail overlay (`game-overlay.js`) on `/{lang}/cat/<id>-…html` — see the platforms table above',
+  Ludiprix:
+    '**Plus** a separate game-detail overlay (`game-overlay.js`) on `/item/show/<id>-…` — see the platforms table above',
   Coolshop: 'Generic card selector across all 10 ccTLDs',
 };
 

@@ -162,6 +162,15 @@ function showOverlayError(overlay, code) {
         return document.querySelector('h1')?.textContent?.trim() ?? null;
       },
     },
+    'ludiprix.fr': {
+      isProductPage() {
+        // Ludiprix product URLs: /item/show/<id>/<slug>
+        return /^\/item\/show\/\d+/.test(location.pathname);
+      },
+      extractTitle() {
+        return document.querySelector('.productname h1')?.textContent?.trim() ?? null;
+      },
+    },
   };
 
   // ── Find matching adapter ─────────────────────────────────────────────────
