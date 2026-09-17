@@ -23,7 +23,7 @@ For each row: "On-page extraction?" means a content script runs in the user's ta
 | BoardGameGeek | User plays / collection / game detail | `https://boardgamegeek.com/user/<u>/plays` | Yes — `src/content/bgg-scraper.js` | Popup → "Import BGG Plays" / "Sync BGG Collection"; on game detail pages popup auto-targets the game (one-click add to BGM collection) | Calls BGG XML2 API `/xmlapi2/user/<u>/{plays,collection}`; on `/boardgame/<id>/<slug>` pages the popup runs `/api/games/search` then `/api/collections/{id}/{type}` |
 | Tabletopia | Any page when logged in | `https://tabletopia.com/...` | Yes — `src/content/tabletopia-scraper.js` | Popup → "Import Tabletopia Matches" | Calls Tabletopia REST `/api/v2/players/current/matches` with pagination |
 | Ludopedia | User history | `https://ludopedia.com.br/usuario/...` | Yes — `src/content/ludopedia-scraper.js` | Popup → "Import Ludopedia Plays" | Calls Ludopedia `/api/v1/plays`; BGG IDs already in payload |
-| Philibert (game-detail overlay) | Product detail | `https://www.philibertnet.com/{lang}/cat/<id>-<slug>.html` | Yes — `src/content/game-overlay.js` | Inline overlay: BGM card, rating, wishlist status; per-user collection pills when logged in | Reads page metadata, resolves via `resolveOverlayGame` background message, posts to `/api/collections/<id>/<type>` |
+| Philibert / Ludiprix (game-detail overlay) | Product detail | `https://www.philibertnet.com/{lang}/cat/<id>-<slug>.html or https://ludiprix.fr/item/show/<id>/<slug>` | Yes — `src/content/game-overlay.js` | Inline overlay: BGM card, rating, wishlist status; per-user collection pills when logged in | Reads page metadata, resolves via `resolveOverlayGame` background message, posts to `/api/collections/<id>/<type>` |
 | Veepee / Privalia (catalog badge) | Catalog grid | `https://www.veepee.fr/*/catalog/` | Yes — `src/content/catalog-badges.js` | Injects a BGM badge on each game image; hover shows rating, collection pills, and personal star rating | Reads game list from __NEXT_DATA__ (+ Redux fallback), matches images by URL path, resolves via `resolveGameOverlay` SW message |
 <!-- AUTO:sites-table END -->
 
@@ -64,7 +64,7 @@ All sites in this group share the same flow:
 | Le Passe-Temps (1) | le-passe-temps.com |  |
 | Le Pion (1) | lepion.com |  |
 | Ludifolie (1) | ludifolie.com |  |
-| ludiprix (1) | ludiprix.fr |  |
+| Ludiprix (1) | ludiprix.fr | **Plus** a separate game-detail overlay (`game-overlay.js`) on `/item/show/<id>-…` — see the platforms table above |
 | Ludisphère (1) | ludisphere.fr |  |
 | Ludum (1) | ludum.fr |  |
 | Milan Spiele (1) | milan-spiele.de |  |

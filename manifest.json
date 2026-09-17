@@ -215,6 +215,8 @@
     {
       "matches": [
         "*://*.philibertnet.com/*",
+        "*://*.ludiprix.fr/*",
+        "*://ludiprix.fr/*",
         "*://boardgamearena.com/gamepanel*",
         "*://en.boardgamearena.com/gamepanel*"
       ],
