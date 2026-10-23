@@ -24,7 +24,9 @@
     "https://ludopedia.com.br/*",
     "https://www.ludopedia.com.br/*",
     "https://www.philibertnet.com/*",
-    "https://philibertnet.com/*"
+    "https://philibertnet.com/*",
+    "https://ludiprix.fr/*",
+    "https://www.ludiprix.fr/*"
   ],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; style-src 'self' 'unsafe-inline'"
