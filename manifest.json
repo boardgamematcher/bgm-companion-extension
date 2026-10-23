@@ -26,7 +26,9 @@
     "https://www.philibertnet.com/*",
     "https://philibertnet.com/*",
     "https://www.parkage.com/*",
-    "https://parkage.com/*"
+    "https://parkage.com/*",
+    "https://ludiprix.fr/*",
+    "https://www.ludiprix.fr/*"
   ],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; style-src 'self' 'unsafe-inline'"
