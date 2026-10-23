@@ -41,6 +41,10 @@ export const SUPPORTED_URLS = [
   { url: 'https://www.spieletaxi.de/brettspiele', expectedName: /Spieletaxi/ },
   { url: 'https://www.bol.com/nl/nl/l/gezelschapsspellen/', expectedName: /Bol/ },
   { url: 'https://www.coolshop.dk/produkt/braetspil/', expectedName: /Coolshop/ },
+  {
+    url: 'https://www.parkage.com/fr/recherche?category_id=4613&complete=true&sort_by=discount_desc&page=1',
+    expectedName: /Parkage Search/,
+  },
 ];
 
 export const UNSUPPORTED_URLS = [
