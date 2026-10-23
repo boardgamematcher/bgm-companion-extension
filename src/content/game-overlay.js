@@ -171,6 +171,16 @@ function showOverlayError(overlay, code) {
         return document.querySelector('.productname h1')?.textContent?.trim() ?? null;
       },
     },
+    'parkage.com': {
+      isProductPage() {
+        // Parkage product URLs: /fr/<id>-<slug> (listings are /fr/recherche, /fr/<range>)
+        return /^\/fr\/\d+-[^/]+\/?$/.test(location.pathname);
+      },
+      extractTitle() {
+        // The h1 is the clean name; JSON-LD / <title> carry a language suffix ("… - Français").
+        return document.querySelector('h1')?.textContent?.trim() ?? null;
+      },
+    },
   };
 
   // ── Find matching adapter ─────────────────────────────────────────────────

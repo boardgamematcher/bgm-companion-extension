@@ -1,9 +1,12 @@
-// BGM Catalog Badges — injects a BGM info badge on each game image on
-// Veepee (and Privalia) catalog pages, showing game details on hover.
+// BGM Catalog Badges — injects a BGM info badge on each game image of a
+// catalog/listing page, showing game details on hover.
+//  - Veepee (and Privalia): every image listed in __NEXT_DATA__.
+//  - Profiles with `catalog_badges: true` (e.g. Parkage): each card
+//    (card_selector + image_selector, title from selector) whose title is a
+//    game known to BoardGameMatcher.
 
 (async function bgmCatalogBadges() {
   if (typeof chrome === 'undefined' || !chrome.runtime) return;
-  if (!isVeepeeCatalog()) return;
 
   // Get the matched pattern (for name cleanup config)
   let pattern;
@@ -13,11 +16,23 @@
       domain: location.hostname,
       url: location.href,
     });
-    if (!res?.supported || res.pattern?.data_source !== 'next_data') return;
+    if (!res?.supported) return;
     pattern = res.pattern;
   } catch {
     return;
   }
+
+  if (
+    pattern?.catalog_badges &&
+    pattern.card_selector &&
+    pattern.selector &&
+    pattern.image_selector
+  ) {
+    injectBadges(() => readDomGames(pattern));
+    return;
+  }
+
+  if (!isVeepeeCatalog() || pattern?.data_source !== 'next_data') return;
 
   // __NEXT_DATA__ may not yet contain catalog items on SPA navigation; retry once
   let games = readNextDataGames(pattern);
@@ -27,7 +42,7 @@
     if (!games.length) return;
   }
 
-  injectBadges(games);
+  injectNextDataBadges(games);
 })();
 
 // ── Helpers ────────────────────────────────────────────────────────────────
@@ -117,6 +132,37 @@ function readNextDataGames(pattern) {
   }
 
   return results;
+}
+
+// Cards on the page as { img, name }, from the profile's selectors. Only games
+// BGM knows about are returned (title lookups are cached per page).
+const knownTitles = new Map();
+
+async function readDomGames(pattern) {
+  const cleanup = buildCleanupFn(pattern.name_cleanup);
+  const targets = [];
+  for (const card of document.querySelectorAll(pattern.card_selector)) {
+    const img = card.querySelector(pattern.image_selector);
+    const name = cleanup(card.querySelector(pattern.selector)?.textContent.trim() || '');
+    if (img && name) targets.push({ img, name });
+  }
+
+  const unchecked = [...new Set(targets.map((t) => t.name))].filter((n) => !knownTitles.has(n));
+  if (unchecked.length) {
+    let matches = [];
+    try {
+      matches =
+        (await chrome.runtime.sendMessage({ action: 'findKnownGames', titles: unchecked }))
+          ?.matches || [];
+    } catch {
+      return [];
+    }
+    const found = new Map(matches.map((m) => [m.title, m.name]));
+    for (const name of unchecked) {
+      knownTitles.set(name, found.has(name) && isConfidentTitleMatch(name, found.get(name)));
+    }
+  }
+  return targets.filter((t) => knownTitles.get(t.name));
 }
 
 // Normalize an image URL to a stable key for matching.
@@ -389,13 +435,27 @@ function renderGame(tooltip, { game, collectionTypes, userRating }) {
 
 // ── Main badge injection ───────────────────────────────────────────────────
 
-function injectBadges(games) {
+// Veepee: badge every <img> whose URL is listed in __NEXT_DATA__.
+function injectNextDataBadges(games) {
   const imageToName = new Map();
   for (const g of games) {
     if (g.imageUrl) imageToName.set(normalizeImgUrl(g.imageUrl), g.name);
   }
   if (!imageToName.size) return;
 
+  injectBadges(() => {
+    const targets = [];
+    for (const img of document.querySelectorAll('img')) {
+      const src = getImgSrc(img);
+      const name = src && imageToName.get(normalizeImgUrl(src));
+      if (name) targets.push({ img, name });
+    }
+    return targets;
+  });
+}
+
+// getTargets() returns (or resolves to) [{ img, name }] for the images to badge.
+function injectBadges(getTargets) {
   const tooltip = createTooltip();
   document.body.appendChild(tooltip);
   let hideTimer = null;
@@ -439,15 +499,9 @@ function injectBadges(games) {
       });
   }
 
-  function scanAndBadge() {
-    for (const img of document.querySelectorAll('img')) {
+  async function scanOnce() {
+    for (const { img, name: gameName } of await getTargets()) {
       if (img.dataset.bgmBadged) continue;
-      const src = getImgSrc(img);
-      if (!src) continue;
-
-      const gameName = imageToName.get(normalizeImgUrl(src));
-      if (!gameName) continue;
-
       img.dataset.bgmBadged = '1';
 
       // The badge is positioned absolutely inside the image's closest
@@ -464,6 +518,25 @@ function injectBadges(games) {
       badge.addEventListener('mouseenter', () => showFor(badge, gameName));
       badge.addEventListener('mouseleave', scheduleHide);
       (wrap || img.parentElement).appendChild(badge);
+    }
+  }
+
+  // Serialize scans: a scan may await title lookups while the DOM keeps changing.
+  let scanning = false;
+  let rescan = false;
+  async function scanAndBadge() {
+    if (scanning) {
+      rescan = true;
+      return;
+    }
+    scanning = true;
+    try {
+      do {
+        rescan = false;
+        await scanOnce();
+      } while (rescan);
+    } finally {
+      scanning = false;
     }
   }
 
