@@ -1,7 +1,7 @@
 // BGM Catalog Badges — injects a BGM info badge on each game image of a
 // catalog/listing page, showing game details on hover.
 //  - Veepee (and Privalia): every image listed in __NEXT_DATA__.
-//  - Profiles with `catalog_badges: true` (e.g. Parkage): each card
+//  - Profiles with `catalog_badges: true` (e.g. Parkage, Philibert): each card
 //    (card_selector + image_selector, title from selector) whose title is a
 //    game known to BoardGameMatcher.
 

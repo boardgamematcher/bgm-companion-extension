@@ -242,7 +242,8 @@
         "*://*.veepee.lu/*",
         "*://*.veepee.nl/*",
         "*://*.privalia.com/*",
-        "*://*.parkage.com/*"
+        "*://*.parkage.com/*",
+        "*://*.philibertnet.com/*"
       ],
       "js": ["src/lib/normalize.js", "src/content/catalog-badges.js"],
       "css": ["src/content/bgm-tokens.css", "src/content/catalog-badges.css"],
