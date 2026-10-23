@@ -129,10 +129,11 @@ function showOverlayError(overlay, code) {
         return /\/fr\/[^/]+\/\d+-[^/]+\.html/.test(location.pathname);
       },
       extractTitle() {
-        // Philibert renders the clean product name in h1#product_name.
+        // Philibert renders the clean product name in h1.product-title
+        // (h1#product_name before its redesign).
         // og:title is unusable ("Acheter <name> - Jeu de société - <publisher>")
         // and JSON-LD isn't always present server-side.
-        const productName = document.querySelector('h1#product_name');
+        const productName = document.querySelector('h1.product-title, h1#product_name');
         if (productName) return productName.textContent.trim();
 
         // JSON-LD fallback (in case Philibert injects it later)
