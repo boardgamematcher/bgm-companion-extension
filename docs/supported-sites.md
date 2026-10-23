@@ -42,7 +42,7 @@ All sites in this group share the same flow:
 3. Matched titles + prices are previewed via `POST /api/extract/preview`, then on confirm sent to `POST /api/extract/extension`. On any failure the popup falls back to opening `boardgamematcher.com/extract?url=<page>` so the BGM web extractor takes over.
 
 <!-- AUTO:retail-brands START -->
-**61 retail domains in `manifest.json`**, grouped by brand:
+**62 retail domains in `manifest.json`**, grouped by brand:
 
 | Brand | Domains | Notes |
 |---|---|---|
@@ -70,6 +70,7 @@ All sites in this group share the same flow:
 | Milan Spiele (1) | milan-spiele.de |  |
 | Miniature Market (1) | miniaturemarket.com |  |
 | Okkazeo (1) | okkazeo.com |  |
+| parkage (1) | parkage.com |  |
 | Philibert (1) | philibertnet.com | **Plus** a separate game-detail overlay (`game-overlay.js`) on `/{lang}/cat/<id>-…html` — see the platforms table above |
 | Spiele-Offensive (1) | spiele-offensive.de |  |
 | Spieletaxi (1) | spieletaxi.de |  |
