@@ -1,5 +1,5 @@
 const { describe, test, expect } = require('@jest/globals');
-const { normalizeName } = require('../src/lib/normalize.js');
+const { normalizeName, isConfidentTitleMatch } = require('../src/lib/normalize.js');
 
 describe('normalizeName', () => {
   test('lowercases and strips punctuation', () => {
@@ -33,5 +33,31 @@ describe('normalizeName', () => {
     expect(normalizeName('Catan')).toBe(normalizeName('Catan.'));
     // Colon vs no colon
     expect(normalizeName('Ticket to Ride Europe')).toBe(normalizeName('Ticket to Ride: Europe'));
+  });
+});
+
+describe('isConfidentTitleMatch', () => {
+  test.each([
+    ['Sherlock : Connectez les Indices', 'Sherlock: Case Connection'],
+    ["L'Île des Chats - Explore & Draw", 'The Isle of Cats: Explore & Draw'],
+    ["Kingdom Rush - Vez'Nan vs Moloch", "Kingdom Rush: Rift in Time – Vez'nan vs. Moloch"],
+    ['Catan', 'CATAN'],
+    ['Carcassonne', 'Carcassonne'],
+    ['Dixit', 'Dixit: Odyssey'],
+  ])('accepts %s ~ %s', (title, name) => {
+    expect(isConfidentTitleMatch(title, name)).toBe(true);
+  });
+
+  test.each([
+    ['Classeur Ultra Pro 9 cases', 'Chasseur de tête'],
+    ['Sleeves Standard Dragon Shield', 'Tanto Cuore: Standard Art Sleeves – Claudine'],
+    ['Puzzle 1000 pièces Paysage', '1 vs. 100: The Puzzle Game'],
+  ])('rejects %s ~ %s', (title, name) => {
+    expect(isConfidentTitleMatch(title, name)).toBe(false);
+  });
+
+  test('rejects empty input', () => {
+    expect(isConfidentTitleMatch('', 'Catan')).toBe(false);
+    expect(isConfidentTitleMatch('Catan', '')).toBe(false);
   });
 });

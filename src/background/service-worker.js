@@ -325,6 +325,26 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true;
   }
 
+  // Which BGM game does each retailer title resolve to? Search only (no
+  // collection/rating/cover fetches), a few requests at a time.
+  if (message.action === 'findKnownGames' && Array.isArray(message.titles)) {
+    (async () => {
+      const titles = message.titles.filter((t) => typeof t === 'string');
+      const matches = [];
+      let next = 0;
+      const worker = async () => {
+        while (next < titles.length) {
+          const title = titles[next++];
+          const res = await searchGameByTitle(title);
+          if (res.game) matches.push({ title, name: res.game.name });
+        }
+      };
+      await Promise.all(Array.from({ length: 4 }, worker));
+      sendResponse({ matches });
+    })().catch(() => sendResponse({ matches: [] }));
+    return true;
+  }
+
   if (message.action === 'setCollectionType') {
     setCollectionType(message.gameId, message.collectionType, message.add)
       .then(() => sendResponse({ success: true }))
@@ -747,12 +767,10 @@ function normalizeForMatch(name) {
     .trim();
 }
 
-// Resolve a retailer page title to a BGM game + the user's collection types.
-// Returns { game: {id, name, slug, display_rating, bayes_average, users_rated,
-//   image_url}, collectionTypes: [], userRating } or { error }. The web API
-// exposes display_rating + users_rated since BGM-1230; legacy bayes_average
-// is kept on the contract so older overlay versions still render.
-async function resolveGameOverlay(title) {
+// Look up the BGM game for a retailer title (session-cached by normalized
+// title). Returns { game } or { error }. Shared by the overlay and the
+// catalog badges' known-games check.
+async function searchGameByTitle(title) {
   if (!title || typeof title !== 'string') return { error: 'invalid_title' };
 
   // Per-tab session cache keyed by normalized title
@@ -796,6 +814,19 @@ async function resolveGameOverlay(title) {
       return { error: 'network: ' + e.message };
     }
   }
+
+  return { game };
+}
+
+// Resolve a retailer page title to a BGM game + the user's collection types.
+// Returns { game: {id, name, slug, display_rating, bayes_average, users_rated,
+//   image_url}, collectionTypes: [], userRating } or { error }. The web API
+// exposes display_rating + users_rated since BGM-1230; legacy bayes_average
+// is kept on the contract so older overlay versions still render.
+async function resolveGameOverlay(title) {
+  const found = await searchGameByTitle(title);
+  if (found.error) return { error: found.error };
+  const game = found.game;
 
   // Fetch collection types and personal rating in parallel (both require login)
   let collectionTypes = [];

@@ -24,7 +24,9 @@
     "https://ludopedia.com.br/*",
     "https://www.ludopedia.com.br/*",
     "https://www.philibertnet.com/*",
-    "https://philibertnet.com/*"
+    "https://philibertnet.com/*",
+    "https://www.parkage.com/*",
+    "https://parkage.com/*"
   ],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; style-src 'self' 'unsafe-inline'"
@@ -219,6 +221,7 @@
         "*://*.philibertnet.com/*",
         "*://*.ludiprix.fr/*",
         "*://ludiprix.fr/*",
+        "*://*.parkage.com/*",
         "*://boardgamearena.com/gamepanel*",
         "*://en.boardgamearena.com/gamepanel*"
       ],
@@ -236,9 +239,10 @@
         "*://*.veepee.it/*",
         "*://*.veepee.lu/*",
         "*://*.veepee.nl/*",
-        "*://*.privalia.com/*"
+        "*://*.privalia.com/*",
+        "*://*.parkage.com/*"
       ],
-      "js": ["src/content/catalog-badges.js"],
+      "js": ["src/lib/normalize.js", "src/content/catalog-badges.js"],
       "css": ["src/content/bgm-tokens.css", "src/content/catalog-badges.css"],
       "run_at": "document_idle"
     }
