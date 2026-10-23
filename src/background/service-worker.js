@@ -307,17 +307,26 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     (async () => {
       try {
         const data = await resolveGameOverlay(message.title);
+        let coverInjected = false;
         if (data.imageDataUrl && sender.tab?.id) {
           try {
+            // The overlay has one cover; the catalog tooltip is per game, so
+            // its rule is keyed by game id (hovering several cards in a row).
             await chrome.scripting.insertCSS({
               target: { tabId: sender.tab.id },
-              css: `#bgm-overlay .bgm-overlay-cover{background-image:url("${data.imageDataUrl}") !important}`,
+              css: `#bgm-overlay .bgm-overlay-cover,#bgm-cat-tooltip .bgm-ct-cover[data-game-id="${data.game.id}"]{background-image:url("${data.imageDataUrl}") !important}`,
             });
+            coverInjected = true;
           } catch (_) {
-            /* insertCSS can fail if the tab navigated away */
+            /* insertCSS can fail if the tab navigated away or has no host permission */
           }
         }
-        sendResponse({ ...data, imageDataUrl: null, imageFetched: !!data.imageDataUrl });
+        sendResponse({
+          ...data,
+          imageDataUrl: null,
+          imageFetched: !!data.imageDataUrl,
+          coverInjected,
+        });
       } catch (_) {
         sendResponse({ error: 'resolve_failed' });
       }

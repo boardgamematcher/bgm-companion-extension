@@ -139,6 +139,28 @@
 }
 
 /* Game name */
+.bgm-ct-head {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 0 0 7px !important;
+}
+
+.bgm-ct-head .bgm-ct-name {
+  margin: 0 !important;
+  min-width: 0 !important;
+}
+
+.bgm-ct-cover {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 5px !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  flex-shrink: 0 !important;
+}
+
 .bgm-ct-name {
   margin: 0 0 7px !important;
   font-size: 12px !important;
