@@ -294,7 +294,7 @@ function setError(tooltip, code) {
   tooltip.querySelector('.bgm-ct-body').innerHTML = `<div class="bgm-ct-error">${esc(code)}</div>`;
 }
 
-function renderGame(tooltip, { game, collectionTypes, userRating }) {
+function renderGame(tooltip, { game, collectionTypes, userRating, coverInjected }) {
   // BGM-1231: headline uses soft Bayesian display_rating when present, else
   // legacy bayes_average. Vote count surfaces the confidence signal.
   const bgg = pickDisplayRating(game);
@@ -337,7 +337,10 @@ function renderGame(tooltip, { game, collectionTypes, userRating }) {
     .join('');
 
   tooltip.querySelector('.bgm-ct-body').innerHTML = `
-    <p class="bgm-ct-name" title="${esc(game.name)}">${esc(game.name)}</p>
+    <div class="bgm-ct-head">
+      ${coverInjected ? `<div class="bgm-ct-cover" data-game-id="${esc(game.id)}"></div>` : ''}
+      <p class="bgm-ct-name" title="${esc(game.name)}">${esc(game.name)}</p>
+    </div>
     ${starsHtml}
     <div class="bgm-ct-pills">${pillsHtml}</div>
     <div class="bgm-ct-my-rating">
