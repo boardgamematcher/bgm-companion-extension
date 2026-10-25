@@ -1163,5 +1163,23 @@
   },
   "moreSuggestSiteSub": {
     "message": "Pídenos añadir un sitio"
+  },
+  "optionsDisplayTitle": {
+    "message": "Listados de tiendas"
+  },
+  "optionsDisplaySubtitle": {
+    "message": "Cómo aparece BGM en las tarjetas de juegos de las tiendas compatibles. Recarga la página de la tienda para aplicarlo."
+  },
+  "optionsDisplayLabel": {
+    "message": "Mostrar en las tarjetas"
+  },
+  "optionsDisplayBadge": {
+    "message": "Insignia BGM (detalles al pasar el ratón)"
+  },
+  "optionsDisplayInline": {
+    "message": "Nota y enlace «Ver más»"
+  },
+  "catalogSeeMore": {
+    "message": "Ver más en BGM"
   }
 }

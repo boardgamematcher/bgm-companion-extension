@@ -134,8 +134,8 @@ function readNextDataGames(pattern) {
   return results;
 }
 
-// Cards on the page as { img, name }, from the profile's selectors. Only games
-// BGM knows about are returned (title lookups are cached per page).
+// Cards on the page as { img, name, game }, from the profile's selectors. Only
+// games BGM knows about are returned (title lookups are cached per page).
 const knownTitles = new Map();
 
 async function readDomGames(pattern) {
@@ -157,12 +157,15 @@ async function readDomGames(pattern) {
     } catch {
       return [];
     }
-    const found = new Map(matches.map((m) => [m.title, m.name]));
+    const found = new Map(matches.map((m) => [m.title, m.game]));
     for (const name of unchecked) {
-      knownTitles.set(name, found.has(name) && isConfidentTitleMatch(name, found.get(name)));
+      const game = found.get(name);
+      knownTitles.set(name, game && isConfidentTitleMatch(name, game.name) ? game : null);
     }
   }
-  return targets.filter((t) => knownTitles.get(t.name));
+  return targets
+    .filter((t) => knownTitles.get(t.name))
+    .map((t) => ({ ...t, game: knownTitles.get(t.name) }));
 }
 
 // Normalize an image URL to a stable key for matching.
@@ -436,6 +439,48 @@ function renderGame(tooltip, { game, collectionTypes, userRating, coverInjected 
   });
 }
 
+// ── Display mode ───────────────────────────────────────────────────────────
+
+// 'badge' (default): BGM pill with a hover tooltip. 'inline': the BGM rating
+// shown on the card with a "See more" link. Set in the options page.
+async function readDisplayMode() {
+  try {
+    const { catalogDisplayMode } = await chrome.storage.local.get('catalogDisplayMode');
+    return catalogDisplayMode === 'inline' ? 'inline' : 'badge';
+  } catch {
+    return 'badge';
+  }
+}
+
+function msg(key, fallback) {
+  return chrome.i18n?.getMessage(key) || fallback;
+}
+
+// Rating strip pinned to the bottom of the card image.
+function createInlineRating(game) {
+  const rating = pickDisplayRating(game);
+  const el = document.createElement('div');
+  el.className = 'bgm-cat-inline';
+  const ratingHtml =
+    rating != null
+      ? `<span class="bgm-cat-inline-rating">★ ${rating.toFixed(1)}<small>/5</small></span>`
+      : `<span class="bgm-cat-inline-rating bgm-cat-inline-none">BGM</span>`;
+  el.innerHTML = `${ratingHtml}<a class="bgm-cat-inline-link" href="${esc(localizedGameUrl(game.slug))}" target="_blank" rel="noopener noreferrer">${esc(msg('catalogSeeMore', 'See more on BGM'))} →</a>`;
+  // Bypass host-page link hijacking (same as the tooltip link)
+  el.querySelector('a').addEventListener(
+    'click',
+    (e) => {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      chrome.runtime
+        .sendMessage({ action: 'openTab', url: e.currentTarget.href })
+        .catch(() => window.open(e.currentTarget.href, '_blank', 'noopener'));
+    },
+    true
+  );
+  return el;
+}
+
 // ── Main badge injection ───────────────────────────────────────────────────
 
 // Veepee: badge every <img> whose URL is listed in __NEXT_DATA__.
@@ -503,7 +548,8 @@ function injectBadges(getTargets) {
   }
 
   async function scanOnce() {
-    for (const { img, name: gameName } of await getTargets()) {
+    const mode = await readDisplayMode();
+    for (const { img, name: gameName, game } of await getTargets()) {
       if (img.dataset.bgmBadged) continue;
       img.dataset.bgmBadged = '1';
 
@@ -512,6 +558,11 @@ function injectBadges(getTargets) {
       const wrap = img.parentElement;
       if (wrap && getComputedStyle(wrap).position === 'static') {
         wrap.style.position = 'relative';
+      }
+
+      if (mode === 'inline' && game) {
+        (wrap || img.parentElement).appendChild(createInlineRating(game));
+        continue;
       }
 
       const badge = document.createElement('button');

@@ -1163,5 +1163,23 @@
   },
   "moreSuggestSiteSub": {
     "message": "Chiedi di aggiungere un sito"
+  },
+  "optionsDisplayTitle": {
+    "message": "Elenchi dei negozi"
+  },
+  "optionsDisplaySubtitle": {
+    "message": "Come appare BGM sulle schede dei giochi nei negozi supportati. Ricarica la pagina del negozio per applicare."
+  },
+  "optionsDisplayLabel": {
+    "message": "Mostra sulle schede"
+  },
+  "optionsDisplayBadge": {
+    "message": "Badge BGM (dettagli al passaggio del mouse)"
+  },
+  "optionsDisplayInline": {
+    "message": "Voto e link «Vedi altro»"
+  },
+  "catalogSeeMore": {
+    "message": "Vedi altro su BGM"
   }
 }

@@ -345,7 +345,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         while (next < titles.length) {
           const title = titles[next++];
           const res = await searchGameByTitle(title);
-          if (res.game) matches.push({ title, name: res.game.name });
+          if (res.game) matches.push({ title, name: res.game.name, game: res.game });
         }
       };
       await Promise.all(Array.from({ length: 4 }, worker));

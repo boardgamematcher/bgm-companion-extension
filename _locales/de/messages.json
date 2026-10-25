@@ -1163,5 +1163,23 @@
   },
   "moreSuggestSiteSub": {
     "message": "Sag uns, welchen Shop wir hinzufügen sollen"
+  },
+  "optionsDisplayTitle": {
+    "message": "Shop-Listen"
+  },
+  "optionsDisplaySubtitle": {
+    "message": "Wie BGM auf den Spielkarten in unterstützten Shops erscheint. Shop-Seite neu laden, um die Änderung anzuwenden."
+  },
+  "optionsDisplayLabel": {
+    "message": "Auf Karten anzeigen"
+  },
+  "optionsDisplayBadge": {
+    "message": "BGM-Badge (Details beim Überfahren)"
+  },
+  "optionsDisplayInline": {
+    "message": "Bewertung und Link „Mehr“"
+  },
+  "catalogSeeMore": {
+    "message": "Mehr auf BGM"
   }
 }
