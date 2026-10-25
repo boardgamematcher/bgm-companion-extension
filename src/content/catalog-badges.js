@@ -146,26 +146,30 @@ async function readDomGames(pattern) {
     const name = cleanup(card.querySelector(pattern.selector)?.textContent.trim() || '');
     if (img && name) targets.push({ img, name });
   }
-
-  const unchecked = [...new Set(targets.map((t) => t.name))].filter((n) => !knownTitles.has(n));
-  if (unchecked.length) {
-    let matches = [];
-    try {
-      matches =
-        (await chrome.runtime.sendMessage({ action: 'findKnownGames', titles: unchecked }))
-          ?.matches || [];
-    } catch {
-      return [];
-    }
-    const found = new Map(matches.map((m) => [m.title, m.game]));
-    for (const name of unchecked) {
-      const game = found.get(name);
-      knownTitles.set(name, game && isConfidentTitleMatch(name, game.name) ? game : null);
-    }
-  }
+  await lookupKnownGames(targets.map((t) => t.name));
   return targets
     .filter((t) => knownTitles.get(t.name))
     .map((t) => ({ ...t, game: knownTitles.get(t.name) }));
+}
+
+// Resolve titles to BGM games (cached in knownTitles: game, or null when
+// BGM doesn't know the title / the match isn't confident).
+async function lookupKnownGames(names) {
+  const unchecked = [...new Set(names)].filter((n) => !knownTitles.has(n));
+  if (!unchecked.length) return;
+  let matches = [];
+  try {
+    matches =
+      (await chrome.runtime.sendMessage({ action: 'findKnownGames', titles: unchecked }))
+        ?.matches || [];
+  } catch {
+    return;
+  }
+  const found = new Map(matches.map((m) => [m.title, m.game]));
+  for (const name of unchecked) {
+    const game = found.get(name);
+    knownTitles.set(name, game && isConfidentTitleMatch(name, game.name) ? game : null);
+  }
 }
 
 // Normalize an image URL to a stable key for matching.
@@ -549,7 +553,13 @@ function injectBadges(getTargets) {
 
   async function scanOnce() {
     const mode = await readDisplayMode();
-    for (const { img, name: gameName, game } of await getTargets()) {
+    const targets = await getTargets();
+    // Sources that list every image (Veepee) carry no game data; the inline
+    // rating needs it, so resolve those titles here.
+    if (mode === 'inline')
+      await lookupKnownGames(targets.filter((t) => !t.game).map((t) => t.name));
+    for (const { img, name: gameName, game: known } of targets) {
+      const game = known || knownTitles.get(gameName);
       if (img.dataset.bgmBadged) continue;
       img.dataset.bgmBadged = '1';
 
@@ -560,8 +570,9 @@ function injectBadges(getTargets) {
         wrap.style.position = 'relative';
       }
 
-      if (mode === 'inline' && game) {
-        (wrap || img.parentElement).appendChild(createInlineRating(game));
+      if (mode === 'inline') {
+        // Nothing to rate when BGM doesn't know the title.
+        if (game) (wrap || img.parentElement).appendChild(createInlineRating(game));
         continue;
       }
 
