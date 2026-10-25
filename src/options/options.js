@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadDevMode();
   await loadPatterns();
   await loadNotifSettings();
+  await loadDisplaySettings();
   await loadLanguageSetting();
   setupTabs();
   setupEventListeners();
@@ -120,6 +121,11 @@ async function applyLanguageChange(locale) {
   }
 }
 
+async function loadDisplaySettings() {
+  const { catalogDisplayMode = 'badge' } = await chrome.storage.local.get('catalogDisplayMode');
+  document.getElementById('catalog-display-mode').value = catalogDisplayMode;
+}
+
 async function loadNotifSettings() {
   const { newsNotifEnabled = true } = await chrome.storage.local.get('newsNotifEnabled');
   document.getElementById('notif-news').checked = newsNotifEnabled;
@@ -148,6 +154,10 @@ function setupEventListeners() {
       applyLanguageChange(e.target.value);
     });
   }
+
+  document.getElementById('catalog-display-mode').addEventListener('change', (e) => {
+    chrome.storage.local.set({ catalogDisplayMode: e.target.value });
+  });
 
   // Notifications toggles
   document.getElementById('notif-news').addEventListener('change', async (e) => {

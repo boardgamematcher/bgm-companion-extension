@@ -1172,5 +1172,23 @@
   },
   "moreSuggestSiteSub": {
     "message": "Demandez-nous d'ajouter un site"
+  },
+  "optionsDisplayTitle": {
+    "message": "Listes des boutiques"
+  },
+  "optionsDisplaySubtitle": {
+    "message": "Comment BGM apparaît sur les cartes de jeux des boutiques prises en charge. Rechargez la page de la boutique pour appliquer."
+  },
+  "optionsDisplayLabel": {
+    "message": "Afficher sur les cartes"
+  },
+  "optionsDisplayBadge": {
+    "message": "Badge BGM (détails au survol)"
+  },
+  "optionsDisplayInline": {
+    "message": "Note et lien « Voir + »"
+  },
+  "catalogSeeMore": {
+    "message": "Voir + sur BGM"
   }
 }

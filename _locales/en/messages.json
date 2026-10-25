@@ -1279,5 +1279,23 @@
   },
   "moreSuggestSiteSub": {
     "message": "Ask us to add a site"
+  },
+  "optionsDisplayTitle": {
+    "message": "Shop listings"
+  },
+  "optionsDisplaySubtitle": {
+    "message": "How BGM appears on game cards in supported shops. Reload the shop page to apply."
+  },
+  "optionsDisplayLabel": {
+    "message": "Show on cards"
+  },
+  "optionsDisplayBadge": {
+    "message": "BGM badge (details on hover)"
+  },
+  "optionsDisplayInline": {
+    "message": "Rating and \"See more\" link"
+  },
+  "catalogSeeMore": {
+    "message": "See more on BGM"
   }
 }

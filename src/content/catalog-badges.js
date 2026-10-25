@@ -99,6 +99,26 @@ function findReduxState() {
   return null;
 }
 
+// Name and blurb of the current sale (Veepee: initialState.Sale.result), e.g.
+// "Jeux de sociète et puzzles". Empty when the page doesn't expose it.
+function readSaleText() {
+  const path = 'props.initialState.Sale.result';
+  let sale;
+  try {
+    sale = getPath(JSON.parse(document.getElementById('__NEXT_DATA__')?.textContent || ''), path);
+  } catch {
+    // fall through to the live store
+  }
+  if (!sale) {
+    const redux = findReduxState();
+    if (redux) sale = getPath({ props: { initialState: redux } }, path);
+  }
+  return [sale?.name, sale?.brandInfo].filter((t) => typeof t === 'string').join(' ');
+}
+
+// Veepee's own typos ("sociète") and the other site languages are covered.
+const GAME_SALE_RE = /jeux|jeu\b|soci[eè]t|puzzle|game|spiel|juego|giochi|gioco/i;
+
 function readNextDataGames(pattern) {
   const script = document.getElementById('__NEXT_DATA__');
   if (!script) return [];
@@ -134,8 +154,8 @@ function readNextDataGames(pattern) {
   return results;
 }
 
-// Cards on the page as { img, name }, from the profile's selectors. Only games
-// BGM knows about are returned (title lookups are cached per page).
+// Cards on the page as { img, name, game }, from the profile's selectors. Only
+// games BGM knows about are returned (title lookups are cached per page).
 const knownTitles = new Map();
 
 async function readDomGames(pattern) {
@@ -146,23 +166,30 @@ async function readDomGames(pattern) {
     const name = cleanup(card.querySelector(pattern.selector)?.textContent.trim() || '');
     if (img && name) targets.push({ img, name });
   }
+  await lookupKnownGames(targets.map((t) => t.name));
+  return targets
+    .filter((t) => knownTitles.get(t.name))
+    .map((t) => ({ ...t, game: knownTitles.get(t.name) }));
+}
 
-  const unchecked = [...new Set(targets.map((t) => t.name))].filter((n) => !knownTitles.has(n));
-  if (unchecked.length) {
-    let matches = [];
-    try {
-      matches =
-        (await chrome.runtime.sendMessage({ action: 'findKnownGames', titles: unchecked }))
-          ?.matches || [];
-    } catch {
-      return [];
-    }
-    const found = new Map(matches.map((m) => [m.title, m.name]));
-    for (const name of unchecked) {
-      knownTitles.set(name, found.has(name) && isConfidentTitleMatch(name, found.get(name)));
-    }
+// Resolve titles to BGM games (cached in knownTitles: game, or null when
+// BGM doesn't know the title / the match isn't confident).
+async function lookupKnownGames(names) {
+  const unchecked = [...new Set(names)].filter((n) => !knownTitles.has(n));
+  if (!unchecked.length) return;
+  let matches = [];
+  try {
+    matches =
+      (await chrome.runtime.sendMessage({ action: 'findKnownGames', titles: unchecked }))
+        ?.matches || [];
+  } catch {
+    return;
   }
-  return targets.filter((t) => knownTitles.get(t.name));
+  const found = new Map(matches.map((m) => [m.title, m.game]));
+  for (const name of unchecked) {
+    const game = found.get(name);
+    knownTitles.set(name, game && isConfidentTitleMatch(name, game.name) ? game : null);
+  }
 }
 
 // Normalize an image URL to a stable key for matching.
@@ -436,6 +463,48 @@ function renderGame(tooltip, { game, collectionTypes, userRating, coverInjected 
   });
 }
 
+// ── Display mode ───────────────────────────────────────────────────────────
+
+// 'badge' (default): BGM pill with a hover tooltip. 'inline': the BGM rating
+// shown on the card with a "See more" link. Set in the options page.
+async function readDisplayMode() {
+  try {
+    const { catalogDisplayMode } = await chrome.storage.local.get('catalogDisplayMode');
+    return catalogDisplayMode === 'inline' ? 'inline' : 'badge';
+  } catch {
+    return 'badge';
+  }
+}
+
+function msg(key, fallback) {
+  return chrome.i18n?.getMessage(key) || fallback;
+}
+
+// Rating strip shown right under the card image.
+function createInlineRating(game) {
+  const rating = pickDisplayRating(game);
+  const el = document.createElement('div');
+  el.className = 'bgm-cat-inline';
+  const ratingHtml =
+    rating != null
+      ? `<span class="bgm-cat-inline-rating">★ ${rating.toFixed(1)}<small>/5</small></span>`
+      : `<span class="bgm-cat-inline-rating bgm-cat-inline-none">BGM</span>`;
+  el.innerHTML = `${ratingHtml}<a class="bgm-cat-inline-link" href="${esc(localizedGameUrl(game.slug))}" target="_blank" rel="noopener noreferrer">${esc(msg('catalogSeeMore', 'See more on BGM'))} →</a>`;
+  // Bypass host-page link hijacking (same as the tooltip link)
+  el.querySelector('a').addEventListener(
+    'click',
+    (e) => {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      chrome.runtime
+        .sendMessage({ action: 'openTab', url: e.currentTarget.href })
+        .catch(() => window.open(e.currentTarget.href, '_blank', 'noopener'));
+    },
+    true
+  );
+  return el;
+}
+
 // ── Main badge injection ───────────────────────────────────────────────────
 
 // Veepee: badge every <img> whose URL is listed in __NEXT_DATA__.
@@ -446,16 +515,30 @@ function injectNextDataBadges(games) {
   }
   if (!imageToName.size) return;
 
-  injectBadges(() => {
+  injectBadges(async () => {
     const targets = [];
     for (const img of document.querySelectorAll('img')) {
       const src = getImgSrc(img);
       const name = src && imageToName.get(normalizeImgUrl(src));
       if (name) targets.push({ img, name });
     }
-    return targets;
+
+    // Veepee sells far more than board games: only badge titles BGM knows.
+    // A sale named after games is taken as such; otherwise probe a few titles
+    // first so a shoe or wine sale costs a handful of lookups, not one per
+    // product.
+    const names = [...new Set(targets.map((t) => t.name))];
+    const seenGame = GAME_SALE_RE.test(readSaleText()) || [...knownTitles.values()].some(Boolean);
+    if (!seenGame) {
+      await lookupKnownGames(names.slice(0, VEEPEE_PROBE_SIZE));
+      if (!names.slice(0, VEEPEE_PROBE_SIZE).some((n) => knownTitles.get(n))) return [];
+    }
+    await lookupKnownGames(names);
+    return targets.filter((t) => knownTitles.get(t.name));
   });
 }
+
+const VEEPEE_PROBE_SIZE = 10;
 
 // getTargets() returns (or resolves to) [{ img, name }] for the images to badge.
 function injectBadges(getTargets) {
@@ -503,7 +586,14 @@ function injectBadges(getTargets) {
   }
 
   async function scanOnce() {
-    for (const { img, name: gameName } of await getTargets()) {
+    const mode = await readDisplayMode();
+    const targets = await getTargets();
+    // Sources that list every image (Veepee) carry no game data; the inline
+    // rating needs it, so resolve those titles here.
+    if (mode === 'inline')
+      await lookupKnownGames(targets.filter((t) => !t.game).map((t) => t.name));
+    for (const { img, name: gameName, game: known } of targets) {
+      const game = known || knownTitles.get(gameName);
       if (img.dataset.bgmBadged) continue;
       img.dataset.bgmBadged = '1';
 
@@ -512,6 +602,13 @@ function injectBadges(getTargets) {
       const wrap = img.parentElement;
       if (wrap && getComputedStyle(wrap).position === 'static') {
         wrap.style.position = 'relative';
+      }
+
+      if (mode === 'inline') {
+        // Nothing to rate when BGM doesn't know the title.
+        // Below the image, not over it: shops put their own labels on the image.
+        if (game) (wrap || img).insertAdjacentElement('afterend', createInlineRating(game));
+        continue;
       }
 
       const badge = document.createElement('button');
