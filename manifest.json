@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extName__",
-  "version": "0.7.2",
+  "version": "0.8.0",
   "description": "__MSG_extDescription__",
   "default_locale": "en",
   "author": "BoardGameMatcher",
@@ -28,7 +28,23 @@
     "https://www.parkage.com/*",
     "https://parkage.com/*",
     "https://ludiprix.fr/*",
-    "https://www.ludiprix.fr/*"
+    "https://www.ludiprix.fr/*",
+    "https://www.board-game.co.uk/*",
+    "https://board-game.co.uk/*",
+    "https://www.boardgamebliss.com/*",
+    "https://boardgamebliss.com/*",
+    "https://www.espritjeu.com/*",
+    "https://espritjeu.com/*",
+    "https://www.gamersdream.shop/*",
+    "https://gamersdream.shop/*",
+    "https://www.knapix.com/*",
+    "https://knapix.com/*",
+    "https://www.le-passe-temps.com/*",
+    "https://le-passe-temps.com/*",
+    "https://www.lepion.com/*",
+    "https://lepion.com/*",
+    "https://www.ludisphere.fr/*",
+    "https://ludisphere.fr/*"
   ],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; style-src 'self' 'unsafe-inline'"
@@ -233,6 +249,17 @@
     },
     {
       "matches": [
+        "*://*.board-game.co.uk/*",
+        "*://*.boardgamebliss.com/*",
+        "*://*.espritjeu.com/*",
+        "*://*.gamersdream.shop/*",
+        "*://*.knapix.com/*",
+        "*://*.le-passe-temps.com/*",
+        "*://*.lepion.com/*",
+        "*://*.ludisphere.fr/*",
+        "*://*.parkage.com/*",
+        "*://*.philibertnet.com/*",
+        "*://*.privalia.com/*",
         "*://*.veepee.at/*",
         "*://*.veepee.be/*",
         "*://*.veepee.de/*",
@@ -240,10 +267,7 @@
         "*://*.veepee.fr/*",
         "*://*.veepee.it/*",
         "*://*.veepee.lu/*",
-        "*://*.veepee.nl/*",
-        "*://*.privalia.com/*",
-        "*://*.parkage.com/*",
-        "*://*.philibertnet.com/*"
+        "*://*.veepee.nl/*"
       ],
       "js": ["src/lib/normalize.js", "src/content/catalog-badges.js"],
       "css": ["src/content/bgm-tokens.css", "src/content/catalog-badges.css"],
