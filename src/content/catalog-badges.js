@@ -99,6 +99,26 @@ function findReduxState() {
   return null;
 }
 
+// Name and blurb of the current sale (Veepee: initialState.Sale.result), e.g.
+// "Jeux de sociète et puzzles". Empty when the page doesn't expose it.
+function readSaleText() {
+  const path = 'props.initialState.Sale.result';
+  let sale;
+  try {
+    sale = getPath(JSON.parse(document.getElementById('__NEXT_DATA__')?.textContent || ''), path);
+  } catch {
+    // fall through to the live store
+  }
+  if (!sale) {
+    const redux = findReduxState();
+    if (redux) sale = getPath({ props: { initialState: redux } }, path);
+  }
+  return [sale?.name, sale?.brandInfo].filter((t) => typeof t === 'string').join(' ');
+}
+
+// Veepee's own typos ("sociète") and the other site languages are covered.
+const GAME_SALE_RE = /jeux|jeu\b|soci[eè]t|puzzle|game|spiel|juego|giochi|gioco/i;
+
 function readNextDataGames(pattern) {
   const script = document.getElementById('__NEXT_DATA__');
   if (!script) return [];
@@ -504,10 +524,11 @@ function injectNextDataBadges(games) {
     }
 
     // Veepee sells far more than board games: only badge titles BGM knows.
-    // Probe a few titles first so a shoe or wine sale costs a handful of
-    // lookups instead of one per product.
+    // A sale named after games is taken as such; otherwise probe a few titles
+    // first so a shoe or wine sale costs a handful of lookups, not one per
+    // product.
     const names = [...new Set(targets.map((t) => t.name))];
-    const seenGame = [...knownTitles.values()].some(Boolean);
+    const seenGame = GAME_SALE_RE.test(readSaleText()) || [...knownTitles.values()].some(Boolean);
     if (!seenGame) {
       await lookupKnownGames(names.slice(0, VEEPEE_PROBE_SIZE));
       if (!names.slice(0, VEEPEE_PROBE_SIZE).some((n) => knownTitles.get(n))) return [];
