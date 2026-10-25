@@ -480,7 +480,7 @@ function msg(key, fallback) {
   return chrome.i18n?.getMessage(key) || fallback;
 }
 
-// Rating strip pinned to the bottom of the card image.
+// Rating strip shown right under the card image.
 function createInlineRating(game) {
   const rating = pickDisplayRating(game);
   const el = document.createElement('div');
@@ -606,7 +606,8 @@ function injectBadges(getTargets) {
 
       if (mode === 'inline') {
         // Nothing to rate when BGM doesn't know the title.
-        if (game) (wrap || img.parentElement).appendChild(createInlineRating(game));
+        // Below the image, not over it: shops put their own labels on the image.
+        if (game) (wrap || img).insertAdjacentElement('afterend', createInlineRating(game));
         continue;
       }
 

@@ -43,10 +43,8 @@
 /* ── Inline rating (display mode "inline") ─────────────────────────────── */
 
 .bgm-cat-inline {
-  position: absolute !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
+  position: relative !important;
+  width: 100% !important;
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
