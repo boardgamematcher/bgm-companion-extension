@@ -495,16 +495,29 @@ function injectNextDataBadges(games) {
   }
   if (!imageToName.size) return;
 
-  injectBadges(() => {
+  injectBadges(async () => {
     const targets = [];
     for (const img of document.querySelectorAll('img')) {
       const src = getImgSrc(img);
       const name = src && imageToName.get(normalizeImgUrl(src));
       if (name) targets.push({ img, name });
     }
-    return targets;
+
+    // Veepee sells far more than board games: only badge titles BGM knows.
+    // Probe a few titles first so a shoe or wine sale costs a handful of
+    // lookups instead of one per product.
+    const names = [...new Set(targets.map((t) => t.name))];
+    const seenGame = [...knownTitles.values()].some(Boolean);
+    if (!seenGame) {
+      await lookupKnownGames(names.slice(0, VEEPEE_PROBE_SIZE));
+      if (!names.slice(0, VEEPEE_PROBE_SIZE).some((n) => knownTitles.get(n))) return [];
+    }
+    await lookupKnownGames(names);
+    return targets.filter((t) => knownTitles.get(t.name));
   });
 }
+
+const VEEPEE_PROBE_SIZE = 10;
 
 // getTargets() returns (or resolves to) [{ img, name }] for the images to badge.
 function injectBadges(getTargets) {
