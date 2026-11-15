@@ -265,6 +265,8 @@
         "*://*.knapix.com/*",
         "*://*.le-passe-temps.com/*",
         "*://*.lepion.com/*",
+        "*://*.ludiprix.fr/*",
+        "*://ludiprix.fr/*",
         "*://*.ludisphere.fr/*",
         "*://*.parkage.com/*",
         "*://*.philibertnet.com/*",
