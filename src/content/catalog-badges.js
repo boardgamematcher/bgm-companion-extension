@@ -172,23 +172,52 @@ async function readDomGames(pattern) {
     .map((t) => ({ ...t, game: knownTitles.get(t.name) }));
 }
 
+// Shorter title that found the game, when the retailer's full title did not
+const searchTitles = new Map();
+
 // Resolve titles to BGM games (cached in knownTitles: game, or null when
 // BGM doesn't know the title / the match isn't confident).
 async function lookupKnownGames(names) {
   const unchecked = [...new Set(names)].filter((n) => !knownTitles.has(n));
   if (!unchecked.length) return;
-  let matches = [];
-  try {
-    matches =
-      (await chrome.runtime.sendMessage({ action: 'findKnownGames', titles: unchecked }))
-        ?.matches || [];
-  } catch {
-    return;
-  }
-  const found = new Map(matches.map((m) => [m.title, m.game]));
+  const found = await findMatches(unchecked);
+  if (!found) return;
+  const scores = new Map();
   for (const name of unchecked) {
-    const game = found.get(name);
-    knownTitles.set(name, game && isConfidentTitleMatch(name, game.name) ? game : null);
+    const m = found.get(name);
+    const score = m ? titleMatchScore(name, m.game.name, m.related) : 0;
+    scores.set(name, score);
+    knownTitles.set(name, score ? m.game : null);
+  }
+
+  // A title often leads with the publisher ("Blackrock Games - Enquêtes Express
+  // - dès 10 ans"), which BGM's search then follows. Unless the full title is
+  // already a solid match, also search what follows its first " - " and keep
+  // whichever title shares more words with its result.
+  const tails = new Map(
+    unchecked
+      .filter((n) => scores.get(n) < 2 && n.includes(' - '))
+      .map((n) => [n, n.slice(n.indexOf(' - ') + 3)])
+  );
+  if (!tails.size) return;
+  const foundTails = await findMatches([...new Set(tails.values())]);
+  if (!foundTails) return;
+  for (const [name, tail] of tails) {
+    const m = foundTails.get(tail);
+    if (m && titleMatchScore(tail, m.game.name, m.related) > scores.get(name)) {
+      knownTitles.set(name, m.game);
+      searchTitles.set(name, tail);
+    }
+  }
+}
+
+// Title -> { game, related } for a batch of titles, or null when the lookup failed.
+async function findMatches(titles) {
+  try {
+    const res = await chrome.runtime.sendMessage({ action: 'findKnownGames', titles });
+    return new Map((res?.matches || []).map((m) => [m.title, m]));
+  } catch {
+    return null;
   }
 }
 
@@ -570,7 +599,7 @@ function injectBadges(getTargets) {
     setLoading(tooltip);
 
     chrome.runtime
-      .sendMessage({ action: 'resolveGameOverlay', title: gameName })
+      .sendMessage({ action: 'resolveGameOverlay', title: searchTitles.get(gameName) || gameName })
       .then((res) => {
         if (currentGame !== gameName) return;
         if (!res?.game) {

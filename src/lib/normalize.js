@@ -16,7 +16,8 @@ function normalizeName(name) {
 const TITLE_STOPWORDS = new Set(
   (
     'the and for with les des une aux pour par sur dans avec jeu jeux game games de du la le un et ' +
-    'en of to sleeves sleeve standard booster display classeur puzzle cartes carte promo box set'
+    'en of to sleeves sleeve standard booster display classeur puzzle cartes carte promo box set ' +
+    'ans joueurs joueur players'
   ).split(' ')
 );
 
@@ -45,6 +46,23 @@ function isConfidentTitleMatch(retailerTitle, gameName) {
   return shared.length === 1 && a[0] === b[0] && a[0].length >= 5;
 }
 
+// Strength of a retailer title's match with a search result: how many
+// distinctive words it shares with the top result or, failing that, with the
+// other results (0 = no confident match). BGM matches translated titles
+// ("Enquêtes Express" -> "Investigation Express") through the game's other
+// names, so a lower result that carries the retailer's own words (the French
+// "Enquêtes Express: ..." expansions) vouches for the top one.
+function titleMatchScore(retailerTitle, gameName, related = []) {
+  const a = titleTokens(retailerTitle);
+  let best = 0;
+  for (const name of [gameName, ...related]) {
+    if (!isConfidentTitleMatch(retailerTitle, name)) continue;
+    const inName = new Set(titleTokens(name));
+    best = Math.max(best, a.filter((t) => inName.has(t)).length, 1);
+  }
+  return best;
+}
+
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { normalizeName, isConfidentTitleMatch };
+  module.exports = { normalizeName, isConfidentTitleMatch, titleMatchScore };
 }
