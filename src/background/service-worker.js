@@ -314,7 +314,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             // its rule is keyed by game id (hovering several cards in a row).
             await chrome.scripting.insertCSS({
               target: { tabId: sender.tab.id },
-              css: `#bgm-overlay .bgm-overlay-cover,#bgm-cat-tooltip .bgm-ct-cover[data-game-id="${data.game.id}"]{background-image:url("${data.imageDataUrl}") !important}`,
+              css: `#bgm-overlay .bgm-overlay-cover,#bgm-cat-tooltip .bgm-ct-cover[data-game-id="${data.game.id}"],#bgm-ct-product-card .bgm-ct-cover[data-game-id="${data.game.id}"]{background-image:url("${data.imageDataUrl}") !important}`,
             });
             coverInjected = true;
           } catch (_) {
