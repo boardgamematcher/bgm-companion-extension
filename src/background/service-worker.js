@@ -2,7 +2,7 @@
 const PROFILES_URL =
   'https://raw.githubusercontent.com/boardgamematcher/site-profiles/main/profiles.json';
 const PROFILES_CACHE_KEY = 'cachedProfiles';
-const PROFILES_CACHE_TTL = 6 * 60 * 60 * 1000; // 6 hours
+const PROFILES_REVALIDATE_AFTER = 15 * 60 * 1000; // ask GitHub again after 15 minutes
 const WISHLIST_CACHE_KEY = 'cachedWishlist';
 const WISHLIST_CACHE_TTL = 10 * 60 * 1000; // 10 minutes
 const BGM_BASE_URL = 'https://boardgamematcher.com';
@@ -130,23 +130,34 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   }
 });
 
-// Fetch shared profiles from GitHub, with local cache and bundled fallback
+// Where the profiles last came from: 'github' | 'cache' | 'bundled'
+let profilesSource = 'bundled';
+let forceProfilesFetch = false;
+
+// Fetch shared profiles from GitHub. The saved copy is trusted for 15 minutes,
+// then GitHub is asked again; the browser's HTTP cache revalidates with the
+// ETag, so an unchanged file costs a 304 and no body. When GitHub is
+// unreachable the saved copy is used, then the bundled fallback.
 async function fetchSharedProfiles() {
-  // Check local cache first
+  const force = forceProfilesFetch;
+  forceProfilesFetch = false;
+
+  let entry;
   try {
-    const cached = await chrome.storage.local.get(PROFILES_CACHE_KEY);
-    const entry = cached[PROFILES_CACHE_KEY];
-    if (entry && Date.now() - entry.timestamp < PROFILES_CACHE_TTL) {
-      debug('Using cached profiles (%d profiles)', entry.profiles.length);
-      return entry.profiles;
-    }
+    entry = (await chrome.storage.local.get(PROFILES_CACHE_KEY))[PROFILES_CACHE_KEY];
   } catch (_e) {
     // Cache read failed, continue to fetch
   }
+  if (!force && entry && Date.now() - entry.timestamp < PROFILES_REVALIDATE_AFTER) {
+    debug('Using cached profiles (%d profiles)', entry.profiles.length);
+    profilesSource = 'cache';
+    return entry.profiles;
+  }
 
-  // Fetch from GitHub
   try {
-    const response = await fetch(PROFILES_URL);
+    // A manual refresh skips GitHub's 5-minute edge cache with a fresh URL
+    const url = force ? `${PROFILES_URL}?t=${Date.now()}` : PROFILES_URL;
+    const response = await fetch(url, { cache: 'no-cache' });
     if (response.ok) {
       const data = await response.json();
       const profiles = data.profiles || [];
@@ -154,13 +165,21 @@ async function fetchSharedProfiles() {
         [PROFILES_CACHE_KEY]: { profiles, timestamp: Date.now() },
       });
       debug('Fetched %d profiles from GitHub', profiles.length);
+      profilesSource = 'github';
       return profiles;
     }
   } catch (_e) {
     console.warn('Failed to fetch profiles from GitHub, using fallback');
   }
 
+  // A stale saved copy still beats the bundled one
+  if (entry?.profiles) {
+    profilesSource = 'cache';
+    return entry.profiles;
+  }
+
   // Fall back to bundled file
+  profilesSource = 'bundled';
   try {
     const response = await fetch(chrome.runtime.getURL('patterns/built-in.json'));
     const data = await response.json();
@@ -168,6 +187,18 @@ async function fetchSharedProfiles() {
   } catch (_e) {
     return [];
   }
+}
+
+// Manual refresh (options page): skip the saved copy and report the source.
+async function refreshProfiles() {
+  await reloadingPromise;
+  forceProfilesFetch = true;
+  await reloadPatterns();
+  return {
+    success: profilesSource === 'github',
+    source: profilesSource,
+    count: cachedPatterns.length,
+  };
 }
 
 // Load patterns from shared profiles + custom patterns
@@ -238,6 +269,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     updateStats(message.stats);
     sendResponse({ success: true });
     return false;
+  }
+
+  if (message.action === 'refreshProfiles') {
+    refreshProfiles()
+      .then(sendResponse)
+      .catch(() => sendResponse({ success: false, source: profilesSource, count: 0 }));
+    return true;
   }
 
   if (message.action === 'reloadPatterns') {
