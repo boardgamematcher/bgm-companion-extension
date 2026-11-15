@@ -16,11 +16,14 @@
       domain: location.hostname,
       url: location.href,
     });
-    if (!res?.supported) return;
-    pattern = res.pattern;
+    if (res?.supported) pattern = res.pattern;
   } catch {
     return;
   }
+
+  // Veepee's product page is outside the catalog profile
+  if (isVeepeeHost()) watchVeepeeProductPage();
+  if (!pattern) return;
 
   if (
     pattern?.catalog_badges &&
@@ -47,8 +50,16 @@
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
+function isVeepeeHost() {
+  return /veepee\.|privalia\.com/.test(location.hostname);
+}
+
 function isVeepeeCatalog() {
-  return /veepee\.|privalia\.com/.test(location.hostname) && /\/catalog\//.test(location.pathname);
+  return isVeepeeHost() && /\/catalog\//.test(location.pathname);
+}
+
+function isVeepeeProductPage() {
+  return isVeepeeHost() && /\/product\/\d+\/\d+/.test(location.pathname);
 }
 
 function getPath(obj, path) {
@@ -545,6 +556,8 @@ function injectNextDataBadges(games) {
   if (!imageToName.size) return;
 
   injectBadges(async () => {
+    // The product page gets one card instead (watchVeepeeProductPage)
+    if (isVeepeeProductPage()) return [];
     const targets = [];
     for (const img of document.querySelectorAll('img')) {
       const src = getImgSrc(img);
@@ -568,6 +581,65 @@ function injectNextDataBadges(games) {
 }
 
 const VEEPEE_PROBE_SIZE = 10;
+
+// ── Veepee product page ────────────────────────────────────────────────────
+
+// One BGM card between the price and the add-to-cart button, when the product
+// is a game BGM knows. The page is a SPA: it is created, refreshed or removed
+// as the visitor navigates.
+const PRODUCT_CARD_ID = 'bgm-ct-product-card';
+let productCardTitle = null;
+let productCardBusy = false;
+
+function watchVeepeeProductPage() {
+  let timer;
+  new MutationObserver(() => {
+    clearTimeout(timer);
+    timer = setTimeout(syncProductCard, 200);
+  }).observe(document.body, { childList: true, subtree: true });
+  syncProductCard();
+}
+
+async function syncProductCard() {
+  if (productCardBusy) return;
+  const existing = document.getElementById(PRODUCT_CARD_ID);
+  if (!isVeepeeProductPage()) {
+    existing?.remove();
+    productCardTitle = null;
+    return;
+  }
+  const anchor = document.querySelector('[data-facil-iti="product-sheet--price-container"]');
+  const title = anchor?.querySelector('h1')?.textContent.trim();
+  if (!anchor || !title) return;
+  if (title === productCardTitle && (existing || !knownTitles.get(title))) return;
+
+  productCardBusy = true;
+  try {
+    existing?.remove();
+    productCardTitle = title;
+    await lookupKnownGames([title]);
+    if (!knownTitles.get(title)) return;
+
+    const card = createTooltip();
+    card.id = PRODUCT_CARD_ID;
+    card.className = '';
+    anchor.insertAdjacentElement('afterend', card);
+    setLoading(card);
+    const res = await chrome.runtime.sendMessage({
+      action: 'resolveGameOverlay',
+      title: searchTitles.get(title) || title,
+    });
+    if (!res?.game) {
+      card.remove();
+      return;
+    }
+    renderGame(card, res);
+  } catch {
+    document.getElementById(PRODUCT_CARD_ID)?.remove();
+  } finally {
+    productCardBusy = false;
+  }
+}
 
 // getTargets() returns (or resolves to) [{ img, name }] for the images to badge.
 function injectBadges(getTargets) {
