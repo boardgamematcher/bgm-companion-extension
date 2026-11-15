@@ -1,5 +1,9 @@
 const { describe, test, expect } = require('@jest/globals');
-const { normalizeName, isConfidentTitleMatch } = require('../src/lib/normalize.js');
+const {
+  normalizeName,
+  isConfidentTitleMatch,
+  titleMatchScore,
+} = require('../src/lib/normalize.js');
 
 describe('normalizeName', () => {
   test('lowercases and strips punctuation', () => {
@@ -59,5 +63,46 @@ describe('isConfidentTitleMatch', () => {
   test('rejects empty input', () => {
     expect(isConfidentTitleMatch('', 'Catan')).toBe(false);
     expect(isConfidentTitleMatch('Catan', '')).toBe(false);
+  });
+});
+
+describe('titleMatchScore', () => {
+  test('counts the words shared with the top result', () => {
+    expect(titleMatchScore("Kingdom Rush - Vez'Nan vs Moloch", 'Kingdom Rush: Rift in Time')).toBe(
+      2
+    );
+  });
+
+  test('a translated title is vouched for by the other results', () => {
+    const related = [
+      'Enquêtes Express: Panique à Dinopark',
+      "Enquêtes Express: Dans l'ombre de Peter",
+    ];
+    expect(titleMatchScore('Enquêtes Express - dès 10 ans', 'Investigation Express', related)).toBe(
+      2
+    );
+    expect(
+      titleMatchScore('Olémains 2 Le retour du lapin', 'Bunny Hops', ['OléMains!: Mini-jeu'])
+    ).toBe(1);
+  });
+
+  test('a publisher-led title scores below its stripped form', () => {
+    const full = titleMatchScore(
+      'Blackrock Games - Enquêtes Express - dès 10 ans',
+      'Blackrock Castle'
+    );
+    const tail = titleMatchScore('Enquêtes Express - dès 10 ans', 'Investigation Express', [
+      'Enquêtes Express: Panique à Dinopark',
+    ]);
+    expect(tail).toBeGreaterThan(full);
+  });
+
+  test('is 0 when nothing matches confidently', () => {
+    expect(
+      titleMatchScore('Classeur Ultra Pro 9 cases', 'Chasseur de tête', [
+        'Chasseur de tête: Extension',
+      ])
+    ).toBe(0);
+    expect(titleMatchScore('', 'Catan')).toBe(0);
   });
 });

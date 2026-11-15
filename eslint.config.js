@@ -13,6 +13,7 @@ export default [
         ...globals.webextensions,
         normalizeName: 'readonly',
         isConfidentTitleMatch: 'readonly',
+        titleMatchScore: 'readonly',
         normalizeBgg: 'readonly',
         ratingTier: 'readonly',
         ratingFillPercent: 'readonly',

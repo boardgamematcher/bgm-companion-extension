@@ -345,7 +345,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         while (next < titles.length) {
           const title = titles[next++];
           const res = await searchGameByTitle(title);
-          if (res.game) matches.push({ title, name: res.game.name, game: res.game });
+          if (res.game)
+            matches.push({ title, name: res.game.name, game: res.game, related: res.related });
         }
       };
       await Promise.all(Array.from({ length: 4 }, worker));
@@ -777,7 +778,7 @@ function normalizeForMatch(name) {
 }
 
 // Look up the BGM game for a retailer title (session-cached by normalized
-// title). Returns { game } or { error }. Shared by the overlay and the
+// title). Returns { game, related } or { error }. Shared by the overlay and the
 // catalog badges' known-games check.
 async function searchGameByTitle(title) {
   if (!title || typeof title !== 'string') return { error: 'invalid_title' };
@@ -785,11 +786,13 @@ async function searchGameByTitle(title) {
   // Per-tab session cache keyed by normalized title
   const cacheKey = `bgmOverlayGame:${normalizeForMatch(title)}`;
   let game;
+  let related = [];
   try {
     const cached = await chrome.storage.session.get(cacheKey);
     const entry = cached[cacheKey];
     if (entry && Date.now() - entry.timestamp < OVERLAY_GAME_CACHE_TTL) {
       game = entry.game;
+      related = entry.related || [];
     }
   } catch (_) {
     // ignore
@@ -810,10 +813,14 @@ async function searchGameByTitle(title) {
       // Prefer exact normalized match; otherwise fall back to first result
       const wanted = normalizeForMatch(title);
       game = games.find((g) => normalizeForMatch(g.name) === wanted) || games[0];
+      related = games
+        .filter((g) => g !== game)
+        .slice(0, 5)
+        .map((g) => g.name);
 
       try {
         await chrome.storage.session.set({
-          [cacheKey]: { game, timestamp: Date.now() },
+          [cacheKey]: { game, related, timestamp: Date.now() },
         });
       } catch (_) {
         // ignore
@@ -824,7 +831,7 @@ async function searchGameByTitle(title) {
     }
   }
 
-  return { game };
+  return { game, related };
 }
 
 // Resolve a retailer page title to a BGM game + the user's collection types.
