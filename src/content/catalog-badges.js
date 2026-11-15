@@ -173,7 +173,9 @@ async function readDomGames(pattern) {
   const cleanup = buildCleanupFn(pattern.name_cleanup);
   const targets = [];
   for (const card of document.querySelectorAll(pattern.card_selector)) {
-    const img = card.querySelector(pattern.image_selector);
+    // Some shops (Ludiprix) put the cover in the cell before the card
+    const imgRoot = pattern.image_in_previous_sibling ? card.previousElementSibling : card;
+    const img = imgRoot?.querySelector(pattern.image_selector);
     const name = cleanup(card.querySelector(pattern.selector)?.textContent.trim() || '');
     if (img && name) targets.push({ img, name });
   }
