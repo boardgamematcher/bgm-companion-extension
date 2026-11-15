@@ -1297,5 +1297,20 @@
   },
   "catalogSeeMore": {
     "message": "See more on BGM"
+  },
+  "optionsProfilesTitle": {
+    "message": "Shop profiles"
+  },
+  "optionsProfilesSubtitle": {
+    "message": "How BGM finds games on each shop is updated automatically. Refresh now to get the latest."
+  },
+  "optionsProfilesRefresh": {
+    "message": "Refresh shop profiles"
+  },
+  "optionsProfilesDone": {
+    "message": "Profiles are up to date."
+  },
+  "optionsProfilesFailed": {
+    "message": "Could not reach GitHub: using the saved profiles."
   }
 }

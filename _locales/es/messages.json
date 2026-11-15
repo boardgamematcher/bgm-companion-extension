@@ -1181,5 +1181,20 @@
   },
   "catalogSeeMore": {
     "message": "Ver más en BGM"
+  },
+  "optionsProfilesTitle": {
+    "message": "Perfiles de tiendas"
+  },
+  "optionsProfilesSubtitle": {
+    "message": "La forma en que BGM detecta juegos en cada tienda se actualiza automáticamente. Actualiza ahora para obtener la última versión."
+  },
+  "optionsProfilesRefresh": {
+    "message": "Actualizar perfiles de tiendas"
+  },
+  "optionsProfilesDone": {
+    "message": "Perfiles actualizados."
+  },
+  "optionsProfilesFailed": {
+    "message": "No se pudo contactar con GitHub: se usan los perfiles guardados."
   }
 }

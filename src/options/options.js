@@ -159,6 +159,23 @@ function setupEventListeners() {
     chrome.storage.local.set({ catalogDisplayMode: e.target.value });
   });
 
+  const refreshBtn = document.getElementById('refresh-profiles-btn');
+  const refreshStatus = document.getElementById('refresh-profiles-status');
+  refreshBtn.addEventListener('click', async () => {
+    refreshBtn.disabled = true;
+    refreshStatus.textContent = '';
+    let res;
+    try {
+      res = await chrome.runtime.sendMessage({ action: 'refreshProfiles' });
+    } catch {
+      res = null;
+    }
+    refreshStatus.textContent = chrome.i18n.getMessage(
+      res?.success ? 'optionsProfilesDone' : 'optionsProfilesFailed'
+    );
+    refreshBtn.disabled = false;
+  });
+
   // Notifications toggles
   document.getElementById('notif-news').addEventListener('change', async (e) => {
     await chrome.storage.local.set({ newsNotifEnabled: e.target.checked });
