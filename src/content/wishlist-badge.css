@@ -7,7 +7,7 @@
   background: var(--bgm-bg) !important;
   color: var(--bgm-amber) !important;
   border: 1px solid var(--bgm-amber-border) !important;
-  border-radius: 4px !important;
+  border-radius: var(--bgm-radius-sm) !important;
   padding: 2px 8px 2px 4px !important;
   font-size: 11px !important;
   font-weight: 600 !important;
@@ -23,7 +23,7 @@
 
 .bgm-wishlist-badge:hover {
   background: var(--bgm-bg-hover) !important;
-  border-color: rgba(245, 166, 35, 0.5) !important;
+  border-color: var(--bgm-amber-border-hover) !important;
   color: var(--bgm-amber-light) !important;
 }
 
@@ -37,7 +37,7 @@
   font-weight: 800 !important;
   letter-spacing: 0.4px !important;
   padding: 1px 4px !important;
-  border-radius: 3px !important;
+  border-radius: var(--bgm-radius-sm) !important;
   line-height: 1.4 !important;
   flex-shrink: 0 !important;
 }

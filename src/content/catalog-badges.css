@@ -8,7 +8,7 @@
   right: 6px !important;
   height: 20px !important;
   padding: 0 6px !important;
-  border-radius: 5px !important;
+  border-radius: var(--bgm-radius-sm) !important;
   background: var(--bgm-amber) !important;
   border: none !important;
   cursor: pointer !important;
@@ -21,7 +21,7 @@
   color: var(--bgm-bg-deep) !important;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
   z-index: 100 !important;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35) !important;
+  box-shadow: var(--bgm-shadow-sm) !important;
   transition:
     transform 0.15s ease,
     box-shadow 0.15s ease !important;
@@ -31,7 +31,7 @@
 
 .bgm-cat-badge:hover {
   transform: scale(1.12) !important;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45) !important;
+  box-shadow: var(--bgm-shadow-md) !important;
 }
 
 .bgm-cat-badge span {
@@ -154,7 +154,7 @@
 .bgm-ct-logo {
   height: 16px !important;
   padding: 0 4px !important;
-  border-radius: 3px !important;
+  border-radius: var(--bgm-radius-sm) !important;
   background: var(--bgm-amber) !important;
   display: flex !important;
   align-items: center !important;
@@ -188,7 +188,7 @@
 .bgm-ct-spinner {
   width: 14px !important;
   height: 14px !important;
-  border: 2px solid rgba(245, 166, 35, 0.2) !important;
+  border: 2px solid var(--bgm-amber-faint) !important;
   border-top-color: var(--bgm-amber) !important;
   border-radius: 50% !important;
   animation: bgm-ct-spin 0.7s linear infinite !important;
@@ -224,7 +224,7 @@
 .bgm-ct-cover {
   width: 44px !important;
   height: 44px !important;
-  border-radius: 5px !important;
+  border-radius: var(--bgm-radius-sm) !important;
   background-size: cover !important;
   background-position: center !important;
   background-repeat: no-repeat !important;
@@ -248,9 +248,9 @@
   gap: 6px !important;
   margin-bottom: 8px !important;
   padding: 4px 6px !important;
-  background: rgba(245, 166, 35, 0.06) !important;
+  background: var(--bgm-amber-tint-faint) !important;
   border-left: 2px solid var(--bgm-amber) !important;
-  border-radius: 3px !important;
+  border-radius: var(--bgm-radius-sm) !important;
   flex-wrap: wrap !important;
 }
 
@@ -263,7 +263,7 @@
 }
 
 .bgm-ct-s-empty {
-  color: rgba(245, 166, 35, 0.22) !important;
+  color: var(--bgm-amber-faint) !important;
 }
 
 .bgm-ct-s-fill {
@@ -305,7 +305,7 @@
 }
 
 .bgm-ct-pill {
-  background: rgba(255, 255, 255, 0.05) !important;
+  background: var(--bgm-chip-bg) !important;
   border: 1px solid var(--bgm-border) !important;
   color: var(--bgm-text-muted) !important;
   font-size: 10px !important;
@@ -320,13 +320,13 @@
 }
 
 .bgm-ct-pill:hover {
-  border-color: rgba(245, 166, 35, 0.4) !important;
+  border-color: var(--bgm-amber-border) !important;
   color: var(--bgm-text) !important;
 }
 
 .bgm-ct-pill-on {
   background: var(--bgm-amber-tint-mid) !important;
-  border-color: rgba(245, 166, 35, 0.5) !important;
+  border-color: var(--bgm-amber-border-hover) !important;
   color: var(--bgm-amber) !important;
 }
 
@@ -381,7 +381,7 @@
   font-size: 18px !important;
   line-height: 1 !important;
   cursor: pointer !important;
-  color: rgba(245, 166, 35, 0.2) !important;
+  color: var(--bgm-amber-faint) !important;
   transition: color 0.1s !important;
   font-family: inherit !important;
 }
@@ -394,7 +394,7 @@
   background: linear-gradient(
     to right,
     var(--bgm-amber) 50%,
-    rgba(245, 166, 35, 0.2) 50%
+    var(--bgm-amber-faint) 50%
   ) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
