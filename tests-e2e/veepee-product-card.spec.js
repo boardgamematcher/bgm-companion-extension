@@ -13,7 +13,7 @@ test('Veepee product page: one BGM card between price and cart, no bars on image
         id: 7,
         name: 'Investigation Express',
         slug: 'investigation-express',
-        bayes_average: 3.3,
+        display_rating: 3.3,
         users_rated: 57,
       },
       { id: 8, name: 'Enquêtes Express: Panique à Dinopark', slug: 'enquetes-express-panique' },

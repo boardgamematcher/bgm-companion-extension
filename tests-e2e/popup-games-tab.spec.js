@@ -17,7 +17,7 @@ const WINGSPAN = {
   max_players: 5,
   playing_time: 70,
   weight_average: 2.46,
-  bayes_average: 8.2, // 8.2 / 2 = 4.1 (toFixed(1)); 8.1/2 = 4.05 which rounds to "4.0" in V8
+  display_rating: 8.2, // 8.2 / 2 = 4.1 (toFixed(1)); 8.1/2 = 4.05 which rounds to "4.0" in V8
   image_url: 'https://boardgamematcher.com/static/games/wingspan.jpg',
   designers: ['Elizabeth Hargrave'],
 };
@@ -79,7 +79,7 @@ test('clicking a result shows game detail card with specs and rating', async ({
   await expect(popup.locator('#gd-specs')).toContainText(/1.+5/); // "1–5 players"
   await expect(popup.locator('#gd-specs')).toContainText(/70/); // "70 min"
 
-  // BGM rating (bayes_average 8.2 / 2 = 4.1 stars)
+  // BGM rating (display_rating 8.2 / 2 = 4.1 stars)
   await expect(popup.locator('#gd-rating')).toBeVisible();
   await expect(popup.locator('#gd-rating-val')).toHaveText('4.1');
 
