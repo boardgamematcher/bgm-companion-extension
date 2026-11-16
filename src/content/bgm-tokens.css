@@ -1,19 +1,53 @@
-/* BGM shared design tokens — injected before all other BGM content CSS */
+/* BGM shared design tokens — injected before all other BGM content CSS.
+   Values mirror the site tokens (web/src/static/css/base.css): dark by
+   default, light when the page asks for it via prefers-color-scheme. */
 :root {
-  --bgm-bg: #1b2028;
-  --bgm-bg-deep: #14181c;
-  --bgm-bg-hover: #242c38;
-  --bgm-border: rgba(255, 255, 255, 0.1);
-  --bgm-border-dim: rgba(255, 255, 255, 0.07);
+  --bgm-bg: #1b2028; /* site --bg-surface */
+  --bgm-bg-deep: #0e1114; /* text colour on amber (site primary-content) */
+  --bgm-bg-hover: #2c353e;
+  --bgm-border: rgba(255, 255, 255, 0.12);
+  --bgm-border-dim: rgba(255, 255, 255, 0.06);
   --bgm-amber: #f5a623;
   --bgm-amber-light: #ffc64d;
   --bgm-amber-tint: rgba(245, 166, 35, 0.08);
+  --bgm-amber-tint-faint: rgba(245, 166, 35, 0.06);
   --bgm-amber-tint-mid: rgba(245, 166, 35, 0.15);
   --bgm-amber-border: rgba(245, 166, 35, 0.3);
+  --bgm-amber-border-hover: rgba(245, 166, 35, 0.5);
+  --bgm-amber-faint: rgba(245, 166, 35, 0.2);
+  --bgm-chip-bg: rgba(255, 255, 255, 0.05);
   --bgm-text: #e1e3e5;
   --bgm-text-muted: #a8bcc8;
   --bgm-text-dim: #7b8d9e;
-  --bgm-radius: 10px;
+  --bgm-radius: 6px;
+  --bgm-radius-sm: 4px;
   --bgm-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --bgm-shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.35);
+  --bgm-shadow-md: 0 3px 10px rgba(0, 0, 0, 0.45);
   --bgm-card-width: 240px;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bgm-bg: #ffffff;
+    --bgm-bg-deep: #1a1a1a;
+    --bgm-bg-hover: #e4e0d9;
+    --bgm-border: rgba(0, 0, 0, 0.15);
+    --bgm-border-dim: rgba(0, 0, 0, 0.08);
+    --bgm-amber: #d4911a;
+    --bgm-amber-light: #b07818;
+    --bgm-amber-tint: rgba(212, 145, 26, 0.1);
+    --bgm-amber-tint-faint: rgba(212, 145, 26, 0.07);
+    --bgm-amber-tint-mid: rgba(212, 145, 26, 0.16);
+    --bgm-amber-border: rgba(212, 145, 26, 0.4);
+    --bgm-amber-border-hover: rgba(212, 145, 26, 0.6);
+    --bgm-amber-faint: rgba(212, 145, 26, 0.25);
+    --bgm-chip-bg: rgba(0, 0, 0, 0.05);
+    --bgm-text: #1a1a1a;
+    --bgm-text-muted: #4a4a4a;
+    --bgm-text-dim: #7a7a7a;
+    --bgm-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    --bgm-shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.15);
+    --bgm-shadow-md: 0 3px 10px rgba(0, 0, 0, 0.2);
+  }
 }
