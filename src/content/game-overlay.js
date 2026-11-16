@@ -22,12 +22,11 @@ function normalizeBgg(rating) {
 }
 
 // Pick the best community-rating value to display from a game payload.
-// BGM-1231: prefer ``display_rating`` (soft Bayesian, honest for low-N
-// games) and fall back to legacy ``bayes_average``. Returns null when
-// both are absent.
+// BGM-1231: ``display_rating`` (soft Bayesian, honest for low-N games).
+// Returns null when absent.
 function pickDisplayRating(game) {
   if (!game) return null;
-  const raw = game.display_rating ?? game.bayes_average ?? null;
+  const raw = game.display_rating ?? null;
   return raw == null ? null : normalizeBgg(Number(raw));
 }
 
@@ -264,7 +263,7 @@ function showOverlayError(overlay, code) {
   }
 
   const { game, collectionTypes, userRating, imageFetched } = gameData;
-  // game: { id, name, slug, display_rating, bayes_average, users_rated, image_url }
+  // game: { id, name, slug, display_rating, users_rated, image_url }
   // collectionTypes: string[] e.g. ['own', 'played']
   // userRating: 1–5 | null
 
@@ -279,8 +278,8 @@ function showOverlayError(overlay, code) {
 
   const activeTypes = new Set(collectionTypes);
 
-  // BGM-1231: headline uses soft Bayesian display_rating when present, else
-  // legacy bayes_average. Vote count surfaces the confidence signal so users
+  // BGM-1231: headline uses the soft Bayesian display_rating. Vote count
+  // surfaces the confidence signal so users
   // can judge how much to trust the score.
   const bggRating = pickDisplayRating(game);
   const votesLabel = formatVoteCount(game.users_rated);

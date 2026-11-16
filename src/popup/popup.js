@@ -1468,8 +1468,8 @@ async function renderGameDetail(game) {
   renderGameSpecs(game);
 
   // Rating — soft Bayesian display_rating on the 0–5 scale (BGM-1231),
-  // falling back to legacy bayes_average. Same helpers as the game overlay
-  // and catalog badges via shared lib/rating.js. Vote count surfaces the
+  // Same helpers as the game overlay and catalog badges via shared
+  // lib/rating.js. Vote count surfaces the
   // confidence signal alongside the tier label.
   const ratingWrap = document.getElementById('gd-rating');
   const noRatingWrap = document.getElementById('gd-no-rating');
