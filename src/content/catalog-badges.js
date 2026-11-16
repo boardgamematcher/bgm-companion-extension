@@ -546,6 +546,21 @@ function createInlineRating(game) {
   return el;
 }
 
+// Where the inline strip goes: after the image's wrapper, but outside any
+// wrapper that is no taller than the image itself (a carousel track, a
+// fixed-height picture box). Inserted there it would be one more slide or be
+// squashed to its 2px border, which is all Veepee showed.
+function inlineAnchor(el) {
+  for (let i = 0; i < 4; i++) {
+    const parent = el.parentElement;
+    const h = el.getBoundingClientRect().height;
+    if (!parent || parent === document.body || !h) break;
+    if (parent.getBoundingClientRect().height > h + 2) break;
+    el = parent;
+  }
+  return el;
+}
+
 // ── Main badge injection ───────────────────────────────────────────────────
 
 // Veepee: badge every <img> whose URL is listed in __NEXT_DATA__.
@@ -709,7 +724,8 @@ function injectBadges(getTargets) {
       if (mode === 'inline') {
         // Nothing to rate when BGM doesn't know the title.
         // Below the image, not over it: shops put their own labels on the image.
-        if (game) (wrap || img).insertAdjacentElement('afterend', createInlineRating(game));
+        if (game)
+          inlineAnchor(wrap || img).insertAdjacentElement('afterend', createInlineRating(game));
         continue;
       }
 
