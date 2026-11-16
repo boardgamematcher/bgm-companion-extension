@@ -579,7 +579,7 @@ chrome.notifications.onClicked.addListener((notifId) => {
   }
   if (notifId.startsWith('bgm-game-')) {
     const slug = notifId.slice('bgm-game-'.length);
-    chrome.tabs.create({ url: `${BGM_BASE_URL}/boardgames/${slug}` });
+    chrome.tabs.create({ url: `${BGM_BASE_URL}/game/${slug}` });
     chrome.notifications.clear(notifId);
   }
 });
