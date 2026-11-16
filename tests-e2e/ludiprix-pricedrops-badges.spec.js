@@ -32,7 +32,7 @@ test('Ludiprix price drops: badge on the cover, which sits in the cell before th
   await mockJson(context, 'https://boardgamematcher.com/api/games/search**', (request) => {
     const q = new URL(request.url()).searchParams.get('q') || '';
     return /stress/i.test(q)
-      ? { games: [{ id: 5, name: 'Stress Botics', slug: 'stress-botics', bayes_average: 6.1 }] }
+      ? { games: [{ id: 5, name: 'Stress Botics', slug: 'stress-botics', display_rating: 6.1 }] }
       : { games: [] };
   });
   await mockJson(context, 'https://boardgamematcher.com/api/collections/5', {

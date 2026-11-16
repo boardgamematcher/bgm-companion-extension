@@ -47,23 +47,19 @@ describe('ratingFillPercent', () => {
 });
 
 describe('pickDisplayRating', () => {
-  test('prefers display_rating over bayes_average', () => {
-    expect(pickDisplayRating({ display_rating: 3.4, bayes_average: 4.5 })).toBe(3.4);
+  test('reads display_rating', () => {
+    expect(pickDisplayRating({ display_rating: 3.4 })).toBe(3.4);
   });
 
-  test('falls back to bayes_average when display_rating is null/undefined', () => {
-    expect(pickDisplayRating({ display_rating: null, bayes_average: 4.5 })).toBe(4.5);
-    expect(pickDisplayRating({ bayes_average: 4.5 })).toBe(4.5);
+  test('ignores legacy bayes_average (no fallback)', () => {
+    expect(pickDisplayRating({ bayes_average: 4.5 })).toBeNull();
+    expect(pickDisplayRating({ display_rating: null, bayes_average: 4.5 })).toBeNull();
   });
 
-  test('returns null when both fields absent', () => {
+  test('returns null when display_rating is absent or 0 (unrated sentinel)', () => {
     expect(pickDisplayRating({})).toBeNull();
-    expect(pickDisplayRating({ display_rating: null, bayes_average: null })).toBeNull();
-  });
-
-  test('treats bayes_average: 0 as no-rating (API sentinel for unrated games)', () => {
-    expect(pickDisplayRating({ bayes_average: 0 })).toBeNull();
-    expect(pickDisplayRating({ display_rating: null, bayes_average: 0 })).toBeNull();
+    expect(pickDisplayRating({ display_rating: null })).toBeNull();
+    expect(pickDisplayRating({ display_rating: 0 })).toBeNull();
   });
 
   test('halves legacy 0–10 values', () => {

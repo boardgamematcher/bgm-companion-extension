@@ -9,7 +9,7 @@ test('Philibert product page renders the BGM overlay (BGM-976)', async ({ contex
   );
 
   await mockJson(context, 'https://boardgamematcher.com/api/games/search**', {
-    games: [{ id: 13, name: 'Catan', slug: 'catan', bayes_average: 7.2 }],
+    games: [{ id: 13, name: 'Catan', slug: 'catan', display_rating: 7.2 }],
   });
   await mockJson(context, 'https://boardgamematcher.com/api/collections/13', {
     collection_types: ['own', 'played'],

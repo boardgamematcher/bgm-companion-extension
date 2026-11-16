@@ -289,11 +289,10 @@ function normBgg(r) {
   return r > 5 ? r / 2 : r;
 }
 
-// BGM-1231: prefer soft Bayesian display_rating, fall back to legacy
-// bayes_average. Returns null when both are absent.
+// BGM-1231: soft Bayesian display_rating. Returns null when absent.
 function pickDisplayRating(game) {
   if (!game) return null;
-  const raw = game.display_rating ?? game.bayes_average ?? null;
+  const raw = game.display_rating ?? null;
   return raw == null ? null : normBgg(Number(raw));
 }
 
@@ -364,8 +363,8 @@ function setError(tooltip, code) {
 }
 
 function renderGame(tooltip, { game, collectionTypes, userRating, coverInjected }) {
-  // BGM-1231: headline uses soft Bayesian display_rating when present, else
-  // legacy bayes_average. Vote count surfaces the confidence signal.
+  // BGM-1231: headline uses the soft Bayesian display_rating. Vote count
+  // surfaces the confidence signal.
   const bgg = pickDisplayRating(game);
   const votesLabel = formatVotes(game.users_rated);
   const PILLS = [

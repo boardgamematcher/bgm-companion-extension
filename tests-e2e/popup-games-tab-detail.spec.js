@@ -17,7 +17,7 @@ const WINGSPAN = {
   max_players: 5,
   playing_time: 70,
   weight_average: 2.46,
-  bayes_average: 8.2,
+  display_rating: 8.2,
   image_url: 'https://boardgamematcher.com/static/games/wingspan.jpg',
   designers: ['Elizabeth Hargrave'],
 };
@@ -31,7 +31,7 @@ const AZUL = {
   max_players: 4,
   playing_time: 45,
   weight_average: 1.76,
-  bayes_average: 0,
+  display_rating: 0,
   image_url: 'https://boardgamematcher.com/static/games/azul.jpg',
   designers: ['Michael Riesling'],
 };

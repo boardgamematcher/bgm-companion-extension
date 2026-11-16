@@ -11,7 +11,7 @@ test('BGA game panel renders the BGM overlay', async ({ context }) => {
   );
 
   await mockJson(context, 'https://boardgamematcher.com/api/games/search**', {
-    games: [{ id: 42, name: 'Café', slug: 'cafe', bayes_average: 7.5 }],
+    games: [{ id: 42, name: 'Café', slug: 'cafe', display_rating: 7.5 }],
   });
   await mockJson(context, 'https://boardgamematcher.com/api/collections/42', {
     collection_types: ['played'],
@@ -39,7 +39,7 @@ test('en.boardgamearena.com gamepanel renders the BGM overlay', async ({ context
   );
 
   await mockJson(context, 'https://boardgamematcher.com/api/games/search**', {
-    games: [{ id: 42, name: 'Café', slug: 'cafe', bayes_average: 7.5 }],
+    games: [{ id: 42, name: 'Café', slug: 'cafe', display_rating: 7.5 }],
   });
   await mockJson(context, 'https://boardgamematcher.com/api/collections/42', {
     collection_types: [],
@@ -64,7 +64,7 @@ test('extracts title from document.title when game_name element and og:title are
   );
 
   await mockJson(context, 'https://boardgamematcher.com/api/games/search**', {
-    games: [{ id: 99, name: 'Terraforming Mars', slug: 'terraforming-mars', bayes_average: 8.1 }],
+    games: [{ id: 99, name: 'Terraforming Mars', slug: 'terraforming-mars', display_rating: 8.1 }],
   });
   await mockJson(context, 'https://boardgamematcher.com/api/collections/99', {
     collection_types: [],
@@ -118,7 +118,7 @@ test('dismiss button hides the overlay', async ({ context }) => {
   );
 
   await mockJson(context, 'https://boardgamematcher.com/api/games/search**', {
-    games: [{ id: 42, name: 'Café', slug: 'cafe', bayes_average: 7.5 }],
+    games: [{ id: 42, name: 'Café', slug: 'cafe', display_rating: 7.5 }],
   });
   await mockJson(context, 'https://boardgamematcher.com/api/collections/42', {
     collection_types: [],

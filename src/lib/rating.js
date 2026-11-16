@@ -9,13 +9,12 @@ function normalizeBgg(rating) {
   return rating > 5 ? rating / 2 : rating;
 }
 
-// Pick the best community-rating value to display from a game payload.
-// BGM-1231: prefer ``display_rating`` (soft Bayesian — honest for low-N
-// games), then fall back to legacy ``bayes_average`` (was raw community
-// average since BGM-1235). Returns null when both are absent.
+// Pick the community-rating value to display from a game payload: the soft
+// Bayesian ``display_rating`` (honest for low-N games, BGM-1231). Returns
+// null when absent.
 function pickDisplayRating(game) {
   if (!game) return null;
-  const raw = game.display_rating || game.bayes_average || null;
+  const raw = game.display_rating || null;
   return raw == null ? null : normalizeBgg(Number(raw));
 }
 
